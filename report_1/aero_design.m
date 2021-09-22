@@ -1,5 +1,5 @@
 % 46320 LAC Course
-% Streamlined code for aerodynamic design
+% Assignment 1
 % Nils Joseph Gaukroger
 % 18th September 2021
 
@@ -266,59 +266,3 @@ beta_coeffs = [
 	];
 beta = ppmak(beta_breaks,beta_coeffs,1);
 end
-
-%% Design polynomials for the 35-m blade
-
-% function t = thickness(r)
-% % Absolute thickness [m] as a function of radius [m] for 35m blade
-% r(r < 5) = 5;
-% t = 9.35996E-08*r.^6 - 1.2911E-05*r.^5 + 7.15038E-04*r.^4 - 2.03735E-02*r.^3 + 3.17726E-01*r.^2 - 2.65357E+00*r + 1.02616E+01;
-% end
-% 
-% function cl = cl_des(that)
-% % Design cl [-] as a function of t/c [%]
-% cl = NaN(length(that));
-% that(that < 15) = 15;
-% that(that > 100) = 100;
-% for i = 1:length(that)
-%     if that(i) < 36
-%         cl(i) = -7.34862E-07*that(i)^5 + 1.10229E-04*that(i)^4 - 6.40432E-03*that(i)^3 + 1.79563E-01*that(i)^2 - 2.43397E+00*that(i) + 1.36000E+01;
-%     elseif 36 <= that(i)
-%         cl(i) = -0.0094*that(i) + 0.9375;
-%     else
-%         print('Invalid that range')
-%     end
-% end
-% end
-% 
-% function clcd = clcd_des(that)
-% % Design cl [-] as a function of t/c [%]
-% clcd = NaN(length(that));
-% that(that < 15) = 15;
-% that(that > 100) = 100;
-% for i = 1:length(that)
-%     if that(i) < 36
-%         clcd(i) = -8.10212E-03*that(i)^4 + 8.73313E-01*that(i)^3 - 3.41180E+01*that(i)^2 + 5.66297E+02*that(i) - 3.24932E+03;
-%     elseif 36 <= that(i)
-%         clcd(i) = -0.8906*that(i) + 89.063;
-%     else
-%         print('Invalid that range')
-%     end
-% end
-% end
-% 
-% function alpha = alpha_des(that)
-% % Design AoA [deg] as a function of t/c [%]
-% alpha = NaN(length(that));
-% that(that < 15) = 15;
-% that(that > 100) = 100;
-% for i = 1:length(that)
-%     if that(i) < 36
-%         alpha(i) = 2.32706E-05*that(i)^5 - 2.87331E-03*that(i)^4 + 1.36343E-01*that(i)^3 - 3.10470E+00*that(i)^2 + 3.38460E+01*that(i) - 1.36500E+02;
-%     elseif 36 <= that(i)
-%         alpha(i) = -0.0078*that(i) + 0.7813;
-%     else
-%         print('Invalid that range')
-%     end
-% end
-% end

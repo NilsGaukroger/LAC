@@ -1,0 +1,13 @@
+blade.data column 
+#1 : radial position
+#2 : twist
+#3 : chord
+#4 : thickness
+
+airfoil.data column
+#1 : aoa
+#2 : clstat
+#3 : cdstat
+#4 : fsst
+#5 : clinv
+#6 : clfs

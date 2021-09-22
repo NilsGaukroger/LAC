@@ -10,13 +10,13 @@ function [R2,n] = rotorScaling(V1,I1,R1,I2,varargin)
 % D1 = 178.3 m
 
 % IEC turbulence classes
-% A: I1 = 0.18
-% B: I2 = 0.16
+% A: I1 = 0.16
+% B: I2 = 0.14
 
 V1_max = V1 * (1 + 2*I1);
 
 if nargin == 4
-    eps      = 1e-5;
+    eps      = 1e-6;
     R2_guess = (I1/I2) * R1;
 elseif nargin == 5
     eps      = varargin{1};

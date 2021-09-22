@@ -6,87 +6,32 @@
 close all; clear variables; clc
 
 %% Design polynomials from DTU 10MW reports
-[DTU.c,DTU.that,DTU.beta] = DTU10MW_des();
-fn = fieldnames(DTU);
-x = linspace(2.8,89.166,101);
-figure
-for i = 1:length(fn)
-    subplot(3,1,i)
-    plot(x,fnval(DTU.(fn{i}),x))
-end
+[DTU.c,DTU.that,DTU.beta] = DTU10MW_des(1);
 
 %% New rotor radius
 [Rnew,~] = rotorScaling(11.4,0.16,178.3/2,0.14);
 
 %% Aerofoil data
-S = dir('polars\*.txt');
-aerofoil = cell(2,length(S));
-aerofoil(1,:) = {S.name};
-vars = {'alpha','cl','cd','fsst','clinv','clfs','cm'};
-
-for i = 1:size(aerofoil,2)
-    aerofoil{2,i} = readtable("polars\" + aerofoil{1,i});
-    aerofoil{2,i}.Properties.VariableNames = vars;
-end
+aerofoil = polars();
 
 %% cl vs alpha
-figure
-xlimits = [0 90];
-for i = 1:4 % ignoring 60.0% and cylinder
-    subplot(2,2,i)
-    plot(aerofoil{2,i}.alpha,aerofoil{2,i}.cl)
-    xlabel('\alpha [deg]'); ylabel('c_l [-]');
-%     xlim([0 90]);
-    title(aerofoil{1,i});
-    grid on
-end
+n = 4; % ignore 60.0% and cylinder
+limits = [0, 90; 0, 2]; % [xlim, ylim]
+plot_polars(aerofoil,limits,n,1);
 
 %% cl vs cd
-figure
-mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
-for i = 1:4 % ignoring 60.0% and cylinder
-    subplot(2,2,i)
-    plot(aerofoil{2,i}.cd(mask),aerofoil{2,i}.cl(mask))
-    xlabel('c_d [-]'); ylabel('c_l [-]');
-    title(aerofoil{1,i});
-    grid on
-end
+limits = [0, 90]; % limits for alpha
+plot_polars(aerofoil,limits,n,2);
 
-%% the clever bit
-idx0 = find(aerofoil{2,1}.alpha == 0);
+%% New design polynomials
+x = [0.35, 0.45, 0.42, 0.45]; % cl,max - cl,des
+[cl_des,alpha_des,clcd_des] = desPolys(aerofoil,x,4);
 
-t_c = [24.1, 30.1, 36.0, 48.0, 100];
-
-x = [0.4, 0.4, 0.4, 0.4];
-mask2 = false(size(aerofoil{2,1},1),4);
-cl_des = NaN(1,4);
-alpha_des = NaN(1,4);
-cd_des = NaN(1,4);
-clcd_des = NaN(1,4);
-for i = 1:4
-    clmax_idx = find(diff(aerofoil{2,i}.cl(mask)) <= 0, 1, 'First');
-    clmax = aerofoil{2,i}.cl(clmax_idx + idx0);
-    alpha_max = aerofoil{2,i}.alpha(clmax_idx + idx0 - 1);
-    cl_des(i) = clmax - x(i);
-    mask2(:,i) = aerofoil{2,i}.alpha >= 0 & aerofoil{2,i}.alpha < alpha_max;
-    alpha_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.alpha(mask2(:,i)),cl_des(i));
-    cd_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.cd(mask2(:,i)),cl_des(i));
-    clcd_des(i) = cl_des(i) / cd_des(i);
-end
-
-figure
-des = [cl_des; alpha_des; clcd_des];
-
-for i = 1:3
-    subplot(3,1,i)
-    plot(t_c,[des(i,:) 0],'x')
-    axis tight
-end
-xlabel('Relative thickness [%]')
-
-%% 
-
-
+%% Add constraints on geometry
+% Absolute thickness
+% Chord
+% Relative thickness
+% Twist
 
 %% Define rotor
 % rotor.R     = 35;  % length of blade [m]
@@ -164,8 +109,178 @@ xlabel('Relative thickness [%]')
 % xlabel('TSR [-]'); ylabel('C_P [-]')
 % grid on
 
-%% Functions
+%% Design polynomial splines for the DTU 10MW
+function [c,that,beta] = DTU10MW_des(plt)
+% Chord
+c_breaks = [2.8000 8.1960 19.9548 28.0124 38.2220 55.0271 70.0576 78.1586 85.0000 86.2521 88.6595 88.9861 89.1660];
+c_coeffs = [
+    0.00000000E+00 0.00000000E+00 0.00000000E+00 5.38000000E+00;
+    -4.61301443E-04 1.04228497E-02 0.00000000E+00 5.38000000E+00;
+    9.54064544E-05 -5.85020456E-03 5.37688193E-02 6.07113924E+00;
+    7.94309215E-05 -3.54396342E-03 -2.19256287E-02 6.17447367E+00;
+    2.42467032E-05 -1.11108961E-03 -6.94518582E-02 5.66574440E+00;
+    8.59761392E-06 1.11315203E-04 -8.62531671E-02 4.29988830E+00;
+	4.71207167E-06 4.98994511E-04 -7.70799070E-02 3.05780226E+00;
+	-4.39083118E-04 6.13511989E-04 -6.80674918E-02 2.46863016E+00;
+    -1.32866948E-03 -8.39831774E-03 -1.21326462E-01 1.89106967E+00;
+    -1.47600180E-02 -1.33891816E-02 -1.48606495E-01 1.72338280E+00;
+	-6.79818589E+00 -1.19989176E-01 -4.69702133E-01 1.08209177E+00;
+	1.04359293E+01 -6.78085172E+00 -2.72351677E+00 6.79055450E-01];
+c = ppmak(c_breaks,c_coeffs,1);
 
+% Relative thickness
+that_breaks = [2.8 4.8 18.8310 27.1510 37.424 63.615 89.166];
+that_coeffs = 100*[
+    0.00000000E+00 0.00000000E+00 0.00000000E+00 1.00000000E+00
+    1.63195479E-04 -4.64026965E-03 0.00000000E+00 1.00000000E+00
+    -6.94374457E-05 2.22911763E-03 -3.38308740E-02 5.37264647E-01
+    -1.19564154E-05 4.95958990E-04 -1.11582365E-02 3.70105515E-01
+    -9.34760029E-07 1.27474224E-04 -4.75370706E-03 2.94855128E-01
+    0.00000000E+00 0.00000000E+00 0.00000000E+00 2.41000000E-01
+    ];
+that = ppmak(that_breaks,that_coeffs,1);
+
+% Twist
+beta_breaks = [2.8 9.119 15.5543 21.3482 30.1888 43.4352 57.5373 89.1660];
+beta_coeffs = [
+	0.00000000E+00 0.00000000E+00 0.00000000E+00 1.45000000E+01
+	-1.94790140E-03 -1.76633017E-02 0.00000000E+00 1.45000000E+01
+	 5.39990815E-03 -5.52692913E-02 -4.69343116E-01 1.32493815E+01
+	 -1.35567415E-03 3.85902922E-02 -5.65979568E-01 9.72497036E+00
+	 -1.20591403E-04 2.63537363E-03 -2.01519947E-01 6.80074227E+00
+	 9.58895526E-05 -2.15683227E-03 -1.95180996E-01 4.31345834E+00
+	 -1.48680703E-05 1.89989991E-03 -1.98804282E-01 1.40098858E+00
+	];
+beta = ppmak(beta_breaks,beta_coeffs,1);
+
+% Plot polynomials
+if plt == 1
+    poly = [c,that,beta];
+    x = linspace(2.8,89.166,101);
+    labels = ["Chord [m]", "Relative thickness [%]", "Twist [deg]"];
+    figure
+    for i = 1:length(poly)
+        subplot(3,1,i)
+        plot(x,fnval(poly(i),x))
+        ylabel(labels(i));
+        grid on
+    end
+    xlabel('Radius [m]')
+    sgtitle('DTU 10MW Geometry')
+else
+end
+end
+
+%% Aerofoil data input
+function aerofoil = polars()
+S = dir('polars\*.txt');
+S = S(1:6,1); % remove 'hints.txt'
+aerofoil = cell(2,length(S));
+aerofoil(1,:) = {S.name};
+vars = {'alpha','cl','cd','fsst','clinv','clfs','cm'};
+
+for i = 1:size(aerofoil,2)
+    aerofoil{2,i} = readtable("polars\" + aerofoil{1,i});
+    aerofoil{2,i}.Properties.VariableNames = vars;
+    aerofoil{1,i} = erase(aerofoil{1,i},"_ds.txt");
+end
+end
+
+%% Polar plotting
+function plot_polars(aerofoil,limits,n,mode)
+figure
+for i = 1:n
+    subplot(ceil(n/2),2,i)
+    if mode == 1
+        plot(aerofoil{2,i}.alpha,aerofoil{2,i}.cl)
+        xlabel('\alpha [deg]'); ylabel('c_l [-]');
+        ylim(limits(2,:))
+        xlim(limits(1,:));
+    elseif mode == 2
+        mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
+        plot(aerofoil{2,i}.cd(mask),aerofoil{2,i}.cl(mask))
+        xlabel('c_d [-]'); ylabel('c_l [-]');
+    end
+    title(aerofoil{1,i});
+    grid on
+end
+figure
+markers = ['o','x','^','s'];
+for i = 1:n
+    if mode == 1
+        plot(aerofoil{2,i}.alpha,aerofoil{2,i}.cl,'Marker',markers(i))
+        hold on
+    elseif mode == 2
+        plot(aerofoil{2,i}.cd(mask),aerofoil{2,i}.cl(mask),'Marker',markers(i));
+        hold on
+    end
+end
+if mode == 1
+    xlabel('\alpha [deg]'); ylabel('c_l [-]');
+    xlim(limits(1,:)); ylim(limits(2,:));
+elseif mode == 2
+    xlabel('c_d [-]'); ylabel('c_l [-]');
+end
+legend(aerofoil{1,1:n});
+grid on
+hold off
+end
+
+%% Design polynomials
+function [cl_des,alpha_des,clcd_des] = desPolys(aerofoil,x,n)
+% Find values
+mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
+idx0 = find(aerofoil{2,1}.alpha == 0);
+
+t_c = [24.1, 30.1, 36.0, 48.0, 100];
+
+mask2 = false(size(aerofoil{2,1},1),4);
+
+cl_des = NaN(1,4);
+alpha_des = NaN(1,4);
+cd_des = NaN(1,4);
+clcd_des = NaN(1,4);
+for i = 1:n
+    clmax_idx = find(diff(aerofoil{2,i}.cl(mask)) <= 0, 1, 'First');
+    clmax = aerofoil{2,i}.cl(clmax_idx + idx0);
+    alpha_max = aerofoil{2,i}.alpha(clmax_idx + idx0 - 1);
+    cl_des(i) = clmax - x(i);
+    mask2(:,i) = aerofoil{2,i}.alpha >= 0 & aerofoil{2,i}.alpha < alpha_max;
+    alpha_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.alpha(mask2(:,i)),cl_des(i));
+    cd_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.cd(mask2(:,i)),cl_des(i));
+    clcd_des(i) = cl_des(i) / cd_des(i);
+end
+des = [cl_des; alpha_des; clcd_des];
+
+% Fit cubics
+p = NaN(size(des,1),4);
+N = 101;
+x = linspace(t_c(1),t_c(4),N);
+y = NaN(size(des,1),N);
+for i = 1:size(des,1)
+    p(i,:) = polyfit(t_c(1:4),des(i,1:4),3);
+    y(i,:) = polyval(p(i,:),x);
+end
+
+% Plot polynomials
+figure
+labels = ["c_{l,des} [-]", "\alpha_{des} [deg]", "{(c_l/c_d)}_{des} [-]"];
+
+for i = 1:3
+    subplot(3,1,i)
+    plot(t_c,[des(i,:) 0],'x')
+    hold on
+    plot(x,y(i,:),'r');
+    plot(t_c(4:5),[des(i,4),0],'r');
+    hold off
+    ylabel(labels(i))
+    axis tight
+    grid on
+end
+xlabel('Relative thickness [%]')
+end
+
+%% Residual function for c and a'
 function [out,varargout] = residuals(x,rotor,idx,varargin)
 % Calculate the residuals for chord and tangential induction factor
 
@@ -220,49 +335,4 @@ if nargout == 2
     varargout{1} = [t,c,phi,alpha,beta,cl,cd,ap,cp,ct];
 %     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
 end
-end
-
-%% Design polynomial splines for the DTU 10MW
-function [c,that,beta] = DTU10MW_des()
-% Chord
-c_breaks = [2.8000 8.1960 19.9548 28.0124 38.2220 55.0271 70.0576 78.1586 85.0000 86.2521 88.6595 88.9861 89.1660];
-c_coeffs = [
-    0.00000000E+00 0.00000000E+00 0.00000000E+00 5.38000000E+00;
-    -4.61301443E-04 1.04228497E-02 0.00000000E+00 5.38000000E+00;
-    9.54064544E-05 -5.85020456E-03 5.37688193E-02 6.07113924E+00;
-    7.94309215E-05 -3.54396342E-03 -2.19256287E-02 6.17447367E+00;
-    2.42467032E-05 -1.11108961E-03 -6.94518582E-02 5.66574440E+00;
-    8.59761392E-06 1.11315203E-04 -8.62531671E-02 4.29988830E+00;
-	4.71207167E-06 4.98994511E-04 -7.70799070E-02 3.05780226E+00;
-	-4.39083118E-04 6.13511989E-04 -6.80674918E-02 2.46863016E+00;
-    -1.32866948E-03 -8.39831774E-03 -1.21326462E-01 1.89106967E+00;
-    -1.47600180E-02 -1.33891816E-02 -1.48606495E-01 1.72338280E+00;
-	-6.79818589E+00 -1.19989176E-01 -4.69702133E-01 1.08209177E+00;
-	1.04359293E+01 -6.78085172E+00 -2.72351677E+00 6.79055450E-01];
-c = ppmak(c_breaks,c_coeffs,1);
-
-% Relative thickness
-that_breaks = [2.8 4.8 18.8310 27.1510 37.424 63.615 89.166];
-that_coeffs = [
-    0.00000000E+00 0.00000000E+00 0.00000000E+00 1.00000000E+00
-    1.63195479E-04 -4.64026965E-03 0.00000000E+00 1.00000000E+00
-    -6.94374457E-05 2.22911763E-03 -3.38308740E-02 5.37264647E-01
-    -1.19564154E-05 4.95958990E-04 -1.11582365E-02 3.70105515E-01
-    -9.34760029E-07 1.27474224E-04 -4.75370706E-03 2.94855128E-01
-    0.00000000E+00 0.00000000E+00 0.00000000E+00 2.41000000E-01
-    ];
-that = ppmak(that_breaks,that_coeffs,1);
-
-% Twist
-beta_breaks = [2.8 9.119 15.5543 21.3482 30.1888 43.4352 57.5373 89.1660];
-beta_coeffs = [
-	0.00000000E+00 0.00000000E+00 0.00000000E+00 1.45000000E+01
-	-1.94790140E-03 -1.76633017E-02 0.00000000E+00 1.45000000E+01
-	 5.39990815E-03 -5.52692913E-02 -4.69343116E-01 1.32493815E+01
-	 -1.35567415E-03 3.85902922E-02 -5.65979568E-01 9.72497036E+00
-	 -1.20591403E-04 2.63537363E-03 -2.01519947E-01 6.80074227E+00
-	 9.58895526E-05 -2.15683227E-03 -1.95180996E-01 4.31345834E+00
-	 -1.48680703E-05 1.89989991E-03 -1.98804282E-01 1.40098858E+00
-	];
-beta = ppmak(beta_breaks,beta_coeffs,1);
 end

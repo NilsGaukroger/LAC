@@ -3,7 +3,7 @@
 % Nils Joseph Gaukroger
 % 11th September 2021
 
-close all; clc;
+close all; clear; clc;
 
 %% Part 1: Define a residual function
 inputs.R     = 35;  % length of blade [m]

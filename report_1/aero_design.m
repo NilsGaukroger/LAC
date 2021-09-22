@@ -25,7 +25,7 @@ plot_polars(aerofoil,limits,n,2);
 
 %% New design polynomials
 x = [0.35, 0.45, 0.42, 0.45]; % cl,max - cl,des
-[cl_des,alpha_des,clcd_des] = desPolys(aerofoil,x,4);
+[p] = desPolys(aerofoil,x,4);
 
 %% Add constraints on geometry
 % Absolute thickness
@@ -226,8 +226,8 @@ grid on
 hold off
 end
 
-%% Design polynomials
-function [cl_des,alpha_des,clcd_des] = desPolys(aerofoil,x,n)
+%% Creating design polynomials
+function [p] = desPolys(aerofoil,x,n)
 % Find values
 mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
 idx0 = find(aerofoil{2,1}.alpha == 0);
@@ -278,6 +278,28 @@ for i = 1:3
     grid on
 end
 xlabel('Relative thickness [%]')
+sgtitle('New design polynomials')
+end
+
+%% Design polynomials
+% function t = thickness(r,p)
+% % Absolute thickness [m] as a function of radius [m] for redesigned blade
+% r(r < 5) = 5;
+% t = 9.35996E-08*r.^6 - 1.2911E-05*r.^5 + 7.15038E-04*r.^4 - 2.03735E-02*r.^3 + 3.17726E-01*r.^2 - 2.65357E+00*r + 1.02616E+01;
+% end
+
+function x = x_des(that,p1,p2)
+% Design cl / clcd / alpha [ - / deg / - ] as a function of t/c [%]
+x = NaN(length(that));
+that(that < 24.1) = 24.1;
+that(that > 100)  = 100;
+for i = 1:length(that)
+    if that(i) <= 48
+        x(i) = p1(1)*that(i)^3 + p1(2)*that(i)^2 + p1(3)*that(i) + p1(4);
+    else
+        x(i) = p2(1)*that(i) + p2(2);
+    end
+end
 end
 
 %% Residual function for c and a'

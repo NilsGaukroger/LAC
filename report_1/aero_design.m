@@ -24,7 +24,7 @@ limits = [0, 90]; % limits for alpha
 plot_polars(aerofoil,limits,n,2);
 
 %% New design polynomials
-x = [0.35, 0.45, 0.42, 0.45]; % cl,max - cl,des
+x = [0.3, 0.4, 0.35, 0.5]; % cl,max - cl,des
 [p] = desPolys(aerofoil,x,4);
 
 %% Add constraints on geometry

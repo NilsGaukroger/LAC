@@ -63,8 +63,8 @@ rotor.B     = 3;   % number of blades [-]
 rotor.a     = 1/3; % axial induction [-]
 rotor.tsr   = 9; % default tsr
 
-spacing     = 0.1; % increment for spanwise discretisation [m]
-rotor.radii = (0:spacing:rotor.R-(spacing*2));   % blade span [m]
+spacing     = 0.2; % increment for spanwise discretisation [m]
+rotor.radii = (2.8:spacing:rotor.R-(spacing*2));   % blade span [m]
 [result.t, result.c, result.phi, result.alpha, result.beta, result.cl, result.cd, ...
     result.ap, result.cp, result.ct] = deal(NaN(1,length(rotor.radii)));
 
@@ -72,9 +72,10 @@ x0 = [3, 0.001]; % initial guess
 lb = [0, 0]; % lower bounds
 ub = [inf, 1]; % upper bounds
 
+options1=optimset('display','off');
 for i = 1:length(rotor.radii)
-    x0 = lsqnonlin(@(x)residuals(x,rotor,rotor.tsr,i,p,p1,p2,t_max,Rnew),x0,lb,ub);
-    [~,values] = residuals(x,rotor,rotor.tsr,i,p,p1,p2,t_max,Rnew);
+    x0 = lsqnonlin(@(x)residuals(x,rotor,rotor.tsr,i,p,p1,p2,t_max,Rnew),x0,lb,ub,options1);
+    [~,values] = residuals(x0,rotor,rotor.tsr,i,p,p1,p2,t_max,Rnew);
     result.t(i)     = values(1);
     result.c(i)     = values(2);
     result.phi(i)   = values(3);
@@ -86,93 +87,114 @@ for i = 1:length(rotor.radii)
     result.cp(i)    = values(9);
     result.ct(i)    = values(10);
 end
-% result.CP = (2/rotor.R^2) * trapz(rotor.radii,rotor.radii.*result.cp);
+result.CP = (2/rotor.R^2) * trapz(rotor.radii,rotor.radii.*result.cp);
 
-%%
+%% Fixing geometry 
+lroot=Rnew*0.03; %change value
+that=result.t./result.c;
+for i = 1:length(rotor.radii)
+    if rotor.radii(i)>lroot+rotor.radii(1)
+        crtstart=i;
+        break;
+    end
+    that(i)=1;
+    result.c(i)=result.t(1);
+end
+
+%Smooth chord transition from cylinder:
+
+for i = 1:length(rotor.radii)
+    if rotor.radii(i)>10*lroot+rotor.radii(1)
+        crtend=i;
+        break
+    end
+end
+cslope=(result.c(crtend+1)-result.c(crtend))/(rotor.radii(crtend+1)-rotor.radii(crtend));
+result.c(crtstart:crtend) = spline([rotor.radii(crtstart) rotor.radii(crtend)], [0 [result.c(crtstart-1) result.c(crtend)] cslope], rotor.radii(crtstart:crtend));
+
+for i = crtstart:crtend
+    that(i) = result.t(i) / result.c(i);
+end
+
+%% Plotting Geometry
 figure
-plot(rotor.radii,result.ap)
+subplot(3,1,1)
+plot(rotor.radii,result.c)
+ylabel('Chord [m]')
+grid on
+subplot(3,1,2)
+plot(rotor.radii,rad2deg(result.beta))
+ylabel('Twist [deg]');
+grid on
+subplot(3,1,3)
+plot(rotor.radii,that*100)
+xlim([2.8 inf])
+grid on
+ylabel('Relative thickness [%]');
+xlabel('Radius [m]');
+
+figure
+plot(rotor.radii,result.cp)
+xlabel('Radius [m]'); ylabel('c_{p,loc} [-]')
+grid on
+
+figure
+plot(rotor.radii,result.ct)
+xlabel('Radius [m]'); ylabel('c_{t,loc} [-]')
+grid on
 
 %% Add constraints on geometry
-% Absolute thickness
+% Absolute thicknes
 % Chord
 % Relative thickness
 % Twist
+ 
+%% Examining designs for varying TSR
+tsr_lst = 5:1:12;
+[result_tsr.t, result_tsr.c, result_tsr.phi, result_tsr.alpha, result_tsr.beta,...
+    result_tsr.cl, result_tsr.cd, result_tsr.ap, result_tsr.cp, result_tsr.ct]...
+    = deal(NaN(length(tsr_lst),length(rotor.radii)));
+result_tsr.CP = NaN(length(tsr_lst),1);
+[chord, twist, that] = deal(NaN(length(tsr_lst),length(rotor.radii)));
+for j = 1:length(tsr_lst)
+    x0 = [3, 0.001]; % initial guess
+    for i = 1:length(rotor.radii)
+        x0 = lsqnonlin(@(x)residuals(x,rotor,tsr_lst(j),i,p,p1,p2,t_max,Rnew),x0,lb,ub,options1);
+        [~,values_tsr] = residuals(x0,rotor,tsr_lst(j),i,p,p1,p2,t_max,Rnew);
+        result_tsr.t(j,i)     = values_tsr(1);
+        result_tsr.c(j,i)     = values_tsr(2);
+        result_tsr.phi(j,i)   = values_tsr(3);
+        result_tsr.alpha(j,i) = values_tsr(4);
+        result_tsr.beta(j,i)  = values_tsr(5);
+        result_tsr.cl(j,i)    = values_tsr(6);
+        result_tsr.cd(j,i)    = values_tsr(7);
+        result_tsr.ap(j,i)    = values_tsr(8);
+        result_tsr.cp(j,i)    = values_tsr(9);
+        result_tsr.ct(j,i)    = values_tsr(10);
+    end
+    result_tsr.CP(j,1) = (2/rotor.R^2) * trapz(rotor.radii(2:end),rotor.radii(2:end).*result_tsr.cp(j,2:end));
+end
 
-%% Define rotor
-% rotor.R     = 35;  % length of blade [m]
-% rotor.tsr   = 9.0; % TSR [-]
-% rotor.B     = 3;   % number of blades [-]
-% rotor.a     = 1/3; % axial induction [-]
-% 
-% spacing     = 0.5; % increment for spanwise discretisation [m]
-% rotor.radii = (5:spacing:rotor.R-(spacing*2));   % blade span [m]
-% [result.t, result.c, result.phi, result.alpha, result.beta, result.cl, result.cd, ...
-%     result.ap, result.cp, result.ct] = deal(NaN(1,length(rotor.radii)));
-% 
-% x0 = [3, 0.001]; % initial guess
-% lb = [0, 0]; % lower bounds
-% ub = [inf, 1]; % upper bounds
-% 
-% for i = 1:length(rotor.radii)
-%     x0 = lsqnonlin(@(x)residuals(x,rotor,i),x0,lb,ub);
-%     [~,values] = residuals(x0,rotor,i);
-%     result.t(i)     = values(1);
-%     result.c(i)     = values(2);
-%     result.phi(i)   = values(3);
-%     result.alpha(i) = values(4);
-%     result.beta(i)  = values(5);
-%     result.cl(i)    = values(6);
-%     result.cd(i)    = values(7);
-%     result.ap(i)    = values(8);
-%     result.cp(i)    = values(9);
-%     result.ct(i)    = values(10);
-% end
-% result.CP = (2/rotor.R^2) * trapz(rotor.radii.*result.cp);
-% 
-% %% Examining designs for varying TSR
-% tsr_lst = 2:0.5:12;
-% [result_tsr.t, result_tsr.c, result_tsr.phi, result_tsr.alpha, result_tsr.beta,...
-%     result_tsr.cl, result_tsr.cd, result_tsr.ap, result_tsr.cp, result_tsr.ct]...
-%     = deal(NaN(length(tsr_lst),length(rotor.radii)));
-% result_tsr.CP = NaN(length(tsr_lst),1);
-% [chord, twist, rel_t] = deal(NaN(length(tsr_lst),length(rotor.radii)));
-% for j = 1:length(tsr_lst)
-%     x0 = [3, 0.001]; % initial guess
-%     for i = 1:length(rotor.radii)
-%         x0 = lsqnonlin(@(x)residuals(x,rotor,i,tsr_lst(j)),x0,lb,ub);
-%         [~,values_tsr] = residuals(x0,rotor,i,tsr_lst(j));
-%         result_tsr.t(j,i)     = values_tsr(1);
-%         result_tsr.c(j,i)     = values_tsr(2);
-%         result_tsr.phi(j,i)   = values_tsr(3);
-%         result_tsr.alpha(j,i) = values_tsr(4);
-%         result_tsr.beta(j,i)  = values_tsr(5);
-%         result_tsr.cl(j,i)    = values_tsr(6);
-%         result_tsr.cd(j,i)    = values_tsr(7);
-%         result_tsr.ap(j,i)    = values_tsr(8);
-%         result_tsr.cp(j,i)    = values_tsr(9);
-%         result_tsr.ct(j,i)    = values_tsr(10);
-%     end
-%     result_tsr.CP(j,1) = (2/rotor.R^2) * trapz(rotor.radii.*result_tsr.cp(j,:));
-% end
-% 
-% figure
-% subplot(3,1,1)
-% plot(rotor.radii,result_tsr.c)
-% ylabel('Chord [m]');
-% grid on
-% subplot(3,1,2)
-% plot(rotor.radii,rad2deg(result_tsr.beta))
-% ylabel('Twist, \beta [deg]');
-% grid on
-% subplot(3,1,3)
-% plot(rotor.radii,(result_tsr.t./result_tsr.c)*100)
-% ylabel('t/c [%]'); xlabel('Radius [m]')
-% grid on
-% 
-% figure
-% plot(tsr_lst,result_tsr.CP)
-% xlabel('TSR [-]'); ylabel('C_P [-]')
-% grid on
+
+
+figure
+subplot(3,1,1)
+plot(rotor.radii,result_tsr.c)
+ylabel('Chord [m]');
+grid on
+subplot(3,1,2)
+plot(rotor.radii,rad2deg(result_tsr.beta))
+ylabel('Twist, \beta [deg]');
+grid on
+subplot(3,1,3)
+plot(rotor.radii,(result_tsr.t./result_tsr.c)*100)
+ylabel('t/c [%]'); xlabel('Radius [m]')
+grid on
+
+figure
+plot(tsr_lst,result_tsr.CP)
+xlabel('TSR [-]'); ylabel('C_P [-]')
+grid on
 
 %% Design polynomial splines for the DTU 10MW
 function [c,that,beta,t,x] = DTU10MW_des(plt)
@@ -359,28 +381,6 @@ xlabel('Relative thickness [%]')
 sgtitle('New design polynomials')
 end
 
-%% Design polynomials
-% function new_t = new_t(t,r,R)
-% 
-% 
-% 
-% figure
-% plot(DTU.r,DTU.t)
-% hold on
-% grid on
-% 
-% % new absolute thickness
-% scale = Rnew / DTU.R;
-% new.r = DTU.r * scale;
-% new.t = DTU.t * scale;
-% new.t(new.t > max(DTU.t)) = max(DTU.t);
-% plot(new.r,new.t)
-% legend('DTU 10MW','Redesign');
-% xlabel('Radius [m]'); ylabel('Absolute thickness [m]');
-% ff = csapi(new.r,new.t);
-% plot(new.r,fnval(ff,new.r));
-% end
-
 function t = thickness(r,p,t_max,Rnew)
 % Absolute thickness [m] as a function of radius [m] for redesigned blade
 t = p(1)*r.^6 + p(2)*r.^5 + p(3)*r.^4 + p(4)*r.^3 + p(5)*r.^2 + p(6)*r + p(7);
@@ -444,10 +444,33 @@ out = [res_c, res_ap];
 % optional outputs
 if nargout == 2
     beta = phi - deg2rad(alpha);
-    cp = ((1-a)^2 + (tsr*(r/R)) * (1+ap)^2) * tsr * (r/R) * sigma * cx;
-    ct = ((1-a)^2 + (tsr*(r/R)) * (1+ap)^2) * sigma * cy;
+    cp = ((1-a)^2 + (tsr*(r/R))^2 * (1+ap)^2) * tsr * (r/R) * sigma * cx;
+    ct = ((1-a)^2 + (tsr*(r/R))^2 * (1+ap)^2) * sigma * cy;
 %     result.a = 1 / (((4*F*np.sin(phi)**2) / (sigma * cy)) + 1)
     varargout{1} = [t,c,phi,alpha,beta,cl,cd,ap,cp,ct];
 %     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
 end
 end
+
+
+%% Design polynomials
+% function new_t = new_t(t,r,R)
+% 
+% 
+% 
+% figure
+% plot(DTU.r,DTU.t)
+% hold on
+% grid on
+% 
+% % new absolute thickness
+% scale = Rnew / DTU.R;
+% new.r = DTU.r * scale;
+% new.t = DTU.t * scale;
+% new.t(new.t > max(DTU.t)) = max(DTU.t);
+% plot(new.r,new.t)
+% legend('DTU 10MW','Redesign');
+% xlabel('Radius [m]'); ylabel('Absolute thickness [m]');
+% ff = csapi(new.r,new.t);
+% plot(new.r,fnval(ff,new.r));
+% end

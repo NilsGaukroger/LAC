@@ -6,10 +6,11 @@
 close all; clear variables; clc
 
 %% Design polynomials from DTU 10MW reports
-[DTU.c,DTU.that,DTU.beta] = DTU10MW_des(1);
+[DTU.c,DTU.that,DTU.beta,DTU.t,DTU.r] = DTU10MW_des(1);
 
 %% New rotor radius
-[Rnew,~] = rotorScaling(11.4,0.16,178.3/2,0.14);
+DTU.R = 89.1660;
+[Rnew,~] = rotorScaling(11.4,0.16,DTU.R,0.14);
 
 %% Aerofoil data
 aerofoil = polars();
@@ -25,7 +26,71 @@ plot_polars(aerofoil,limits,n,2);
 
 %% New design polynomials
 x = [0.3, 0.4, 0.35, 0.5]; % cl,max - cl,des
-[p] = desPolys(aerofoil,x,4);
+[p1,p2] = desPolys(aerofoil,x,4);
+
+%% Absolute thickness
+figure
+plot(DTU.r,DTU.t)
+hold on
+grid on
+
+% new absolute thickness
+scale = Rnew / DTU.R;
+new.r = DTU.r * scale;
+new.t = DTU.t * scale;
+mask = new.t < max(DTU.t);
+new.t(new.t > max(DTU.t)) = max(DTU.t);
+plot(new.r,new.t)
+ff = csapi(new.r,new.t);
+plot(new.r,fnval(ff,new.r),'marker','x')
+
+x = new.r(mask);
+y = new.t(mask);
+p = polyfit(x(2:end-1),y(2:end-1),6);
+r_plot = new.r(mask);
+plot(r_plot(2:end-1),polyval(p,r_plot(2:end-1)),'marker','s')
+legend('DTU 10MW','Redesign','Splines','polyfit');
+xlabel('Radius [m]'); ylabel('Absolute thickness [m]');
+
+%%
+t_max = 5.38;
+figure
+plot(new.r,thickness(new.r,p,t_max,Rnew))
+
+%% Residual
+rotor.R     = Rnew;  % length of blade [m]
+rotor.B     = 3;   % number of blades [-]
+rotor.a     = 1/3; % axial induction [-]
+rotor.tsr   = 9; % default tsr
+
+spacing     = 0.1; % increment for spanwise discretisation [m]
+rotor.radii = (0:spacing:rotor.R-(spacing*2));   % blade span [m]
+[result.t, result.c, result.phi, result.alpha, result.beta, result.cl, result.cd, ...
+    result.ap, result.cp, result.ct] = deal(NaN(1,length(rotor.radii)));
+
+x0 = [3, 0.001]; % initial guess
+lb = [0, 0]; % lower bounds
+ub = [inf, 1]; % upper bounds
+
+for i = 1:length(rotor.radii)
+    x0 = lsqnonlin(@(x)residuals(x,rotor,rotor.tsr,i,p,p1,p2,t_max,Rnew),x0,lb,ub);
+    [~,values] = residuals(x,rotor,rotor.tsr,i,p,p1,p2,t_max,Rnew);
+    result.t(i)     = values(1);
+    result.c(i)     = values(2);
+    result.phi(i)   = values(3);
+    result.alpha(i) = values(4);
+    result.beta(i)  = values(5);
+    result.cl(i)    = values(6);
+    result.cd(i)    = values(7);
+    result.ap(i)    = values(8);
+    result.cp(i)    = values(9);
+    result.ct(i)    = values(10);
+end
+% result.CP = (2/rotor.R^2) * trapz(rotor.radii,rotor.radii.*result.cp);
+
+%%
+figure
+plot(rotor.radii,result.ap)
 
 %% Add constraints on geometry
 % Absolute thickness
@@ -110,7 +175,7 @@ x = [0.3, 0.4, 0.35, 0.5]; % cl,max - cl,des
 % grid on
 
 %% Design polynomial splines for the DTU 10MW
-function [c,that,beta] = DTU10MW_des(plt)
+function [c,that,beta,t,x] = DTU10MW_des(plt)
 % Chord
 c_breaks = [2.8000 8.1960 19.9548 28.0124 38.2220 55.0271 70.0576 78.1586 85.0000 86.2521 88.6595 88.9861 89.1660];
 c_coeffs = [
@@ -169,6 +234,9 @@ if plt == 1
     sgtitle('DTU 10MW Geometry')
 else
 end
+
+% Absolute thickness
+t = fnval(c,x) .* (fnval(that,x)/100);
 end
 
 %% Aerofoil data input
@@ -227,7 +295,7 @@ hold off
 end
 
 %% Creating design polynomials
-function [p] = desPolys(aerofoil,x,n)
+function [p1,p2] = desPolys(aerofoil,x1,n)
 % Find values
 mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
 idx0 = find(aerofoil{2,1}.alpha == 0);
@@ -236,30 +304,40 @@ t_c = [24.1, 30.1, 36.0, 48.0, 100];
 
 mask2 = false(size(aerofoil{2,1},1),4);
 
-cl_des = NaN(1,4);
-alpha_des = NaN(1,4);
-cd_des = NaN(1,4);
-clcd_des = NaN(1,4);
+cl_des = NaN(1,5);
+alpha_des = NaN(1,5);
+cd_des = NaN(1,5);
+clcd_des = NaN(1,5);
 for i = 1:n
     clmax_idx = find(diff(aerofoil{2,i}.cl(mask)) <= 0, 1, 'First');
     clmax = aerofoil{2,i}.cl(clmax_idx + idx0);
     alpha_max = aerofoil{2,i}.alpha(clmax_idx + idx0 - 1);
-    cl_des(i) = clmax - x(i);
+    cl_des(i) = clmax - x1(i);
     mask2(:,i) = aerofoil{2,i}.alpha >= 0 & aerofoil{2,i}.alpha < alpha_max;
     alpha_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.alpha(mask2(:,i)),cl_des(i));
     cd_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.cd(mask2(:,i)),cl_des(i));
     clcd_des(i) = cl_des(i) / cd_des(i);
 end
+cl_des(1,5) = 1e-6;
+alpha_des(1,5) = 1e-6;
+cd_des(1,5) = 1e-6;
+clcd_des(1,5) = 1e-6;
+
 des = [cl_des; alpha_des; clcd_des];
 
 % Fit cubics
-p = NaN(size(des,1),4);
+p1 = NaN(size(des,1),4); % cubic poly coeffs
+p2 = NaN(size(des,1),2); % straight line coeffs
 N = 101;
-x = linspace(t_c(1),t_c(4),N);
-y = NaN(size(des,1),N);
+x1 = linspace(t_c(1),t_c(4),N);
+x2 = linspace(t_c(4),t_c(5),N);
+y1 = NaN(size(des,1),N);
+y2 = NaN(size(des,1),N);
 for i = 1:size(des,1)
-    p(i,:) = polyfit(t_c(1:4),des(i,1:4),3);
-    y(i,:) = polyval(p(i,:),x);
+    p1(i,:) = polyfit(t_c(1:4),des(i,1:4),3);
+    y1(i,:) = polyval(p1(i,:),x1);
+    p2(i,:) = polyfit(t_c(4:5),des(i,4:5),1);
+    y2(i,:) = polyval(p2(i,:),x2);
 end
 
 % Plot polynomials
@@ -268,10 +346,10 @@ labels = ["c_{l,des} [-]", "\alpha_{des} [deg]", "{(c_l/c_d)}_{des} [-]"];
 
 for i = 1:3
     subplot(3,1,i)
-    plot(t_c,[des(i,:) 0],'x')
+    plot(t_c,des(i,:),'x')
     hold on
-    plot(x,y(i,:),'r');
-    plot(t_c(4:5),[des(i,4),0],'r');
+    plot(x1,y1(i,:),'r');
+    plot(x2,y2(i,:),'r');
     hold off
     ylabel(labels(i))
     axis tight
@@ -282,11 +360,33 @@ sgtitle('New design polynomials')
 end
 
 %% Design polynomials
-% function t = thickness(r,p)
-% % Absolute thickness [m] as a function of radius [m] for redesigned blade
-% r(r < 5) = 5;
-% t = 9.35996E-08*r.^6 - 1.2911E-05*r.^5 + 7.15038E-04*r.^4 - 2.03735E-02*r.^3 + 3.17726E-01*r.^2 - 2.65357E+00*r + 1.02616E+01;
+% function new_t = new_t(t,r,R)
+% 
+% 
+% 
+% figure
+% plot(DTU.r,DTU.t)
+% hold on
+% grid on
+% 
+% % new absolute thickness
+% scale = Rnew / DTU.R;
+% new.r = DTU.r * scale;
+% new.t = DTU.t * scale;
+% new.t(new.t > max(DTU.t)) = max(DTU.t);
+% plot(new.r,new.t)
+% legend('DTU 10MW','Redesign');
+% xlabel('Radius [m]'); ylabel('Absolute thickness [m]');
+% ff = csapi(new.r,new.t);
+% plot(new.r,fnval(ff,new.r));
 % end
+
+function t = thickness(r,p,t_max,Rnew)
+% Absolute thickness [m] as a function of radius [m] for redesigned blade
+t = p(1)*r.^6 + p(2)*r.^5 + p(3)*r.^4 + p(4)*r.^3 + p(5)*r.^2 + p(6)*r + p(7);
+t(t >= t_max) = t_max;
+t(r == Rnew) = 1e-2;
+end
 
 function x = x_des(that,p1,p2)
 % Design cl / clcd / alpha [ - / deg / - ] as a function of t/c [%]
@@ -303,31 +403,25 @@ end
 end
 
 %% Residual function for c and a'
-function [out,varargout] = residuals(x,rotor,idx,varargin)
+function [out,varargout] = residuals(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew)
 % Calculate the residuals for chord and tangential induction factor
 
 % unpack inputs
-R = rotor.R; tsr = rotor.tsr;
-B = rotor.B; a = rotor.a;
+R = rotor.R; B = rotor.B; a = rotor.a;
 
 % spanwise position
 r = rotor.radii(idx);
-
-% optional arguments
-if nargin > 3
-    tsr = varargin{1};
-    rotor.tsr = tsr;
-end
 
 % unpack x
 c  = x(1);
 ap = x(2);
 
 % calculate that, cl and cl/cd from design polynomials
-t    = thickness(r);
+t    = thickness(r,p,t_max,Rnew);
 that = t / c;
-cl   = cl_des(that*100);
-clcd = clcd_des(that*100);
+cl   = x_des(that*100,p1(1,:),p2(1,:));
+alpha = x_des(that*100,p1(2,:),p2(2,:));
+clcd = x_des(that*100,p1(3,:),p2(3,:));
 
 % calculate intermediate variables
 phi   = atan(((1-a)/(1+ap)) * (R/(r*tsr)));
@@ -349,8 +443,7 @@ out = [res_c, res_ap];
 
 % optional outputs
 if nargout == 2
-    alpha = deg2rad(alpha_des(that*100));
-    beta = phi - deg2rad(alpha_des(that*100));
+    beta = phi - deg2rad(alpha);
     cp = ((1-a)^2 + (tsr*(r/R)) * (1+ap)^2) * tsr * (r/R) * sigma * cx;
     ct = ((1-a)^2 + (tsr*(r/R)) * (1+ap)^2) * sigma * cy;
 %     result.a = 1 / (((4*F*np.sin(phi)**2) / (sigma * cy)) + 1)

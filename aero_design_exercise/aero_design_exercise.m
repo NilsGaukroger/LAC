@@ -105,6 +105,33 @@ end
 phi   = atan(((1-inputs.a)./(1+ap)) .* (inputs.R./(radii'.*inputs.tsr)));
 theta = rad2deg(phi) - alpha;
 
+%% Part 7(?): Convert root to cylinder
+lroot= inputs.R*0.02; %change value
+for i = 1:length(radii)
+    if radii(i)>lroot+radii(1)
+        crtstart=i;
+        break;
+    end
+    that(i)=1
+    c(i)=thickness(1);
+end
+
+%Smooth chord transition from cylinder:
+for i = 1:length(radii)
+    if radii(i)>8*lroot+radii(1)
+        crtend=i;
+        break
+    end
+end
+cslope=(c(crtend+1)-c(crtend))/(radii(crtend+1)-radii(crtend));
+spline([radii(crtstart) radii(crtend)], [0 [c(crtstart) c(crtend)] cslope], radii(crtstart:crtend))
+c(crtstart:crtend) = spline([radii(crtstart) radii(crtend)], [0 [c(crtstart-1) c(crtend)] cslope], radii(crtstart:crtend));
+
+for i = crtstart:crtend
+    that(i) = t(i) / c(i);
+end
+
+%% Part 8: Plotting
 figure
 ax1 = subplot(3,1,1);
 plot(radii,c)

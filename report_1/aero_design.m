@@ -64,7 +64,7 @@ rotor.a     = 1/3; % axial induction [-]
 rotor.tsr   = 9; % default tsr
 
 spacing     = 0.2; % increment for spanwise discretisation [m]
-rotor.radii = (0:spacing:rotor.R-(spacing*2));   % blade span [m]
+rotor.radii = (2.8:spacing:rotor.R-(spacing*2));   % blade span [m]
 [result.t, result.c, result.phi, result.alpha, result.beta, result.cl, result.cd, ...
     result.ap, result.cp, result.ct] = deal(NaN(1,length(rotor.radii)));
 

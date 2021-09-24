@@ -6,7 +6,8 @@
 close all; clear variables; clc
 
 %% Design polynomials from DTU 10MW reports
-[DTU.c,DTU.that,DTU.beta,DTU.t,DTU.r] = DTU10MW_des(1);
+dis = 101; % number of points in DTU.r discretisation
+[DTU.c,DTU.that,DTU.beta,DTU.t,DTU.r] = DTU10MW_des(1,dis);
 
 %% New rotor radius
 DTU.R = 89.1660;
@@ -48,6 +49,7 @@ beta_max = (rotor.R/DTU.R) * 14.5;   % maximum twist [deg]
 spacing = 0.2; % increment for radial discretisation [m]
 r_hub   = 2.8; % hub radius [m]
 rotor.r = (r_hub:spacing:rotor.R-(spacing*2)); % blade span [m]
+% rotor.r = (0:spacing:rotor.R-r_hub); % blade span [m]
 
 % Preallocation
 [rotor.t, result.c, result.phi, result.alpha, result.beta,...
@@ -106,10 +108,27 @@ result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
 
 % remove flick after r/R > 0.98 for relative thickness
 t_c = rotor.t ./ result.c;
-a = t_c( find( (rotor.r/rotor.R) > r_R, 1 ) );
+a = t_c(find((rotor.r/rotor.R) > r_R,1));
 result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
 
-% smooth chord transitions
+%% smooth chord transitions
+[maxi,idx] = max(fnval(DTU.c,DTU.r));
+r_R_max = DTU.r(idx)/DTU.R;
+result.c((rotor.r/rotor.R) <= 0.1) = t_max;
+point1 = rotor.r(find((rotor.r/rotor.R) < 0.1,1,'last'));
+point2 = rotor.r(find((rotor.r/rotor.R) < ((r_R_max - 0.1)/2),1,'last'));
+point3 = rotor.r(find((rotor.r/rotor.R) > r_R_max,1));
+
+section1 = (rotor.r > point1) & (rotor.r < point3);
+x = [point1, point2, point3];
+y(1) = result.c(rotor.r == x(1));
+y(2) = result.c(rotor.r == x(2));
+y(3) = result.c(rotor.r == x(3));
+xq = rotor.r(section1);
+s = pchip(x,y,xq);
+
+figure
+plot(xq,s)
 
 %% Edu's changes
 % Fixing geometry 
@@ -175,7 +194,7 @@ if length(tsr) ~= 1
 end
 
 %% Design polynomial splines for the DTU 10MW
-function [c,that,beta,t,x] = DTU10MW_des(plt)
+function [c,that,beta,t,x] = DTU10MW_des(plt,dis)
 % Chord
 c_breaks = [2.8000 8.1960 19.9548 28.0124 38.2220 55.0271 70.0576 78.1586 85.0000 86.2521 88.6595 88.9861 89.1660];
 c_coeffs = [
@@ -221,7 +240,7 @@ beta = ppmak(beta_breaks,beta_coeffs,1);
 % Plot polynomials
 if plt == 1
     poly = [c,that,beta];
-    x = linspace(2.8,89.166,101);
+    x = linspace(2.8,89.166,dis);
     labels = ["Chord [m]", "Relative thickness [%]", "Twist [deg]"];
     figure
     for i = 1:length(poly)

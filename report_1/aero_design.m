@@ -25,7 +25,7 @@ limits = [0, 90]; % limits for alpha
 plot_polars(aerofoil,limits,n,2);
 
 %% New design polynomials
-x = [0.3, 0.4, 0.35, 0.5]; % cl,max - cl,des
+x = [0.3, 0.35, 0.47, 0.5]; % cl,max - cl,des
 [p1,p2] = desPolys(aerofoil,x,4);
 
 %% Absolute thickness
@@ -61,7 +61,7 @@ plot(new.r,thickness(new.r,p,t_max,Rnew))
 rotor.R     = Rnew;  % length of blade [m]
 rotor.B     = 3;   % number of blades [-]
 rotor.a     = 1/3; % axial induction [-]
-rotor.tsr   = 9; % default tsr
+rotor.tsr   = 7.5; % default tsr
 
 spacing     = 0.2; % increment for spanwise discretisation [m]
 rotor.radii = (2.8:spacing:rotor.R-(spacing*2));   % blade span [m]
@@ -91,19 +91,24 @@ result.CP = (2/rotor.R^2) * trapz(rotor.radii,rotor.radii.*result.cp);
 %% Geometry
 figure
 subplot(3,1,1)
-plot(rotor.radii,result.c)
+plot(rotor.radii/rotor.R,result.c); hold on
+plot(DTU.r/DTU.R,fnval(DTU.c,DTU.r)); hold off
 ylabel('Chord [m]')
+legend('Redesign','DTU 10MW RWT')
 grid on
 subplot(3,1,2)
-plot(rotor.radii,rad2deg(result.beta))
+plot(rotor.radii/rotor.R,rad2deg(result.beta)); hold on
+plot(DTU.r/DTU.R,fnval(DTU.beta,DTU.r)); hold off
 ylabel('Twist [deg]');
+legend('Redesign','DTU 10MW RWT')
 grid on
 subplot(3,1,3)
-plot(rotor.radii,(result.t./result.c)*100)
-xlim([2.8 inf])
+plot(rotor.radii/rotor.R,(result.t./result.c)*100); hold on
+plot(DTU.r/DTU.R,fnval(DTU.that,DTU.r)); hold off
 grid on
-ylabel('Relative thickness [%]');
-xlabel('Radius [m]');
+ylabel('Relative thickness [%]')
+legend('Redesign','DTU 10MW RWT')
+xlabel('Non-dimensional radius [-]');
 
 figure
 plot(rotor.radii,result.cp)
@@ -302,7 +307,7 @@ cd_des = NaN(1,5);
 clcd_des = NaN(1,5);
 for i = 1:n
     clmax_idx = find(diff(aerofoil{2,i}.cl(mask)) <= 0, 1, 'First');
-    clmax = aerofoil{2,i}.cl(clmax_idx + idx0);
+    clmax = aerofoil{2,i}.cl(clmax_idx + idx0 - 1);
     alpha_max = aerofoil{2,i}.alpha(clmax_idx + idx0 - 1);
     cl_des(i) = clmax - x1(i);
     mask2(:,i) = aerofoil{2,i}.alpha >= 0 & aerofoil{2,i}.alpha < alpha_max;

@@ -40,13 +40,14 @@ tsr     = 6.61; % optimal tsr [-]
 % Constraints
 t_max    = 5.38; % maximum absolute thickness [m]
 c_max    = (rotor.R/DTU.R) * 6.17447367; % scaled max chord of DTU 10 MW [m]
-beta_max = 20;   % maximum twist [deg]
+beta_max = (rotor.R/DTU.R) * 14.5;   % maximum twist [deg]
 % in future, maybe limit twist up to same non-dimensional radius as DTU
 % 10MW
 
 % Radial discretisation
 spacing = 0.2; % increment for radial discretisation [m]
-rotor.r = (2.8:spacing:rotor.R-(spacing*2)); % blade span [m]
+r_hub   = 2.8; % hub radius [m]
+rotor.r = (r_hub:spacing:rotor.R-(spacing*2)); % blade span [m]
 
 % Preallocation
 [rotor.t, result.c, result.phi, result.alpha, result.beta,...
@@ -91,18 +92,26 @@ end
 %% Apply general constraints
 % cap chord at c_max
 result.c(result.c > c_max) = c_max;
+
 % cap twist at beta_max
 result.beta(result.beta > deg2rad(beta_max)) = deg2rad(beta_max);
+
 % set lower limit on relative thickness of 24.1%
 result.c(result.c > (rotor.t / 0.241)) =...
     rotor.t(result.c > (rotor.t / 0.241)) / 0.241;
+
 % remove flick after r/R > 0.98 for twist
 r_R = 0.98;
 result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
+
 % remove flick after r/R > 0.98 for relative thickness
 t_c = rotor.t ./ result.c;
 a = t_c( find( (rotor.r/rotor.R) > r_R, 1 ) );
 result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
+
+% smooth chord transitions
+
+
 % Smooth chord transition from cylinder:
 % for i = 1:length(radii)
 %     if radii(i)>8*lroot+radii(1)

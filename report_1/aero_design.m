@@ -35,7 +35,7 @@ p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted poly
 %% Create geometries by minimising residuals
 rotor.B = 3;   % number of blades [-]
 rotor.a = 1/3; % axial induction [-]
-% tsr     = 5:0.01:10; % tsr(s) [-] (NB: minimum 5)
+% tsr     = 5:1:10; % tsr(s) [-] (NB: minimum 5)
 tsr     = 6.61; % optimal tsr [-]
 
 % Constraints

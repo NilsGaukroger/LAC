@@ -30,28 +30,26 @@ x = [0.3, 0.35, 0.47, 0.5]; % cl,max - cl,des
 
 %% New absolute thickness
 p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted polynomial
-
-%% Add constraints on geometry
-% Absolute thickness
-% Chord
-% Relative thickness
-% Twist
  
 %% Create geometries by minimising residuals
 rotor.B = 3;   % number of blades [-]
 rotor.a = 1/3; % axial induction [-]
-tsr     = 7.5; % tsr(s) [-]
+% tsr     = 5:0.01:10; % tsr(s) [-] (NB: minimum 5)
+tsr     = 6.61; % optimal tsr [-]
 
 % Constraints
 t_max    = 5.38; % maximum absolute thickness [m]
-beta_max = 25;   % maximum twist [deg]
+c_max    = (rotor.R/DTU.R) * 6.17447367; % scaled max chord of DTU 10 MW [m]
+beta_max = 20;   % maximum twist [deg]
+% in future, maybe limit twist up to same non-dimensional radius as DTU
+% 10MW
 
 % Radial discretisation
 spacing = 0.2; % increment for radial discretisation [m]
 rotor.r = (2.8:spacing:rotor.R-(spacing*2)); % blade span [m]
 
 % Preallocation
-[result.t, result.c, result.phi, result.alpha, result.beta,...
+[rotor.t, result.c, result.phi, result.alpha, result.beta,...
     result.cl, result.cd, result.ap, result.cp, result.ct]...
     = deal(NaN(length(tsr),length(rotor.r))); % spanwise values
 [result.CP, result.CT] = deal(NaN(length(tsr),1)); % global values
@@ -63,9 +61,9 @@ ub = [inf, 1];   % upper bounds
 opts = optimset('display','off'); % suppress lsqnonlin messages
 
 if length(tsr) == 1
-    fprintf('Creating design for TSR = %.1f\n',tsr)
+    fprintf('Creating design for TSR = %.2f\n',tsr)
 else
-    fprintf('Creating designs for %d TSRs between %.1f to %.1f\n',length(tsr),tsr(1),tsr(end))
+    fprintf('Creating designs for %d TSRs between %.2f and %.2f\n',length(tsr),tsr(1),tsr(end))
 end
 for j = 1:length(tsr)
     if length(tsr) ~= 1
@@ -75,7 +73,7 @@ for j = 1:length(tsr)
     for i = 1:length(rotor.r)
         x0 = lsqnonlin(@(x)residuals(x,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R),x0,lb,ub,opts);
         [~,values] = residuals(x0,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R);
-        result.t(j,i)     = values(1);
+        rotor.t(j,i)     = values(1);
         result.c(j,i)     = values(2);
         result.phi(j,i)   = values(3);
         result.alpha(j,i) = values(4);
@@ -89,6 +87,40 @@ for j = 1:length(tsr)
     result.CP(j,1) = (2/rotor.R^2) * trapz(rotor.r(2:end),rotor.r(2:end).*result.cp(j,2:end));
 %     result_tsr.CT(j,1) % can't remember the equation for this right now
 end
+
+%% Apply general constraints
+% cap chord at c_max
+result.c(result.c > c_max) = c_max;
+% cap twist at beta_max
+result.beta(result.beta > deg2rad(beta_max)) = deg2rad(beta_max);
+% set lower limit on relative thickness of 24.1%
+result.c(result.c > (rotor.t / 0.241)) =...
+    rotor.t(result.c > (rotor.t / 0.241)) / 0.241;
+% remove flick after r/R > 0.98 for twist
+r_R = 0.98;
+result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
+% remove flick after r/R > 0.98 for relative thickness
+t_c = rotor.t ./ result.c;
+a = t_c( find( (rotor.r/rotor.R) > r_R, 1 ) );
+result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
+% Smooth chord transition from cylinder:
+% for i = 1:length(radii)
+%     if radii(i)>8*lroot+radii(1)
+%         crtend=i;
+%         break
+%     end
+% end
+% cslope=(c(crtend+1)-c(crtend))/(radii(crtend+1)-radii(crtend));
+% spline([radii(crtstart) radii(crtend)], [0 [c(crtstart) c(crtend)] cslope], radii(crtstart:crtend))
+% c(crtstart:crtend) = spline([radii(crtstart) radii(crtend)], [0 [c(crtstart-1) c(crtend)] cslope], radii(crtstart:crtend));
+% 
+% for i = crtstart:crtend
+%     that(i) = t(i) / c(i);
+% end
+
+%% Apply tweaks
+% remove kink in twist
+
 
 %% Plot geometry
 figure
@@ -105,9 +137,9 @@ ylabel('Twist, \beta [deg]');
 legend('Redesign','DTU 10MW RWT')
 grid on
 subplot(3,1,3)
-plot(rotor.r/rotor.R,(result.t./result.c)*100); hold on
+plot(rotor.r/rotor.R,(rotor.t./result.c)*100); hold on
 plot(DTU.r/DTU.R,fnval(DTU.that,DTU.r),'x'); hold off
-ylabel('t/c [%]'); xlabel('Radius [m]')
+ylabel('t/c [%]'); xlabel('Non-dimensional radius [-]')
 legend('Redesign','DTU 10MW RWT')
 grid on
 
@@ -116,6 +148,9 @@ if length(tsr) ~= 1
     plot(tsr,result.CP)
     xlabel('TSR [-]'); ylabel('C_P [-]')
     grid on
+    % Optimal TSR
+    [CPmax,CPmax_idx] = max(result.CP);
+    tsr_opt   = tsr(CPmax_idx);
 end
 
 %% Design polynomial splines for the DTU 10MW
@@ -424,4 +459,11 @@ if nargout == 2
     varargout{1} = [t,c,phi,alpha,beta,cl,cd,ap,cp,ct];
 %     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
 end
+end
+
+%% Constraints
+function [out,a] = flattenTip(var1,var2,rotor,r_R)
+a = var1( find( (rotor.r/rotor.R) > r_R, 1 ) );
+var1((rotor.r/rotor.R) > r_R) = ones(1,length(var2((rotor.r/rotor.R) > r_R))) .* a;
+out = var1;
 end

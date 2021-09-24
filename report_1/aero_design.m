@@ -111,20 +111,32 @@ result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
 
 % smooth chord transitions
 
+%% Edu's changes
+% Fixing geometry 
+%lroot=Rnew*0.03; %change value
+%that=result.t./result.c;
+%for i = 1:length(rotor.radii)
+%    if rotor.radii(i)>lroot+rotor.radii(1)
+%        crtstart=i;
+%        break;
+%     end
+%     that(i)=1;
+%     result.c(i)=result.t(1);
+% end
 
-% Smooth chord transition from cylinder:
-% for i = 1:length(radii)
-%     if radii(i)>8*lroot+radii(1)
+% %Smooth chord transition from cylinder:
+
+% for i = 1:length(rotor.radii)
+%     if rotor.radii(i)>10*lroot+rotor.radii(1)
 %         crtend=i;
 %         break
 %     end
 % end
-% cslope=(c(crtend+1)-c(crtend))/(radii(crtend+1)-radii(crtend));
-% spline([radii(crtstart) radii(crtend)], [0 [c(crtstart) c(crtend)] cslope], radii(crtstart:crtend))
-% c(crtstart:crtend) = spline([radii(crtstart) radii(crtend)], [0 [c(crtstart-1) c(crtend)] cslope], radii(crtstart:crtend));
-% 
+% cslope=(result.c(crtend+1)-result.c(crtend))/(rotor.radii(crtend+1)-rotor.radii(crtend));
+% result.c(crtstart:crtend) = spline([rotor.radii(crtstart) rotor.radii(crtend)], [0 [result.c(crtstart-1) result.c(crtend)] cslope], rotor.radii(crtstart:crtend));
+
 % for i = crtstart:crtend
-%     that(i) = t(i) / c(i);
+%     that(i) = result.t(i) / result.c(i);
 % end
 
 %% Apply tweaks

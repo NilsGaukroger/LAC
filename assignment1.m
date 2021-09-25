@@ -35,7 +35,7 @@ p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted poly
 %% Create geometries by minimising residuals
 rotor.B = 3;   % number of blades [-]
 rotor.a = 1/3; % axial induction [-]
- %tsr     = 5:0.5:14; % tsr(s) [-] (NB: minimum 5)
+%tsr     = 5:0.5:14; % tsr(s) [-] (NB: minimum 5)
 tsr     = 6.61; % optimal tsr [-]
 
 % Constraints
@@ -94,6 +94,7 @@ end
 %% Apply general constraints
 % cap chord at c_max
 result.c(result.c > c_max) = c_max;
+result.c(1:27) = result.c(1); %----->>> SOS added that to make it a bit flat at the beginning
 
 % cap twist at beta_max
 result.beta(result.beta > deg2rad(beta_max)) = deg2rad(beta_max);
@@ -114,56 +115,13 @@ t_c = rotor.t ./ result.c;
 a = t_c(find((rotor.r/rotor.R) > r_R,1));
 result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
 
-% % % %% smooth chord transitions
-% % % [maxi,idx] = max(fnval(DTU.c,DTU.r));
-% % % r_R_max = DTU.r(idx)/DTU.R;
-% % % result.c((rotor.r/rotor.R) <= 0.1) = t_max;
-% % % point1 = rotor.r(find((rotor.r/rotor.R) < 0.1,1,'last'));
-% % % point2 = rotor.r(find((rotor.r/rotor.R) < ((r_R_max - 0.1)/2),1,'last'));
-% % % point3 = rotor.r(find((rotor.r/rotor.R) > r_R_max,1));
-% % % 
-% % % section1 = (rotor.r > point1) & (rotor.r < point3);
-% % % x = [point1, point2, point3];
-% % % y(1) = result.c(rotor.r == x(1));
-% % % y(2) = result.c(rotor.r == x(2));
-% % % y(3) = result.c(rotor.r == x(3));
-% % % xq = rotor.r(section1);
-% % % s = pchip(x,y,xq);
-% % % 
-% % % figure
-% % % plot(xq,s)
-
-% %% Edu's changes
-% % Fixing geometry 
-% lroot=Rnew*0.03; %change value
-% that=result.t./result.c;
-% for i = 1:length(rotor.radii)
-%    if rotor.radii(i)>lroot+rotor.radii(1)
-%        crtstart=i;
-%        break;
-%     end
-%     that(i)=1;
-%     result.c(i)=result.t(1);
-% end
-% 
-% %Smooth chord transition from cylinder:
-% 
-% for i = 1:length(rotor.radii)
-%     if rotor.radii(i)>10*lroot+rotor.radii(1)
-%         crtend=i;
-%         break
-%     end
-% end
-% cslope=(result.c(crtend+1)-result.c(crtend))/(rotor.radii(crtend+1)-rotor.radii(crtend));
-% result.c(crtstart:crtend) = spline([rotor.radii(crtstart) rotor.radii(crtend)], [0 [result.c(crtstart-1) result.c(crtend)] cslope], rotor.radii(crtstart:crtend));
-% 
-% for i = crtstart:crtend
-%     that(i) = result.t(i) / result.c(i);
-% end
-
-%% Apply tweaks
-% remove kink in twist
-
+ %% smooth chord transitions ------------->>> SOS 
+splineX = [rotor.r(24) rotor.r(93) rotor.r(195)];
+%splineY = linspace(result.c(4),result.c(185),19)
+splineY = [result.c(24) result.c(93)-0.24 result.c(195)];                            
+xq = rotor.r(24:195);
+yy = spline(splineX,splineY,xq);
+result.c(24:195) = yy;
 
 %% Plot geometry
 figure

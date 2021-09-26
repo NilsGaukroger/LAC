@@ -11,10 +11,14 @@ dis = 101; % number of points in DTU.r discretisation
 
 %% New rotor radius
 DTU.R = 89.1660;
-[rotor.R,~] = rotorScaling(11.4,0.16,DTU.R,0.14);
+[rotor.R,rotor.V_rated,~] = rotorScaling(11.4,0.16,DTU.R,0.14);
 
 %% Aerofoil data
 aerofoil = polars();
+
+%% New design polynomials
+x = [0.3, 0.35, 0.47, 0.5]; % cl,max - cl,des
+[p1,p2,x_max,x_des] = desPolys(aerofoil,x,4);
 
 %% cl vs alpha
 n = 4; % ignore 60.0% and cylinder
@@ -24,10 +28,6 @@ plot_polars(aerofoil,limits,n,1);
 %% cl vs cd
 limits = [0, 90]; % limits for alpha
 plot_polars(aerofoil,limits,n,2);
-
-%% New design polynomials
-x = [0.3, 0.35, 0.47, 0.5]; % cl,max - cl,des
-[p1,p2] = desPolys(aerofoil,x,4);
 
 %% New absolute thickness
 p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted polynomial
@@ -47,9 +47,8 @@ beta_max = (rotor.R/DTU.R) * 14.5;   % maximum twist [deg]
 
 % Radial discretisation
 spacing = 0.2; % increment for radial discretisation [m]
-rotor.r_hub   = 2.8; % hub radius [m]
-% rotor.r = (r_hub:spacing:rotor.R-(spacing*2)); % blade span [m]
-rotor.r = (rotor.r_hub:spacing:rotor.R); % blade span [m]
+rotor.r_hub = 2.8; % hub radius [m]
+rotor.r = linspace(rotor.r_hub,rotor.R,475); % blade span [m]
 
 % Preallocation
 [rotor.t, result.c, result.phi, result.alpha, result.beta,...
@@ -58,7 +57,6 @@ rotor.r = (rotor.r_hub:spacing:rotor.R); % blade span [m]
 [result.CP, result.CT] = deal(NaN(length(tsr),1)); % global values
 
 % Least-squares parameters
-x0 = [3, 0.001]; % initial guess
 lb = [0, 0];     % lower bounds
 ub = [inf, 1];   % upper bounds
 opts = optimset('display','off'); % suppress lsqnonlin messages
@@ -131,14 +129,16 @@ result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
 % figure
 % plot(xq,s)
 
-%% smooth chord transitions ------------->>> SOS 
+% smooth chord transitions ------------->>> SOS 
 splineX = [rotor.r(24) rotor.r(93) rotor.r(195)];
 %splineY = linspace(result.c(4),result.c(185),19)
 splineY = [result.c(24) result.c(93)-0.245 result.c(195)];                            
 xq = rotor.r(24:195);
 yy = spline(splineX,splineY,xq);
 result.c(24:195) = yy;
-max(result.c) % Check max chord doesn't exceed c_max
+if max(result.c) > c_max % Check max chord doesn't exceed c_max
+    fprintf('Warning: Chord exceeds c_max, adjust splines')
+end
 
 %% Plot geometry
 figure
@@ -171,52 +171,29 @@ if length(tsr) ~= 1
     tsr_opt   = tsr(CPmax_idx);
 end
 
-%% Rerun
-% rotor.B = 3;   % number of blades [-]
-% rotor.a = 1/3; % axial induction [-]
-% % tsr     = 5:1:10; % tsr(s) [-] (NB: minimum 5)
-% tsr     = 6.61; % optimal tsr [-]
-% 
-% % Constraints
-% t_max    = 5.38; % maximum absolute thickness [m]
-% c_max    = (rotor.R/DTU.R) * 6.17447367; % scaled max chord of DTU 10 MW [m]
-% beta_max = (rotor.R/DTU.R) * 14.5;   % maximum twist [deg]
-% % in future, maybe limit twist up to same non-dimensional radius as DTU
-% % 10MW
-% 
-% % Radial discretisation
-% spacing = 0.2; % increment for radial discretisation [m]
-% rotor.r_hub   = 2.8; % hub radius [m]
-% rotor.r = (rotor.r_hub:spacing:rotor.R-(spacing*2)); % blade span [m]
-% % rotor.r = (0:spacing:rotor.R-rotor.r_hub); % blade span [m]
-% 
+% %% Rerun residuals with correct axial induction factor
 % % Preallocation
-% [rotor.t, result.c, result.phi, result.alpha, result.beta,...
+% [result.phi, result.alpha, result.beta,...
 %     result.cl, result.cd, result.ap, result.cp, result.ct]...
 %     = deal(NaN(length(tsr),length(rotor.r))); % spanwise values
 % [result.CP, result.CT] = deal(NaN(length(tsr),1)); % global values
 % 
-% % Least-squares parameters
-% x0 = [3, 0.001]; % initial guess
-% lb = [0, 0];     % lower bounds
-% ub = [inf, 1];   % upper bounds
-% opts = optimset('display','off'); % suppress lsqnonlin messages
-% 
 % if length(tsr) == 1
-%     fprintf('Creating design for TSR = %.2f\n',tsr)
+%     fprintf('Recalculating design for TSR = %.2f\n',tsr)
 % else
-%     fprintf('Creating designs for %d TSRs between %.2f and %.2f\n',length(tsr),tsr(1),tsr(end))
+%     fprintf('Recalculating designs for %d TSRs between %.2f and %.2f\n',length(tsr),tsr(1),tsr(end))
 % end
 % for j = 1:length(tsr)
 %     if length(tsr) ~= 1
 %         fprintf('TSR = %.1f\n',tsr(j))
 %     end
-%     x0 = [3, 0.001]; % initial guess
+%     % Least squares parameters
+%     x0 = [1/3, 0.001]; % initial guess (now a and a')
 %     for i = 1:length(rotor.r)
-%         x0 = lsqnonlin(@(x)residuals(x,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R),x0,lb,ub,opts);
+%         lb = [result.c(j,i), 0]; % lower bounds (now with fixed c)
+%         ub = [result.c(j,i), 1]; % upper bounds
+%         x0 = lsqnonlin(@(x)residuals(x,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R,result.c(j,:)),x0,lb,ub,opts);
 %         [~,values] = residuals(x0,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R);
-%         rotor.t(j,i)     = values(1);
-%         result.c(j,i)     = values(2);
 %         result.phi(j,i)   = values(3);
 %         result.alpha(j,i) = values(4);
 %         result.beta(j,i)  = values(5);
@@ -227,12 +204,45 @@ end
 %         result.ct(j,i)    = values(10);
 %     end
 %     result.CP(j,1) = (2/rotor.R^2) * trapz(rotor.r(2:end),rotor.r(2:end).*result.cp(j,2:end));
-% %     result_tsr.CT(j,1) % can't remember the equation for this right now
+%     %     result_tsr.CT(j,1) % can't remember the equation for this right now
 % end
 
+%% Plot geometry
+figure
+subplot(3,1,1)
+plot(rotor.r/rotor.R,result.c); hold on
+plot(DTU.r/DTU.R,fnval(DTU.c,DTU.r),'x'); hold off
+ylabel('Chord [m]');
+legend('Redesign','DTU 10MW RWT')
+grid on
+subplot(3,1,2)
+plot(rotor.r/rotor.R,rad2deg(result.beta)); hold on
+plot(DTU.r/DTU.R,fnval(DTU.beta,DTU.r),'x'); hold off
+ylabel('Twist, \beta [deg]');
+legend('Redesign','DTU 10MW RWT')
+grid on
+subplot(3,1,3)
+plot(rotor.r/rotor.R,(rotor.t./result.c)*100); hold on
+plot(DTU.r/DTU.R,fnval(DTU.that,DTU.r),'x'); hold off
+ylabel('t/c [%]'); xlabel('Non-dimensional radius [-]')
+legend('Redesign','DTU 10MW RWT')
+grid on
+
+if length(tsr) ~= 1
+    figure
+    plot(tsr,result.CP)
+    xlabel('TSR [-]'); ylabel('C_P [-]')
+    grid on
+    % Optimal TSR
+    [CPmax,CPmax_idx] = max(result.CP);
+    tsr_opt   = tsr(CPmax_idx);
+end
+
 %% Interpolate geometry for HAWC input
+HAWC.n = 27;
+
 % change from rotor radius to blade length
-HAWC.r = linspace(0,rotor.R-rotor.r_hub,27);
+HAWC.r = linspace(0,rotor.R-rotor.r_hub,HAWC.n);
 % chord, twist, thickness
 HAWC.c = interp1(rotor.r,result.c,(HAWC.r+rotor.r_hub));
 HAWC.beta = interp1(rotor.r,result.beta,(HAWC.r+rotor.r_hub));
@@ -263,7 +273,7 @@ sgtitle('HAWC geometry');
 HAWC.r = HAWC.r';
 HAWC.c = HAWC.c';
 HAWC.beta = HAWC.beta';
-HAWC.t = HAWC.t';
+HAWC.that = (HAWC.t./HAWC.c)';
 
 %% Design polynomial splines for the DTU 10MW
 function [c,that,beta,t,x] = DTU10MW_des(plt,dis)
@@ -346,7 +356,7 @@ end
 end
 
 %% Polar plotting
-function plot_polars(aerofoil,limits,n,mode)
+function plot_polars(aerofoil,limits,n,mode,x_max,x_des)
 figure
 for i = 1:n
     subplot(ceil(n/2),2,i)
@@ -386,7 +396,7 @@ hold off
 end
 
 %% Creating design polynomials
-function [p1,p2] = desPolys(aerofoil,x1,n)
+function [p1,p2,x_max,x_des] = desPolys(aerofoil,x1,n)
 % Find values
 mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
 idx0 = find(aerofoil{2,1}.alpha == 0);
@@ -414,20 +424,21 @@ alpha_des(1,5) = 1e-6;
 % cd_des(1,5) = 1e-6;
 clcd_des(1,5) = 1e-6;
 
-des = [cl_des; alpha_des; clcd_des];
+x_max = [cl_max; alpha_max; clcd_max];
+x_des = [cl_des; alpha_des; clcd_des];
 
 % Fit cubics
-p1 = NaN(size(des,1),4); % cubic poly coeffs
-p2 = NaN(size(des,1),2); % straight line coeffs
+p1 = NaN(size(x_des,1),4); % cubic poly coeffs
+p2 = NaN(size(x_des,1),2); % straight line coeffs
 N = 101;
 x1 = linspace(t_c(1),t_c(4),N);
 x2 = linspace(t_c(4),t_c(5),N);
-y1 = NaN(size(des,1),N);
-y2 = NaN(size(des,1),N);
-for i = 1:size(des,1)
-    p1(i,:) = polyfit(t_c(1:4),des(i,1:4),3);
+y1 = NaN(size(x_des,1),N);
+y2 = NaN(size(x_des,1),N);
+for i = 1:size(x_des,1)
+    p1(i,:) = polyfit(t_c(1:4),x_des(i,1:4),3);
     y1(i,:) = polyval(p1(i,:),x1);
-    p2(i,:) = polyfit(t_c(4:5),des(i,4:5),1);
+    p2(i,:) = polyfit(t_c(4:5),x_des(i,4:5),1);
     y2(i,:) = polyval(p2(i,:),x2);
 end
 
@@ -437,7 +448,7 @@ labels = ["c_{l,des} [-]", "\alpha_{des} [deg]", "{(c_l/c_d)}_{des} [-]"];
 
 for i = 1:3
     subplot(3,1,i)
-    plot(t_c,des(i,:),'x')
+    plot(t_c,x_des(i,:),'x')
     hold on
     plot(x1,y1(i,:),'r');
     plot(x2,y2(i,:),'r');
@@ -524,53 +535,64 @@ end
 end
 
 %% Residual function for c and a'
-function [out,varargout] = residuals(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew)
-% Calculate the residuals for chord and tangential induction factor
-
-% unpack inputs
-R = rotor.R; B = rotor.B; a = rotor.a;
-
-% spanwise position
-r = rotor.r(idx);
-
-% unpack x
-c  = x(1);
-ap = x(2);
-
-% calculate that, cl and cl/cd from design polynomials
-t    = thickness(r,p,t_max,Rnew);
-that = t / c;
-cl   = x_des(that*100,p1(1,:),p2(1,:));
-alpha = x_des(that*100,p1(2,:),p2(2,:));
-clcd = x_des(that*100,p1(3,:),p2(3,:));
-
-% calculate intermediate variables
-phi   = atan(((1-a)/(1+ap)) * (R/(r*tsr)));
-cd    = cl/clcd;
-cy    = cl * cos(phi) + cd * sin(phi);
-cx    = cl * sin(phi) - cd * cos(phi);
-f     = (B/2) * ((R-r)/(r * sin(phi)));
-F     = (2/pi) * acos(exp(-f));
-sigma = (c*B) / (2*pi*r);
-
-% calculate residuals
-res_c  = 4*pi*r * sin(phi)^2 * F * ((2*a) / ...
-    (cy * B * (1-a))) - c;
-res_ap = 1 / ((4 * F * sin(phi) * cos(phi) / ...
-    (sigma * cx)) - 1) - ap;
-
-% pack output
-out = [res_c, res_ap];
-
-% optional outputs
-if nargout == 2
-    beta = phi - deg2rad(alpha);
-    cp = ((1-a)^2 + (tsr*(r/R))^2 * (1+ap)^2) * tsr * (r/R) * sigma * cx;
-    ct = ((1-a)^2 + (tsr*(r/R))^2 * (1+ap)^2) * sigma * cy;
-%     result.a = 1 / (((4*F*np.sin(phi)**2) / (sigma * cy)) + 1)
-    varargout{1} = [t,c,phi,alpha,beta,cl,cd,ap,cp,ct];
-%     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
+function [out,varargout] = residuals(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew,varargin)
+if nargin == 9
+    % unpack inputs
+    R = rotor.R; B = rotor.B; a = rotor.a;
+    
+    % unpack x
+    c  = x(1);
+    ap = x(2);
+    
+elseif nargin > 9
+    % unpack inputs
+    R = rotor.R; B = rotor.B;
+    
+    % optional chord input
+    c = varargin{1}(idx);
+    
+    % unpack x
+    a  = x(1);
+    ap = x(2);
 end
+    
+    % spanwise position
+    r = rotor.r(idx);
+    
+    % calculate that, cl and cl/cd from design polynomials
+    t    = thickness(r,p,t_max,Rnew);
+    that = t / c;
+    cl   = x_des(that*100,p1(1,:),p2(1,:));
+    alpha = x_des(that*100,p1(2,:),p2(2,:));
+    clcd = x_des(that*100,p1(3,:),p2(3,:));
+    
+    % calculate intermediate variables
+    phi   = atan(((1-a)/(1+ap)) * (R/(r*tsr)));
+    cd    = cl/clcd;
+    cy    = cl * cos(phi) + cd * sin(phi);
+    cx    = cl * sin(phi) - cd * cos(phi);
+    f     = (B/2) * ((R-r)/(r * sin(phi)));
+    F     = (2/pi) * acos(exp(-f));
+    sigma = (c*B) / (2*pi*r);
+    
+    % calculate residuals
+    res_c  = 4*pi*r * sin(phi)^2 * F * ((2*a) / ...
+        (cy * B * (1-a))) - c;
+    res_ap = 1 / ((4 * F * sin(phi) * cos(phi) / ...
+        (sigma * cx)) - 1) - ap;
+    
+    % pack output
+    out = [res_c, res_ap];
+    
+    % optional outputs
+    if nargout == 2
+        beta = phi - deg2rad(alpha);
+        cp = ((1-a)^2 + (tsr*(r/R))^2 * (1+ap)^2) * tsr * (r/R) * sigma * cx;
+        ct = ((1-a)^2 + (tsr*(r/R))^2 * (1+ap)^2) * sigma * cy;
+        %     result.a = 1 / (((4*F*np.sin(phi)**2) / (sigma * cy)) + 1)
+        varargout{1} = [t,c,phi,alpha,beta,cl,cd,ap,cp,ct];
+        %     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
+    end
 end
 
 %% Constraints
@@ -579,3 +601,36 @@ a = var1( find( (rotor.r/rotor.R) > r_R, 1 ) );
 var1((rotor.r/rotor.R) > r_R) = ones(1,length(var2((rotor.r/rotor.R) > r_R))) .* a;
 out = var1;
 end
+
+%% Geometry plotting
+% function plotGeo(orig,comp,
+%     figure
+%     subplot(3,1,1)
+%     plot(comp.r/comp.R,comp.c); hold on
+%     plot(orig.r/orig.R,fnval(orig.c,orig.r),'x'); hold off
+%     ylabel('Chord [m]');
+%     legend('Redesign','DTU 10MW RWT')
+%     grid on
+%     subplot(3,1,2)
+%     plot(rotor.r/rotor.R,rad2deg(result.beta)); hold on
+%     plot(DTU.r/DTU.R,fnval(DTU.beta,DTU.r),'x'); hold off
+%     ylabel('Twist, \beta [deg]');
+%     legend('Redesign','DTU 10MW RWT')
+%     grid on
+%     subplot(3,1,3)
+%     plot(rotor.r/rotor.R,(rotor.t./result.c)*100); hold on
+%     plot(DTU.r/DTU.R,fnval(DTU.that,DTU.r),'x'); hold off
+%     ylabel('t/c [%]'); xlabel('Non-dimensional radius [-]')
+%     legend('Redesign','DTU 10MW RWT')
+%     grid on
+% 
+%     if length(tsr) ~= 1
+%         figure
+%         plot(tsr,result.CP)
+%         xlabel('TSR [-]'); ylabel('C_P [-]')
+%         grid on
+%         % Optimal TSR
+%         [CPmax,CPmax_idx] = max(result.CP);
+%         tsr_opt   = tsr(CPmax_idx);
+%     end
+% end

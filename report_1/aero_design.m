@@ -18,16 +18,16 @@ aerofoil = polars();
 
 %% New design polynomials
 x = [0.3, 0.35, 0.47, 0.5]; % cl,max - cl,des
-[p1,p2,x_max,x_des] = desPolys(aerofoil,x,4);
+[p1,p2,cl_max,x_desi] = desPolys(aerofoil,x,4);
 
 %% cl vs alpha
 n = 4; % ignore 60.0% and cylinder
 limits = [0, 90; 0, 2]; % [xlim, ylim]
-plot_polars(aerofoil,limits,n,1);
+plot_polars(aerofoil,limits,n,1,x_desi);
 
 %% cl vs cd
 limits = [0, 90]; % limits for alpha
-plot_polars(aerofoil,limits,n,2);
+plot_polars(aerofoil,limits,n,2,x_desi);
 
 %% New absolute thickness
 p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted polynomial
@@ -49,6 +49,7 @@ beta_max = (rotor.R/DTU.R) * 14.5;   % maximum twist [deg]
 spacing = 0.2; % increment for radial discretisation [m]
 rotor.r_hub = 2.8; % hub radius [m]
 rotor.r = linspace(rotor.r_hub,rotor.R,475); % blade span [m]
+rotor.bladeLength = rotor.R - rotor.r_hub;
 
 % Preallocation
 [rotor.t, result.c, result.phi, result.alpha, result.beta,...
@@ -72,8 +73,8 @@ for j = 1:length(tsr)
     end
     x0 = [3, 0.001]; % initial guess
     for i = 1:length(rotor.r)
-        x0 = lsqnonlin(@(x)residuals(x,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R),x0,lb,ub,opts);
-        [~,values] = residuals(x0,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R);
+        x0 = lsqnonlin(@(x)residuals(x,rotor,tsr(j),i,p,p1,p2,t_max),x0,lb,ub,opts);
+        [~,values] = residuals(x0,rotor,tsr(j),i,p,p1,p2,t_max);
         rotor.t(j,i)     = values(1);
         result.c(j,i)     = values(2);
         result.phi(j,i)   = values(3);
@@ -239,41 +240,44 @@ if length(tsr) ~= 1
 end
 
 %% Interpolate geometry for HAWC input
-HAWC.n = 27;
+HAWC_in.n = 27;
 
 % change from rotor radius to blade length
-HAWC.r = linspace(0,rotor.R-rotor.r_hub,HAWC.n);
+HAWC_in.r = linspace(0,rotor.R-rotor.r_hub,HAWC_in.n);
 % chord, twist, thickness
-HAWC.c = interp1(rotor.r,result.c,(HAWC.r+rotor.r_hub));
-HAWC.beta = interp1(rotor.r,result.beta,(HAWC.r+rotor.r_hub));
-HAWC.t = interp1(rotor.r,rotor.t,(HAWC.r+rotor.r_hub));
+HAWC_in.c = interp1(rotor.r,result.c,(HAWC_in.r+rotor.r_hub));
+HAWC_in.beta = interp1(rotor.r,result.beta,(HAWC_in.r+rotor.r_hub));
+HAWC_in.t = interp1(rotor.r,rotor.t,(HAWC_in.r+rotor.r_hub));
 
 figure
 subplot(3,1,1)
 plot(rotor.r,result.c); hold on
-plot(HAWC.r+rotor.r_hub,HAWC.c); hold off
+plot(HAWC_in.r+rotor.r_hub,HAWC_in.c); hold off
 ylabel('Chord [m]');
 legend('Original','HAWC')
 grid on
 subplot(3,1,2)
 plot(rotor.r,result.beta); hold on
-plot(HAWC.r+rotor.r_hub,HAWC.beta); hold off
+plot(HAWC_in.r+rotor.r_hub,HAWC_in.beta); hold off
 ylabel('Twist, \beta [deg]');
 legend('Original','HAWC')
 grid on
 subplot(3,1,3)
 plot(rotor.r,(rotor.t./result.c)*100); hold on
-plot(HAWC.r+rotor.r_hub,(HAWC.t./HAWC.c)*100); hold off
+plot(HAWC_in.r+rotor.r_hub,(HAWC_in.t./HAWC_in.c)*100); hold off
 ylabel('t/c [%]'); xlabel('NRadius [-]')
 legend('Original','HAWC')
 grid on
 sgtitle('HAWC geometry');
 
 % Make column vectors for ease of use
-HAWC.r = HAWC.r';
-HAWC.c = HAWC.c';
-HAWC.beta = HAWC.beta';
-HAWC.that = (HAWC.t./HAWC.c)';
+HAWC_in.r = HAWC_in.r';
+HAWC_in.c = HAWC_in.c';
+HAWC_in.beta = HAWC_in.beta';
+HAWC_in.that = (HAWC_in.t'./HAWC_in.c);
+
+%% Save variables for post-processing
+save('aero_design','aerofoil','DTU','HAWC_in','result','rotor','p','p1','p2','t_max');
 
 %% Design polynomial splines for the DTU 10MW
 function [c,that,beta,t,x] = DTU10MW_des(plt,dis)
@@ -356,18 +360,20 @@ end
 end
 
 %% Polar plotting
-function plot_polars(aerofoil,limits,n,mode,x_max,x_des)
+function plot_polars(aerofoil,limits,n,mode,x_des)
 figure
 for i = 1:n
     subplot(ceil(n/2),2,i)
     if mode == 1
-        plot(aerofoil{2,i}.alpha,aerofoil{2,i}.cl)
+        plot(aerofoil{2,i}.alpha,aerofoil{2,i}.cl); hold on
+        plot(x_des(2,i),x_des(1,i),'x','color','k','MarkerSize',10); hold off
         xlabel('\alpha [deg]'); ylabel('c_l [-]');
         ylim(limits(2,:))
-        xlim(limits(1,:));
+        xlim(limits(1,:))
     elseif mode == 2
         mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
-        plot(aerofoil{2,i}.cd(mask),aerofoil{2,i}.cl(mask))
+        plot(aerofoil{2,i}.cd(mask),aerofoil{2,i}.cl(mask)); hold on
+        plot(x_des(1,i)/x_des(3,i),x_des(1,i),'x','color','k','MarkerSize',10); hold off
         xlabel('c_d [-]'); ylabel('c_l [-]');
     end
     title(aerofoil{1,i});
@@ -396,7 +402,7 @@ hold off
 end
 
 %% Creating design polynomials
-function [p1,p2,x_max,x_des] = desPolys(aerofoil,x1,n)
+function [p1,p2,cl_max,x_des] = desPolys(aerofoil,x1,n)
 % Find values
 mask = (aerofoil{2,1}.alpha >= 0 & aerofoil{2,1}.alpha <= 90);
 idx0 = find(aerofoil{2,1}.alpha == 0);
@@ -410,10 +416,10 @@ alpha_des = NaN(1,5);
 cd_des = NaN(1,5);
 clcd_des = NaN(1,5);
 for i = 1:n
-    clmax_idx = find(diff(aerofoil{2,i}.cl(mask)) <= 0, 1, 'First');
-    clmax = aerofoil{2,i}.cl(clmax_idx + idx0 - 1);
-    alpha_max = aerofoil{2,i}.alpha(clmax_idx + idx0 - 1);
-    cl_des(i) = clmax - x1(i);
+    cl_max_idx = find(diff(aerofoil{2,i}.cl(mask)) <= 0, 1, 'First');
+    cl_max = aerofoil{2,i}.cl(cl_max_idx + idx0 - 1);
+    alpha_max = aerofoil{2,i}.alpha(cl_max_idx + idx0 - 1);
+    cl_des(i) = cl_max - x1(i);
     mask2(:,i) = aerofoil{2,i}.alpha >= 0 & aerofoil{2,i}.alpha < alpha_max;
     alpha_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.alpha(mask2(:,i)),cl_des(i));
     cd_des(i) = interp1(aerofoil{2,i}.cl(mask2(:,i)),aerofoil{2,i}.cd(mask2(:,i)),cl_des(i));
@@ -424,7 +430,6 @@ alpha_des(1,5) = 1e-6;
 % cd_des(1,5) = 1e-6;
 clcd_des(1,5) = 1e-6;
 
-x_max = [cl_max; alpha_max; clcd_max];
 x_des = [cl_des; alpha_des; clcd_des];
 
 % Fit cubics
@@ -448,7 +453,7 @@ labels = ["c_{l,des} [-]", "\alpha_{des} [deg]", "{(c_l/c_d)}_{des} [-]"];
 
 for i = 1:3
     subplot(3,1,i)
-    plot(t_c,x_des(i,:),'x')
+    plot(t_c,x_des(i,:),'x','color','k')
     hold on
     plot(x1,y1(i,:),'r');
     plot(x2,y2(i,:),'r');
@@ -458,7 +463,7 @@ for i = 1:3
     grid on
 end
 xlabel('Relative thickness [%]')
-sgtitle('New design polynomials')
+% sgtitle('New design polynomials')
 end
 
 %% Design polynomials
@@ -513,30 +518,9 @@ if plt == 1
 end
 end
 
-function t = thickness(r,p,t_max,Rnew)
-% Absolute thickness [m] as a function of radius [m] for redesigned blade
-t = p(1)*r.^6 + p(2)*r.^5 + p(3)*r.^4 + p(4)*r.^3 + p(5)*r.^2 + p(6)*r + p(7);
-t(t >= t_max) = t_max;
-t(r == Rnew) = 1e-2;
-end
-
-function x = x_des(that,p1,p2)
-% Design cl / clcd / alpha [ - / deg / - ] as a function of t/c [%]
-x = NaN(length(that));
-that(that < 24.1) = 24.1;
-that(that > 100)  = 100;
-for i = 1:length(that)
-    if that(i) <= 48
-        x(i) = p1(1)*that(i)^3 + p1(2)*that(i)^2 + p1(3)*that(i) + p1(4);
-    else
-        x(i) = p2(1)*that(i) + p2(2);
-    end
-end
-end
-
 %% Residual function for c and a'
-function [out,varargout] = residuals(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew,varargin)
-if nargin == 9
+function [out,varargout] = residuals(x,rotor,tsr,idx,p,p1,p2,t_max,varargin)
+if nargin == 8
     % unpack inputs
     R = rotor.R; B = rotor.B; a = rotor.a;
     
@@ -544,7 +528,7 @@ if nargin == 9
     c  = x(1);
     ap = x(2);
     
-elseif nargin > 9
+elseif nargin > 8
     % unpack inputs
     R = rotor.R; B = rotor.B;
     
@@ -560,7 +544,7 @@ end
     r = rotor.r(idx);
     
     % calculate that, cl and cl/cd from design polynomials
-    t    = thickness(r,p,t_max,Rnew);
+    t    = thickness(r,p,t_max,R);
     that = t / c;
     cl   = x_des(that*100,p1(1,:),p2(1,:));
     alpha = x_des(that*100,p1(2,:),p2(2,:));
@@ -593,13 +577,6 @@ end
         varargout{1} = [t,c,phi,alpha,beta,cl,cd,ap,cp,ct];
         %     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
     end
-end
-
-%% Constraints
-function [out,a] = flattenTip(var1,var2,rotor,r_R)
-a = var1( find( (rotor.r/rotor.R) > r_R, 1 ) );
-var1((rotor.r/rotor.R) > r_R) = ones(1,length(var2((rotor.r/rotor.R) > r_R))) .* a;
-out = var1;
 end
 
 %% Geometry plotting

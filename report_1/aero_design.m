@@ -60,7 +60,7 @@ rotor.bladeLength = rotor.R - rotor.r_hub;
 
 % Preallocation
 [rotor.t, result.c, result.phi, result.alpha, result.beta,...
-    result.cl, result.cd, result.ap, result.cp, result.ct]...
+    result.cl, result.cd, result.ap, result.cp, result.ct, that_tsr]...
     = deal(NaN(length(tsr),length(rotor.r))); % spanwise values
 [result.CP, result.CT] = deal(NaN(length(tsr),1)); % global values
 
@@ -130,7 +130,6 @@ for j = 1:length(tsr)
     for i = crtstart:crtend
         that_tsr(j,i) = result.t(j,i) / result.c(j,i);
     end
-end
 
     % Fixing geometry
     lroot = rotor.R*0.03; %change value
@@ -203,7 +202,7 @@ for j = 1:length(tsr_lst)
     result2.CP(j,1) = (2/rotor.R^2) * trapz(rotor.r(2:end),rotor.r(2:end).*result2.cp(j,2:end));
 %     result.cT(j,1) % can't remember the equation for this right now
 end
-%Constaint of twist at max twist
+% Constraint of twist at max twist
 result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
 
 %% Apply general constraints
@@ -239,7 +238,6 @@ if max(result.c) > c_max % Check max chord doesn't exceed c_max
 end
 
 %% Plot geometry
-
 figure
 subplot(3,1,1)
 plot(rotor.r,result2.c)
@@ -258,9 +256,6 @@ figure
 plot(tsr_lst,result2.CP)
 xlabel('TSR [-]'); ylabel('C_P [-]')
 grid on
-
-%% Rerun residuals with correct axial induction factor
-
 
 %% Plot geometry
 figure
@@ -330,6 +325,9 @@ HAWC_in.c = HAWC_in.c';
 HAWC_in.beta = HAWC_in.beta';
 HAWC_in.that = (HAWC_in.t'./HAWC_in.c);
 
+%% Save variables for post-processing
+save('aero_design','aerofoil','DTU','HAWC_in','result','rotor','p','p1','p2','t_max');
+
 %% Residual function for a and a'
 function [out,varargout] = residuals_induction(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew,c)
 % Calculate the residuals for chord and tangential induction factor
@@ -381,6 +379,3 @@ if nargout == 2
 %     varargout{1} = [t,c,phi,alpha,beta,cl,cd,a,ap,cp,ct];
 end
 end
-
-%% Save variables for post-processing
-save('aero_design','aerofoil','DTU','HAWC_in','result','rotor','p','p1','p2','t_max');

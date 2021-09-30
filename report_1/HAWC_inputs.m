@@ -88,7 +88,6 @@ end
 fclose(fileID);
 
 %% Print for .htc file
-
 nsec = 27;
 n = linspace(1,nsec,nsec);
 z = (n-1)/(nsec-1).*(rotor.R-rotor.r(1)); %z position along blade
@@ -131,3 +130,8 @@ newhtcfileID = fopen(['your_model/redesign_' elasticity '_hawc2s.htc'],'w'); %cr
 fprintf(newhtcfileID,'%c',text); %writes to new htc file
 
 fclose('all') %saves and closes all files
+
+%% Max gen speed for structural
+gearratio = 50;
+genspeed = N(end) * gearratio;
+fprintf('Max. generator speed = %.2f\n',genspeed);

@@ -33,20 +33,15 @@ plot_polars(aerofoil,limits,n,1,x_desi);
 limits = [0, 90]; % limits for alpha
 plot_polars(aerofoil,limits,n,2,x_desi);
 
-%% Absolute thickness
-figure
-plot(DTU.r,DTU.t)
-hold on
-grid on
-
 %% New absolute thickness
 p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted polynomial
 
 %% Residual
 rotor.B     = 3;   % number of blades [-]
 rotor.a     = 1/3; % axial induction [-]
-tsr     = 5:0.1:10; % tsr(s) [-] (NB: minimum 5)
-% tsr     = 6.61; % optimal tsr [-]
+% tsr     = 5:0.1:10; % tsr(s) [-] (NB: minimum 5)
+tsr_opt     = 7.1; % optimal tsr [-]
+tsr         = tsr_opt;
 
 % Constraints
 t_max    = 5.38; % maximum absolute thickness [m]
@@ -160,7 +155,7 @@ result.c(result.c > (rotor.t / 0.241)) =...
 
 % remove flick after r/R > 0.98 for twist
 r_R = 0.98;
-result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
+% result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
 
 % remove flick after r/R > 0.98 for relative thickness
 for j=1:length(tsr)
@@ -169,17 +164,6 @@ for j=1:length(tsr)
     result.c(j,(rotor.r/rotor.R) > r_R) = rotor.t(j,(rotor.r/rotor.R) > r_R) ./ a;
 end
 
-% % smooth chord transitions ------------->>> SOS 
-% splineX = [rotor.r(24) rotor.r(93) rotor.r(195)];
-% %splineY = linspace(result.c(4),result.c(185),19)
-% splineY = [result.c(24) result.c(93)-0.245 result.c(195)];                            
-% xq = rotor.r(24:195);
-% yy = spline(splineX,splineY,xq);
-% result.c(24:195) = yy;
-% if max(result.c) > c_max % Check max chord doesn't exceed c_max
-%     fprintf('Warning: Chord exceeds c_max, adjust splines')
-% end
-
 %% Residuals for a and a'
 % Least-squares parameters
 lb = [0, 0];     % lower bounds
@@ -187,9 +171,9 @@ ub = [1, 1];   % upper bounds
 opts = optimset('display','off'); % suppress lsqnonlin messages
 
 if length(tsr) == 1
-    fprintf('Creating design for TSR = %.2f\n',tsr)
+    fprintf('Rerunning residuals for TSR = %.2f\n',tsr)
 else
-    fprintf('Creating designs for %d TSRs between %.2f and %.2f\n',length(tsr),tsr(1),tsr(end))
+    fprintf('Rerunning residuals for %d TSRs between %.2f and %.2f\n',length(tsr),tsr(1),tsr(end))
 end
 for j = 1:length(tsr)
     if length(tsr) ~= 1
@@ -220,40 +204,20 @@ result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
 %% Plot geometry
 figure
 subplot(3,1,1)
-plot(rotor.r,result.c)
-ylabel('Chord [m]');
-grid on
-subplot(3,1,2)
-plot(rotor.r,rad2deg(result2.beta))
-ylabel('Twist, \beta [deg]');
-grid on
-subplot(3,1,3)
-plot(rotor.r,(rotor.t./result.c)*100)
-ylabel('t/c [%]'); xlabel('Radius [m]')
-grid on
-
-figure
-plot(tsr,result2.CP)
-xlabel('TSR [-]'); ylabel('C_P [-]')
-grid on
-
-%% Plot geometry
-figure
-subplot(3,1,1)
 plot(rotor.r/rotor.R,result.c); hold on
-plot(DTU.r/DTU.R,fnval(DTU.c,DTU.r),'x'); hold off
+plot(DTU.r/DTU.R,fnval(DTU.c,DTU.r)); hold off
 ylabel('Chord [m]');
 legend('Redesign','DTU 10MW RWT')
 grid on
 subplot(3,1,2)
 plot(rotor.r/rotor.R,rad2deg(result2.beta)); hold on
-plot(DTU.r/DTU.R,fnval(DTU.beta,DTU.r),'x'); hold off
+plot(DTU.r/DTU.R,fnval(DTU.beta,DTU.r)); hold off
 ylabel('Twist, \beta [deg]');
 legend('Redesign','DTU 10MW RWT')
 grid on
 subplot(3,1,3)
 plot(rotor.r/rotor.R,(rotor.t./result.c)*100); hold on
-plot(DTU.r/DTU.R,fnval(DTU.that,DTU.r),'x'); hold off
+plot(DTU.r/DTU.R,fnval(DTU.that,DTU.r)); hold off
 ylabel('t/c [%]'); xlabel('Non-dimensional radius [-]')
 legend('Redesign','DTU 10MW RWT')
 grid on
@@ -286,15 +250,15 @@ ylabel('Chord [m]');
 legend('Original','HAWC')
 grid on
 subplot(3,1,2)
-plot(rotor.r,result2.beta); hold on
-plot(HAWC_in.r+rotor.r_hub,HAWC_in.beta); hold off
+plot(rotor.r,rad2deg(result2.beta)); hold on
+plot(HAWC_in.r+rotor.r_hub,rad2deg(HAWC_in.beta)); hold off
 ylabel('Twist, \beta [deg]');
 legend('Original','HAWC')
 grid on
 subplot(3,1,3)
 plot(rotor.r,(rotor.t./result.c)*100); hold on
 plot(HAWC_in.r+rotor.r_hub,(HAWC_in.t./HAWC_in.c)*100); hold off
-ylabel('t/c [%]'); xlabel('NRadius [-]')
+ylabel('t/c [%]'); xlabel('Non-dimensional radius [-]')
 legend('Original','HAWC')
 grid on
 sgtitle('HAWC geometry');
@@ -304,9 +268,10 @@ HAWC_in.r = HAWC_in.r';
 HAWC_in.c = HAWC_in.c';
 HAWC_in.beta = HAWC_in.beta';
 HAWC_in.that = (HAWC_in.t'./HAWC_in.c);
+HAWC_in.tsr_opt = tsr_opt;
 
 %% Save variables for post-processing
-save('aero_design','aerofoil','DTU','HAWC_in','result','rotor','p','p1','p2','t_max');
+save('aero_design','aerofoil','DTU','HAWC_in','result','result2','rotor','p','p1','p2','t_max');
 
 %% Residual function for a and a'
 function [out,varargout] = residuals_induction(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew,c)

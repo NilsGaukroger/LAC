@@ -147,3 +147,6 @@ octave-workspace
 
 # Simulink autosave extension
 .autosave
+
+# HAWC results
+.report_1/results*

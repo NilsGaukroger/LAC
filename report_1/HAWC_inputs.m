@@ -88,3 +88,8 @@ fprintf('nsec %d;\n',length(HAWC_in.r))
 for i = 1:length(HAWC_in.r)
     fprintf('sec %d %.8f %.8f %.8f %.8f;\n',i,HAWC_in.c2def.x(i),HAWC_in.c2def.y(i),HAWC_in.c2def.z(i),HAWC_in.c2def.beta(i));
 end
+
+%% Max gen speed for structural
+gearratio = 50;
+genspeed = N(end) * gearratio;
+fprintf('Max. generator speed = %.2f\n',genspeed);

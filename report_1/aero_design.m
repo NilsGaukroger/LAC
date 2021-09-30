@@ -42,18 +42,18 @@ p = newThickness(DTU.t,DTU.r,DTU.R,rotor.R,1); % output as coeffs of fitted poly
 %% Residual
 rotor.B     = 3;   % number of blades [-]
 rotor.a     = 1/3; % axial induction [-]
-% tsr     = 5:1:10; % tsr(s) [-] (NB: minimum 5)
-tsr     = 6.61; % optimal tsr [-]
+tsr     = 5:0.1:10; % tsr(s) [-] (NB: minimum 5)
+% tsr     = 6.61; % optimal tsr [-]
 
 % Constraints
 t_max    = 5.38; % maximum absolute thickness [m]
 c_max    = (rotor.R/DTU.R) * 6.17447367; % scaled max chord of DTU 10 MW [m]
-beta_max = (rotor.R/DTU.R) * 14.5;   % maximum twist [deg]
+beta_max = (rotor.R/DTU.R) * 20;   % maximum twist [deg]
 % in future, maybe limit twist up to same non-dimensional radius as DTU
 % 10MW
 
 % Radial discretisation
-dis2        = 0.2; % discretisation for spanwise discretisation [m]
+dis2        = 200; % discretisation for spanwise discretisation [m]
 rotor.r_hub = 2.8; % hub radius [m]
 rotor.r = linspace(rotor.r_hub,rotor.R,dis2); % blade span [m]
 rotor.bladeLength = rotor.R - rotor.r_hub;
@@ -63,6 +63,20 @@ rotor.bladeLength = rotor.R - rotor.r_hub;
     result.cl, result.cd, result.ap, result.cp, result.ct, that_tsr]...
     = deal(NaN(length(tsr),length(rotor.r))); % spanwise values
 [result.CP, result.CT] = deal(NaN(length(tsr),1)); % global values
+
+% Root transition start and initial guess for root transition end
+lroot=rotor.R*0.03; %change value
+that=rotor.t./result.c;
+crtstart = -1;
+for i = 1:length(rotor.r)
+    if rotor.r(i)>lroot+rotor.r(1) && crtstart == -1
+        crtstart=i; % root transition start
+    end
+    if rotor.r(i)>10*lroot+rotor.r(1)
+        crtendstart=i; % lowest root transition end
+        break
+    end
+end
 
 % Least-squares parameters
 lb = [0, 0]; % lower bounds
@@ -98,22 +112,22 @@ for j = 1:length(tsr)
 %     result.CT(j,1) % can't remember the equation for this right now
 
     % Fixing geometry
-    lroot=rotor.R*0.03; %change value
-    that_tsr(j)=result.t(j)./result.c(j);
+    lroot = rotor.R*0.03; %change value
+    that_tsr(j) = rotor.t(j)./result.c(j);
     for i = 1:length(rotor.r)
-        if rotor.r(i)>lroot+rotor.r(1)
-            crtstart=i;
+        if rotor.r(i) > lroot + rotor.r(1)
+            crtstart = i;
             break;
         end
-        that_tsr(j,i)=1;
-        result.c(j,i)=result.t(j,1);
+        that_tsr(j,i) = 1;
+        result.c(j,i) = rotor.t(j,1);
     end
     
     % Smooth chord transition from cylinder
-    crtend=crtendstart;
+    crtend = crtendstart;
     limitchord = true;
     while limitchord
-        cslope=(result.c(j,crtend+1)-result.c(j,crtend))/(rotor.r(crtend+1)-rotor.r(crtend));
+        cslope = (result.c(j,crtend+1)-result.c(j,crtend))/(rotor.r(crtend+1)-rotor.r(crtend));
         result.c(j,crtstart:crtend) = spline([rotor.r(crtstart) rotor.r(crtend)], [0 [result.c(j,crtstart-1) result.c(j,crtend)] cslope], rotor.r(crtstart:crtend));
         if max(result.c(j,crtstart:crtend)) < c_max
             limitchord = false;
@@ -128,87 +142,11 @@ for j = 1:length(tsr)
         end
     end
     for i = crtstart:crtend
-        that_tsr(j,i) = result.t(j,i) / result.c(j,i);
-    end
-
-    % Fixing geometry
-    lroot = rotor.R*0.03; %change value
-    that_tsr(j) = result.t(j)./result.c(j);
-    for i = 1:length(rotor.r)
-        if rotor.r(i)>lroot+rotor.r(1)
-            crtstart=i;
-            break;
-        end
-        that_tsr(j,i)=1;
-        result.c(j,i)=result.t(j,1);
-    end
-    
-    %Smooth chord transition from cylinder:
-    
-    crtend=crtendstart;
-    limitchord = true;
-    while limitchord
-        cslope=(result.c(j,crtend+1)-result.c(j,crtend))/(rotor.r(crtend+1)-rotor.r(crtend));
-        result.c(j,crtstart:crtend) = spline([rotor.r(crtstart) rotor.r(crtend)], [0 [result.c(j,crtstart-1) result.c(j,crtend)] cslope], rotor.r(crtstart:crtend));
-        if max(result.c(j,crtstart:crtend)) < c_max
-            limitchord = false;
-            crtend = crtendstart;
-        else
-            crtend = crtend + 10;
-            if crtend > length(result.c(j,:))
-                crtend = length(result.c(j,:));
-                break;
-            end
-            %crtend = crtendlast;
-        end
-    end
-    for i = crtstart:crtend
-        that_tsr(j,i) = result.t(j,i) / result.c(j,i);
+        that_tsr(j,i) = rotor.t(j,i) / result.c(j,i);
     end
 end
-
-%% Residuals for a and a'
-% Least-squares parameters
-lb = [0, 0];     % lower bounds
-ub = [1, 1];   % upper bounds
-opts = optimset('display','off'); % suppress lsqnonlin messages
-
-if length(tsr_lst) == 1
-    fprintf('Creating design for TSR = %.2f\n',tsr_lst)
-else
-    fprintf('Creating designs for %d TSRs between %.2f and %.2f\n',length(tsr_lst),tsr_lst(1),tsr_lst(end))
-end
-for j = 1:length(tsr_lst)
-    if length(tsr_lst) ~= 1
-        fprintf('TSR = %.1f\n',tsr_lst(j))
-    end
-    x0 = [1/3, 0.001]; % initial guess
-    for i = 1:length(rotor.r)
-%         x0 = lsqnonlin(@(x)residuals_induction(x,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R,result.c(j,i)),x0,lb,ub,opts);
-%         [~,values] = residuals_induction(x0,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R,result.c(j,i));
-        x0 = lsqnonlin(@(x)residuals_induction(x,rotor,tsr_lst(j),i,p,p1,p2,t_max,rotor.R,result.c(j,i)),x0,lb,ub,opts);
-        [~,values] = residuals_induction(x0,rotor,tsr_lst(j),i,p,p1,p2,t_max,rotor.R,result.c(j,i));
-        rotor.t(j,i)     = values(1);
-        result2.a(j,i)     = values(2);
-        result2.phi(j,i)   = values(3);
-        result2.alpha(j,i) = values(4);
-        result2.beta(j,i)  = values(5);
-        result2.cl(j,i)    = values(6);
-        result2.cd(j,i)    = values(7);
-        result2.ap(j,i)    = values(8);
-        result2.cp(j,i)    = values(9);
-        result2.ct(j,i)    = values(10);
-    end
-    result2.CP(j,1) = (2/rotor.R^2) * trapz(rotor.r(2:end),rotor.r(2:end).*result2.cp(j,2:end));
-%     result.cT(j,1) % can't remember the equation for this right now
-end
-% Constraint of twist at max twist
-result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
 
 %% Apply general constraints
-% cap chord at c_max
-result.c(result.c > c_max) = c_max;
-result.c(1:27) = result.c(1); %----->>> SOS added that to make it a bit flat at the beginning
 
 % cap twist at beta_max
 result.beta(result.beta > deg2rad(beta_max)) = deg2rad(beta_max);
@@ -226,21 +164,58 @@ t_c = rotor.t ./ result.c;
 a = t_c(find((rotor.r/rotor.R) > r_R,1));
 result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
 
-% smooth chord transitions ------------->>> SOS 
-splineX = [rotor.r(24) rotor.r(93) rotor.r(195)];
-%splineY = linspace(result.c(4),result.c(185),19)
-splineY = [result.c(24) result.c(93)-0.245 result.c(195)];                            
-xq = rotor.r(24:195);
-yy = spline(splineX,splineY,xq);
-result.c(24:195) = yy;
-if max(result.c) > c_max % Check max chord doesn't exceed c_max
-    fprintf('Warning: Chord exceeds c_max, adjust splines')
+% % smooth chord transitions ------------->>> SOS 
+% splineX = [rotor.r(24) rotor.r(93) rotor.r(195)];
+% %splineY = linspace(result.c(4),result.c(185),19)
+% splineY = [result.c(24) result.c(93)-0.245 result.c(195)];                            
+% xq = rotor.r(24:195);
+% yy = spline(splineX,splineY,xq);
+% result.c(24:195) = yy;
+% if max(result.c) > c_max % Check max chord doesn't exceed c_max
+%     fprintf('Warning: Chord exceeds c_max, adjust splines')
+% end
+
+%% Residuals for a and a'
+% Least-squares parameters
+lb = [0, 0];     % lower bounds
+ub = [1, 1];   % upper bounds
+opts = optimset('display','off'); % suppress lsqnonlin messages
+
+if length(tsr) == 1
+    fprintf('Creating design for TSR = %.2f\n',tsr)
+else
+    fprintf('Creating designs for %d TSRs between %.2f and %.2f\n',length(tsr),tsr(1),tsr(end))
 end
+for j = 1:length(tsr)
+    if length(tsr) ~= 1
+        fprintf('TSR = %.1f\n',tsr(j))
+    end
+    x0 = [1/3, 0.001]; % initial guess
+    for i = 1:length(rotor.r)
+        x0 = lsqnonlin(@(x)residuals_induction(x,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R,result.c(j,i)),x0,lb,ub,opts);
+        [~,values] = residuals_induction(x0,rotor,tsr(j),i,p,p1,p2,t_max,rotor.R,result.c(j,i));
+        rotor.t(j,i)     = values(1);
+        result2.a(j,i)     = values(2);
+        result2.phi(j,i)   = values(3);
+        result2.alpha(j,i) = values(4);
+        result2.beta(j,i)  = values(5);
+        result2.cl(j,i)    = values(6);
+        result2.cd(j,i)    = values(7);
+        result2.ap(j,i)    = values(8);
+        result2.cp(j,i)    = values(9);
+        result2.ct(j,i)    = values(10);
+    end
+    result2.CP(j,1) = (2/rotor.R^2) * trapz(rotor.r(2:end),rotor.r(2:end).*result2.cp(j,2:end));
+%     result.CT(j,1) % can't remember the equation for this right now
+end
+
+%% Reapply constraint for twist
+result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
 
 %% Plot geometry
 figure
 subplot(3,1,1)
-plot(rotor.r,result2.c)
+plot(rotor.r,result.c)
 ylabel('Chord [m]');
 grid on
 subplot(3,1,2)
@@ -248,12 +223,12 @@ plot(rotor.r,rad2deg(result2.beta))
 ylabel('Twist, \beta [deg]');
 grid on
 subplot(3,1,3)
-plot(rotor.r,(rotor.t./result2.c)*100)
+plot(rotor.r,(rotor.t./result.c)*100)
 ylabel('t/c [%]'); xlabel('Radius [m]')
 grid on
 
 figure
-plot(tsr_lst,result2.CP)
+plot(tsr,result2.CP)
 xlabel('TSR [-]'); ylabel('C_P [-]')
 grid on
 
@@ -266,7 +241,7 @@ ylabel('Chord [m]');
 legend('Redesign','DTU 10MW RWT')
 grid on
 subplot(3,1,2)
-plot(rotor.r/rotor.R,rad2deg(result.beta)); hold on
+plot(rotor.r/rotor.R,rad2deg(result2.beta)); hold on
 plot(DTU.r/DTU.R,fnval(DTU.beta,DTU.r),'x'); hold off
 ylabel('Twist, \beta [deg]');
 legend('Redesign','DTU 10MW RWT')
@@ -285,7 +260,7 @@ if length(tsr) ~= 1
     grid on
     % Optimal TSR
     [CPmax,CPmax_idx] = max(result2.CP);
-    tsr_opt   = tsr(CPmax_idx);
+    tsr_opt = tsr(CPmax_idx);
 end
 
 %% Interpolate geometry for HAWC input
@@ -294,7 +269,7 @@ HAWC_in.n = 27;
 % change from rotor radius to blade length
 HAWC_in.r = linspace(0,rotor.R-rotor.r_hub,HAWC_in.n);
 % chord, twist, thickness
-HAWC_in.c = interp1(rotor.r,result2.c,(HAWC_in.r+rotor.r_hub));
+HAWC_in.c = interp1(rotor.r,result.c,(HAWC_in.r+rotor.r_hub));
 HAWC_in.beta = interp1(rotor.r,result2.beta,(HAWC_in.r+rotor.r_hub));
 HAWC_in.t = interp1(rotor.r,rotor.t,(HAWC_in.r+rotor.r_hub));
 
@@ -306,7 +281,7 @@ ylabel('Chord [m]');
 legend('Original','HAWC')
 grid on
 subplot(3,1,2)
-plot(rotor.r,result.beta); hold on
+plot(rotor.r,result2.beta); hold on
 plot(HAWC_in.r+rotor.r_hub,HAWC_in.beta); hold off
 ylabel('Twist, \beta [deg]');
 legend('Original','HAWC')

@@ -87,7 +87,7 @@ for j = 1:length(tsr)
         result.ct(j,i)    = values(10);
     end
     result.CP(j,1) = (2/rotor.R^2) * trapz(rotor.r(2:end),rotor.r(2:end).*result.cp(j,2:end));
-%     result_tsr.CT(j,1) % can't remember the equation for this right now
+%     result.CT(j,1) % can't remember the equation for this right now
 end
 
 %% Apply general constraints

@@ -76,7 +76,7 @@ for i=1:length(f_new_st(:,1))
 end
 writecell(C,'st_new.dat','Delimiter','tab')
 
-%% 
+%% c2new.dat update
 
 f_original_c2 = importdata('c2_inputs.txt');
 HAWCinp=load('aero_design.mat');
@@ -93,7 +93,7 @@ new.z_pos=s.*initial.z_pos;
 new.twist=-rad2deg(HAWCinp.HAWC_in.beta);
 
 
-%%
+
 c2new=[initial.Nsec new.x_pos new.y_pos new.z_pos new.twist];
 
 for i=1:length(c2new(:,1))

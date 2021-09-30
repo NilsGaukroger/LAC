@@ -5,6 +5,10 @@
 
 close all; clear variables; clc
 
+%% Options
+elasticity = 'rigid'; %'flexible' or 'rigid' operation in htc file 4
+ctsr = 1; %chosen tsr index for blade geometry
+
 %% Load inputs
 load('aero_design.mat');
 DTU.c2def = readtable('your_model/DTU_10MW_c2def.txt');
@@ -84,10 +88,48 @@ end
 fclose(fileID);
 
 %% Print for .htc file
-fprintf('nsec %d;\n',length(HAWC_in.r))
-for i = 1:length(HAWC_in.r)
-    fprintf('sec %d %.8f %.8f %.8f %.8f;\n',i,HAWC_in.c2def.x(i),HAWC_in.c2def.y(i),HAWC_in.c2def.z(i),HAWC_in.c2def.beta(i));
+nsec = 27;
+n = linspace(1,nsec,nsec);
+z = (n-1)/(nsec-1).*(rotor.R-rotor.r(1)); %z position along blade
+twist=interp1(rotor.r,rad2deg(result2.beta(ctsr,:)),z+rotor.r(1)); %interpolate twist
+chord=interp1(rotor.r,result.c(ctsr,:),z+rotor.r(1)); %interpolate chord
+relthicc=interp1(rotor.r,rotor.t(ctsr,:)./result.c(ctsr,:)*100,z+rotor.r(1)); %interpolate relative thickness
+
+%fix in case interp returns NaN for first value (z=0)
+twist(1)=twist(2); 
+chord(1)=chord(2);
+relthicc(1)=relthicc(2);
+
+text = fileread(['your_model/DTU_10MW_' elasticity '_hawc2s.htc']); %load .htc to text
+
+%find indices for start and end of c2_def section to replace
+nsecline=sprintf('nsec	%d;',nsec);
+B=strfind(text, nsecline)+length(nsecline);
+text(B:B+length(nsecline)-1)
+countline = 0;
+for i=B+2:length(text)
+    if text(i) == newline
+        countline = countline+1;
+    end
+    if countline == nsec
+        Bf = 1 + i;
+        break
+    end
 end
+
+A=sscanf(text(B+2:Bf),'        sec	%i %f %f %f %f;\n', [5 nsec])'; %read values to matrix
+prebent=A(:,1:3); %gets numbering and x and y coordinates
+prebent(:,2:3) = prebent(:,2:3)*(z(end)/(DTU.R-2.8)); %reescaling prebend with blade length
+printhtcmat = [prebent z' twist']; %matrix to be printed in the new htc
+text(B+2:Bf)=[]; %delete old values
+text=[text(1:B+1) sprintf('        sec	%d %f %f %f %f;\n',printhtcmat') text(B+2:end)]; %insert new values
+text=strrep(text,'DTU_10MW_RWT_ae.dat','redesign_ae.dat'); %changes ae file to the redesigned
+text=strrep(text,'DTU_10MW_RWT_Blade_st.dat','redesign_Blade_st.dat'); %changes st file to the redesigned
+
+newhtcfileID = fopen(['your_model/redesign_' elasticity '_hawc2s.htc'],'w'); %creates new htc file
+fprintf(newhtcfileID,'%c',text); %writes to new htc file
+
+fclose('all') %saves and closes all files
 
 %% Max gen speed for structural
 gearratio = 50;

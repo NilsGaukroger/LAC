@@ -99,8 +99,8 @@ c2new=[initial.Nsec new.x_pos new.y_pos new.z_pos new.twist];
 for i=1:length(c2new(:,1))
     D{i,1}='sec';
     D{i,2}=i;
-    for j=3:length(c2new(1,:))
-      D{i,j}=c2new(i,j);
+    for j=3:(length(c2new(1,:))+1)
+      D{i,j}=c2new(i,j-1);
     end
 end
 

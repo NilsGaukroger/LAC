@@ -10,8 +10,6 @@ clc
 close all
 f_original_st = importdata('scaling_inputs.txt');
 
-
-
 initial.r=f_original_st(:,1);
 initial.m=f_original_st(:,2);
 initial.x_cg=f_original_st(:,3);
@@ -66,32 +64,15 @@ new.I_p=(s.^4).*initial.I_p;
 
 %% st_new.dat update
 
-f_new_st_flexible=[new.r new.m new.x_cg new.y_cg new.ri_x new.ri_y new.x_sh new.y_sh initial.E initial.G new.I_x new.I_y new.I_p initial.k_x initial.k_y new.A initial.pitch new.x_e new.y_e];
-
-rigid.E=initial.E.*10^7;
-rigid.G=initial.G.*10^9;
-
-f_new_st_rigid=[new.r new.m new.x_cg new.y_cg new.ri_x new.ri_y new.x_sh new.y_sh rigid.E rigid.G new.I_x new.I_y new.I_p initial.k_x initial.k_y new.A initial.pitch new.x_e new.y_e];
+f_new_st=[new.r new.m new.x_cg new.y_cg new.ri_x new.ri_y new.x_sh new.y_sh initial.E initial.G new.I_x new.I_y new.I_p initial.k_x initial.k_y new.A initial.pitch new.x_e new.y_e];
 
 C={1, 'number of sets,', 'Nset', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ';'-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ',' ',' '; '#1', 'user_mads', 'generated blade',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' '; 'r', 'm', 'x_cg', 'y_cg', 'ri_x', 'ri_y', 'x_sh', 'y_sh', 'E', 'G', 'I_x', 'I_y', 'I_p', 'k_x', 'k_y', 'A', 'pitch', 'x_e', 'y_e'; '$1', 51, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ',' '};
-for i=1:length(f_new_st_flexible(:,1))
-    for j=1:length(f_new_st_flexible(1,:))
-          C{i+5,j}=f_new_st_flexible(i,j);
+for i=1:length(f_new_st(:,1))
+    for j=1:length(f_new_st(1,:))
+          C{i+5,j}=f_new_st(i,j);
     end
 end
-
-C(57,1:length(f_new_st_flexible(1,:)))={'r', 'm', 'x_cg', 'y_cg', 'ri_x', 'ri_y', 'x_sh', 'y_sh', 'E', 'G', 'I_x', 'I_y', 'I_p', 'k_x', 'k_y', 'A', 'pitch', 'x_e', 'y_e'};
-C(58,1:length(f_new_st_flexible(1,:)))={'$2', 51, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ',' '};
-
-
-for i=1:length(f_new_st_flexible(:,1))
-    for j=1:length(f_new_st_flexible(1,:))
-          C{i+58,j}=f_new_st_rigid(i,j);
-    end
-end
-
 writecell(C,'st_new.dat','Delimiter','tab')
-
 
 %% c2new.dat update
 
@@ -123,61 +104,4 @@ end
 
 writecell(D,'c2_new.dat','Delimiter','tab');
 
-%% Plots
-% Upscaled turbine
-new.flexible.EIxx=initial.E.*new.I_x;
-new.flexible.EIyy=initial.E.*new.I_y;
-new.flexible.GJ=initial.G.*new.I_p;
-new.flexible.EA=initial.E.*new.A;
-
-% DTU 10 MW turbine
-initial.flexible.EIxx=initial.E.*initial.I_x;
-initial.flexible.EIyy=initial.E.*initial.I_y;
-initial.flexible.GJ=initial.G.*initial.I_p;
-initial.flexible.EA=initial.E.*initial.A;
-
-%Normalization of blade length
-initial.normbladelength=initial.r./Blade_length_10MW;
-new.normbladelength=new.r./Blade_length_newrotor;
-
-
-%Plots
-figure
-plot(initial.normbladelength,initial.flexible.EIxx);
-hold on
-plot(new.normbladelength,new.flexible.EIxx);
-legend('DTU 10 MW','Redesign')
-xlabel('r/Blade length');
-ylabel('EIxx(N*m^2)');
-grid on
-grid minor
-
-figure
-plot(initial.normbladelength,initial.flexible.EIyy);
-hold on
-plot(new.normbladelength,new.flexible.EIyy);
-legend('DTU 10 MW','Redesign')
-xlabel('r/Blade length');
-ylabel('EIyy(N*m^2)');
-grid on
-grid minor
-
-figure
-plot(initial.normbladelength,initial.flexible.GJ);
-hold on
-plot(new.normbladelength,new.flexible.GJ);
-legend('DTU 10 MW','Redesign')
-xlabel('r/Blade length');
-ylabel('GJ(N*m^2)');
-grid on
-grid minor
-
-figure
-plot(initial.normbladelength,initial.flexible.EA);
-hold on
-plot(new.normbladelength,new.flexible.EA);
-legend('DTU 10 MW','Redesign')
-xlabel('r/Blade length');
-ylabel('EA(N)');
-grid on
-grid minor
+        

@@ -5,6 +5,9 @@
 
 close all; clear variables; clc
 
+%% Add functions folder to path
+addpath('functions');
+
 %% Design polynomials from DTU 10MW reports
 dis1 = 101; % number of points in DTU.r discretisation
 [DTU.c,DTU.that,DTU.beta,DTU.t,DTU.r] = DTU10MW_des(1,dis1);

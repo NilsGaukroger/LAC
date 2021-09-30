@@ -5,6 +5,16 @@
 
 close all; clear variables; clc
 
+%% Set default plot settings
+disp('Setting default plot parameters...');
+set(    0,          'defaulttextInterpreter', 'tex');
+set(groot, 'defaultAxesTickLabelInterpreter', 'tex');
+set(groot,        'defaultLegendInterpreter', 'tex');
+set(    0,             'defaultAxesFontSize',      15);
+set(    0,            'DefaultLineLineWidth',       1.5);
+disp('Default plot parameters set.');
+% set(    0,           'DefaultFigureColormap',feval('turbo'));
+
 %% Load MATLAB results
 load('aero_design.mat');
 

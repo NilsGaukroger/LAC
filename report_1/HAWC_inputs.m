@@ -73,3 +73,18 @@ for i = 1:n_tsr
     fprintf(fileID,' %.6f  %.6f  %.6f\n',U0(i),pitch(i),N(i));
 end
 fclose(fileID);
+
+%% Write new .ae file
+fileID = fopen('your_model/data/redesign_ae.dat','w');
+fprintf(fileID,'1\n');
+fprintf(fileID,'1 %d\n',length(HAWC_in.r));
+for i = 1:length(HAWC_in.r)
+    fprintf(fileID,' %.14f  %.14f  %.14f 1 ;\n',HAWC_in.r(i),HAWC_in.c(i),HAWC_in.that(i)*100);
+end
+fclose(fileID);
+
+%% Print for .htc file
+fprintf('nsec %d;\n',length(HAWC_in.r))
+for i = 1:length(HAWC_in.r)
+    fprintf('sec %d %.8f %.8f %.8f %.8f;\n',i,HAWC_in.c2def.x(i),HAWC_in.c2def.y(i),HAWC_in.c2def.z(i),HAWC_in.c2def.beta(i));
+end

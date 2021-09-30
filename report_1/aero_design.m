@@ -269,7 +269,7 @@ HAWC_in.that = (HAWC_in.t'./HAWC_in.c);
 HAWC_in.tsr_opt = tsr_opt;
 
 %% Save variables for post-processing
-save('aero_design','aerofoil','DTU','HAWC_in','result','rotor','p','p1','p2','t_max');
+save('aero_design','aerofoil','DTU','HAWC_in','result','result2','rotor','p','p1','p2','t_max');
 
 %% Residual function for a and a'
 function [out,varargout] = residuals_induction(x,rotor,tsr,idx,p,p1,p2,t_max,Rnew,c)

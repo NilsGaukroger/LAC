@@ -20,10 +20,10 @@ load('aero_design.mat');
 
 %% Load HAWC results
 % Retrieve file names
-DTU_folder = 'results_dtu10mw\rigid\';
+DTU_folder = 'your_model\results_dtu10mw\rigid\';
 DTU_name   = 'DTU_10MW_rigid_hawc2s_';
-tsr_folder = 'results_redesign\tsr\';
-ws_folder  = 'results_redesign\ws\';
+tsr_folder = 'your_model\results_redesign\tsr\';
+ws_folder  = 'your_model\results_redesign\ws\';
 rd_name    = 'redesign_rigid_hawc2s_';
 DTU_files_tsr.u = dir([DTU_folder, DTU_name, 'u*']);
 files_tsr.defl = dir([tsr_folder, rd_name, 'd*']);
@@ -117,7 +117,8 @@ xlim([24.1 100]);
 legend('Design','Actual','Location','best')
 grid minor
 subplot(2,1,2)
-plot(HAWC_out.tsr_u.s/HAWC_out.tsr_u.s(end),x_des(HAWC_out.tsr_u.that*100,p1(2,:),p2(2,:))); hold on
+% plot(HAWC_out.tsr_u.s/HAWC_out.tsr_u.s(end),x_des(HAWC_out.tsr_u.that*100,p1(2,:),p2(2,:))); hold on
+plot(rotor.r/rotor.R,result2.alpha); hold on
 plot(HAWC_out.tsr_u.s/HAWC_out.tsr_u.s(end),rad2deg(HAWC_out.tsr_u.ALPHA0),'color',[0.8500, 0.3250, 0.0980]); hold off
 xlabel('Non-dimensional radius [-]'); ylabel('\alpha [deg]');
 legend('Design','Actual','Location','best')
@@ -225,3 +226,9 @@ xlabel('Wind speed [m/s]'); ylabel('C_T [-]')
 ylim([0 1])
 xlim([4 10.7196])
 grid minor
+
+%% Compare CP and CT with DTU 10MW
+fprintf('Redesign CP = %.3f\n',result2.CP);
+fprintf('DTU 10 MW CP = 0.478\n');
+fprintf('Redesign max. thrust = %0.1f kN\n',HAWC_out.ws_pwr.T(end));
+fprintf('DTU 10 MW max. thrust = 1507.4 kN\n');

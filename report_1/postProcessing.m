@@ -22,9 +22,9 @@ load('aero_design.mat');
 % Retrieve file names
 DTU_folder = 'your_model\results_dtu10mw\rigid\';
 DTU_name   = 'DTU_10MW_rigid_hawc2s_';
-tsr_folder = 'your_model\results_redesign\tsr\';
-ws_folder  = 'your_model\results_redesign\ws\';
-rd_name    = 'redesign_rigid_hawc2s_';
+tsr_folder = 'your_model\results_redesign\aero\tsr\';
+ws_folder  = 'your_model\results_redesign\aero\ws\';
+rd_name    = 'redesign_aero_rigid_';
 DTU_files_tsr.u = dir([DTU_folder, DTU_name, 'u*']);
 files_tsr.defl = dir([tsr_folder, rd_name, 'd*']);
 files_tsr.fext = dir([tsr_folder, rd_name, 'f*']);

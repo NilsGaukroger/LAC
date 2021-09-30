@@ -163,9 +163,11 @@ r_R = 0.98;
 result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
 
 % remove flick after r/R > 0.98 for relative thickness
-t_c = rotor.t ./ result.c;
-a = t_c(find((rotor.r/rotor.R) > r_R,1));
-result.c((rotor.r/rotor.R) > r_R) = rotor.t((rotor.r/rotor.R) > r_R) ./ a;
+for j=1:length(tsr)
+    t_c = rotor.t(j,:) ./ result.c(j,:);
+    a = t_c(find((rotor.r/rotor.R) > r_R,1));
+    result.c(j,(rotor.r/rotor.R) > r_R) = rotor.t(j,(rotor.r/rotor.R) > r_R) ./ a;
+end
 
 % % smooth chord transitions ------------->>> SOS 
 % splineX = [rotor.r(24) rotor.r(93) rotor.r(195)];

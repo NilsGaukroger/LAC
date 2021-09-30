@@ -10,14 +10,7 @@ clc
 close all
 f_original_st = importdata('scaling_inputs.txt');
 
-f_original_c2 = importdata('c2_inputs.txt');
-%f_original_c2 = importdata('c2_original.dat');
-%f_new_c2 = 'c2_original.dat' #'c2_new.dat'
-% #
-% s_f_0 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
-% s_f_1 = [10]
-% s_f_2 = []
-% s_f_4 = []
+
 
 initial.r=f_original_st(:,1);
 initial.m=f_original_st(:,2);
@@ -71,7 +64,7 @@ new.I_x=(s.^4).*initial.I_x;
 new.I_y=(s.^4).*initial.I_y;
 new.I_p=(s.^4).*initial.I_p;
 
-%%
+%% st_new.dat update
 
 f_new_st=[new.r new.m new.x_cg new.y_cg new.ri_x new.ri_y new.x_sh new.y_sh initial.E initial.G new.I_x new.I_y new.I_p initial.k_x initial.k_y new.A initial.pitch new.x_e new.y_e];
 
@@ -83,9 +76,34 @@ for i=1:length(f_new_st(:,1))
 end
 writecell(C,'st_new.dat','Delimiter','tab')
 
-%%
+%% 
 
-% C =  {1,2,3;
-%      'text',datetime('today'),hours(1)};
-%  
-%  writecell(C,'C_tab.txt','Delimiter','tab')
+f_original_c2 = importdata('c2_inputs.txt');
+HAWCinp=load('aero_design.mat');
+
+initial.Nsec=f_original_c2(:,1);
+initial.x_pos=f_original_c2(:,2);
+initial.y_pos=f_original_c2(:,3);
+initial.z_pos=f_original_c2(:,4);
+initial.twist=f_original_c2(:,5);
+
+new.x_pos=s.*initial.x_pos;
+new.y_pos=s.*initial.y_pos;
+new.z_pos=s.*initial.z_pos;
+new.twist=-rad2deg(HAWCinp.HAWC_in.beta);
+
+
+%%
+c2new=[initial.Nsec new.x_pos new.y_pos new.z_pos new.twist];
+
+for i=1:length(c2new(:,1))
+    D{i,1}='sec';
+    D{i,2}=i;
+    for j=3:length(c2new(1,:))
+      D{i,j}=c2new(i,j);
+    end
+end
+
+writecell(D,'c2_new.dat','Delimiter','tab');
+
+        

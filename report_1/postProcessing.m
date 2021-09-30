@@ -232,3 +232,6 @@ fprintf('Redesign CP = %.3f\n',result2.CP);
 fprintf('DTU 10 MW CP = 0.478\n');
 fprintf('Redesign max. thrust = %0.1f kN\n',HAWC_out.ws_pwr.T(end));
 fprintf('DTU 10 MW max. thrust = 1507.4 kN\n');
+
+%% Max power for .htc operational_data block
+fprintf('maxpow %.1f\n', HAWC_out.ws_pwr.P(end));

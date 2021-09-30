@@ -130,6 +130,9 @@ dmypy.json
 
 ## MATLAB
 
+# .mat extension
+*.mat
+
 # Windows default autosave extension
 *.asv
 

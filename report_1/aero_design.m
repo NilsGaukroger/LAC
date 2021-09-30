@@ -67,6 +67,20 @@ rotor.bladeLength = rotor.R - rotor.r_hub;
     = deal(NaN(length(tsr),length(rotor.r))); % spanwise values
 [result.CP, result.CT] = deal(NaN(length(tsr),1)); % global values
 
+% Root transition start and initial guess for root transition end
+lroot=rotor.R*0.03; %change value
+that=rotor.t./result.c;
+crtstart = -1;
+for i = 1:length(rotor.r)
+    if rotor.r(i)>lroot+rotor.r(1) && crtstart == -1
+        crtstart=i; % root transition start
+    end
+    if rotor.r(i)>10*lroot+rotor.r(1)
+        crtendstart=i; % lowest root transition end
+        break
+    end
+end
+
 % Least-squares parameters
 lb = [0, 0]; % lower bounds
 ub = [inf, 1]; % upper bounds

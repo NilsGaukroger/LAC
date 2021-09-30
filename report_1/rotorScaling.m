@@ -1,4 +1,4 @@
-function [R2,n] = rotorScaling(V1,I1,R1,I2,varargin)
+function [R2,V2,n] = rotorScaling(V1,I1,R1,I2,varargin)
 
 % 46320 LAC Course
 % Rotor scaling algorithm

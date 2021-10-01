@@ -8,12 +8,16 @@ close all; clear variables; clc
 %% Add functions folder to path
 addpath('functions');
 
+%% DTU rotor parameters
+DTU.R           = 89.1660;           % rotor radius [m]
+DTU.r_hub       = 2.8;               % hub radius [m]
+DTU.bladeLength = DTU.R - DTU.r_hub; % blade length [m]
+
 %% Design polynomials from DTU 10MW reports
 dis1 = 101; % number of points in DTU.r discretisation
 [DTU.c,DTU.that,DTU.beta,DTU.t,DTU.r] = DTU10MW_des(1,dis1);
 
 %% New rotor radius
-DTU.R = 89.1660;
 [rotor.R,rotor.V_rated,~] = rotorScaling(11.4,0.16,DTU.R,0.14);
 
 %% Aerofoil data

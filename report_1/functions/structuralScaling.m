@@ -1,11 +1,11 @@
-function [DTU,rotor] = structuralScaling(original_fileName,new_fileName,...
+function [DTU,redesign] = structuralScaling(original_fileName,new_fileName,...
     original_c2def_fileName,new_c2def_fileName)
 % Function to write new Blade_st.dat file by scaling
 % DTU_10MW_RWT_Blade_St.dat file. Also writes new redesign_c2def.txt file
 % with scaled c2def coordinates.
 
 %% Load aero_design outputs
-load('aero_design.mat','DTU','HAWC_in','rotor');
+load('aero_design.mat','DTU','HAWC_in','redesign');
 
 %% Import original DTU 10MW structural file
 % Define import options
@@ -24,7 +24,7 @@ opts.DataLines      = [59 109]; % only read rigid data (ignoring headers)
 f_original_st_rigid = readtable(original_fileName,opts);
 
 %% Set scaling factor
-s = rotor.bladeLength / DTU.bladeLength;
+s = redesign.bladeLength / DTU.bladeLength;
 
 %% Preallocate new (scaled) structural tables
 f_new_st_flex  = f_original_st_flex;
@@ -94,7 +94,7 @@ writetable(f_new_c2,new_c2def_fileName,'Delimiter','tab','WriteVariableNames',0)
 %% Save structural parameters to structures
 DTU.st_flex    = f_original_st_flex;
 DTU.st_rigid   = f_original_st_rigid;
-rotor.st_flex  = f_new_st_flex;
-rotor.st_rigid = f_new_st_rigid;
+redesign.st_flex  = f_new_st_flex;
+redesign.st_rigid = f_new_st_rigid;
 
 end

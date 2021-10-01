@@ -9,7 +9,7 @@ close all; clear variables; clc
 elasticity = 'rigid'; %'flexible' or 'rigid' operation in htc file 4
 mode = '1pt'; % '1pt', 'tsr', or 'ws'
 ctsr = 1; % chosen tsr index for blade geometry
-auto = 0;
+auto = 0; % '0': write .htc manually, '1': automatic
 
 %% Load inputs
 load('aero_design.mat');

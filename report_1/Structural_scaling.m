@@ -100,3 +100,6 @@ end
 
 % Write new data to file
 writetable(f_new_c2,new_c2def_fileName,'Delimiter','tab','WriteVariableNames',0);
+
+%% Save data for post-processing
+save('struct.mat');

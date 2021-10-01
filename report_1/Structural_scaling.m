@@ -19,8 +19,8 @@ original_c2def_fileName = 'your_model/dtu10mw/DTU_10MW_c2def.txt';
 new_c2def_fileName = 'your_model/redesign_c2def.txt';
 
 %% Run structuralScaling
-[DTU,rotor] = structuralScaling(original_fileName,new_fileName,...
+[DTU,redesign] = structuralScaling(original_fileName,new_fileName,...
     original_c2def_fileName,new_c2def_fileName);
 
 %% Save data for post-processing
-save('struct.mat','DTU','rotor');
+save('struct.mat','DTU','redesign');

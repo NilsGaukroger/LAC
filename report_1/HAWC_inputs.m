@@ -18,7 +18,7 @@ DTU.c2def = readtable('your_model/dtu10mw/DTU_10MW_c2def.txt');
 DTU.c2def.Properties.VariableNames = {'sec','idx','x','y','z','beta'};
 
 %% Scale coordinates
-scale = rotor.R / DTU.R;
+scale = redesign.R / DTU.R;
 
 HAWC_in.c2def   = DTU.c2def;
 HAWC_in.c2def.x = DTU.c2def.x * scale;
@@ -28,17 +28,17 @@ HAWC_in.c2def.beta = -rad2deg(HAWC_in.beta);
 
 %% Check for max rpm
 TS_max    = 90; % maximum tip speed [m/s]
-omega_max = (TS_max / rotor.R);
+omega_max = (TS_max / redesign.R);
 N_max     = omega_max * (60/(2*pi));
-U0_max    = (omega_max * rotor.R) / HAWC_in.tsr_opt;
+U0_max    = (omega_max * redesign.R) / HAWC_in.tsr_opt;
 
-if U0_max < rotor.V_rated
+if U0_max < redesign.V_rated
     disp('Warning: maximum tip speed exceeded within partially loaded region')
 end
 
 %% Single point operation
 U0 = 8; % wind speed [m/s]
-omega = (HAWC_in.tsr_opt * U0) / rotor.R;
+omega = (HAWC_in.tsr_opt * U0) / redesign.R;
 N     = omega * (60/(2*pi));
 pitch = 0;
 
@@ -53,7 +53,7 @@ n_tsr = 10;
 tsr = linspace(5,10,n_tsr);
 
 U0 = 8:0.001:(8+(n_tsr-1)*0.001); % wind speed [m/s]
-omega = (tsr .* U0) / rotor.R;
+omega = (tsr .* U0) / redesign.R;
 N     = omega * (60/(2*pi));
 pitch = zeros(1,n_tsr);
 
@@ -67,9 +67,9 @@ fclose(fileID);
 
 %% Multiple wind speed operation
 n_U0 = 10;
-U0 = linspace(4,rotor.V_rated,n_U0);
+U0 = linspace(4,redesign.V_rated,n_U0);
 
-omega = (HAWC_in.tsr_opt .* U0) / rotor.R;
+omega = (HAWC_in.tsr_opt .* U0) / redesign.R;
 N     = omega * (60/(2*pi));
 pitch = zeros(1,n_tsr);
 

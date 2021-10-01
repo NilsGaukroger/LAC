@@ -1,107 +1,102 @@
-% import numpy as np
-% #
-% # Output file name
-%f_new_st = 'st_new.dat'
-% # ============================================================================
-%# INPUTS
-%# ============================================================================
-clear
-clc
-close all
-f_original_st = importdata('scaling_inputs.txt');
+% 46320 LAC Course
+% Assignment 2
+% Stefanos Masalas & Nils Joseph Gaukroger
+% 30th September 2021
 
-initial.r=f_original_st(:,1);
-initial.m=f_original_st(:,2);
-initial.x_cg=f_original_st(:,3);
-initial.y_cg=f_original_st(:,4);
-initial.ri_x=f_original_st(:,5);
-initial.ri_y=f_original_st(:,6);
-initial.x_sh=f_original_st(:,7);
-initial.y_sh=f_original_st(:,8);
-initial.E=f_original_st(:,9);
-initial.G=f_original_st(:,10);
-initial.I_x=f_original_st(:,11);
-initial.I_y=f_original_st(:,12);
-initial.I_p=f_original_st(:,13);
-initial.k_x=f_original_st(:,14);
-initial.k_y=f_original_st(:,15);
-initial.A=f_original_st(:,16);
-initial.pitch=f_original_st(:,17);
-initial.x_e=f_original_st(:,18);
-initial.y_e=f_original_st(:,19);
+close all; clear variables; clc
 
-r_tip_10MW=89.1660;
-r_tip_newrotor=97.7893;
-r_root=2.8;
+%% Name input and output files
+% st.dat file
+original_fileName  = 'your_model/dtu10mw/DTU_10MW_RWT_Blade_st.dat';
+new_fileName       = 'your_model/data/redesign_Blade_st.dat';
 
-Blade_length_10MW=r_tip_10MW-r_root;
-Blade_length_newrotor=r_tip_newrotor-r_root;
-s=Blade_length_newrotor./Blade_length_10MW;
+% c2def.txt file
+original_c2def_fileName = 'your_model/dtu10mw/DTU_10MW_c2def.txt';
+new_c2def_fileName = 'your_model/redesign_c2def.txt';
 
-%% s^1
+%% Load aero_design outputs
+load('aero_design.mat');
 
-new.r=s.*initial.r;
-new.x_cg=s.*initial.x_cg;
-new.y_cg=s.*initial.y_cg;
-new.ri_x=s.*initial.ri_x;
-new.ri_y=s.*initial.ri_y;
-new.x_sh=s.*initial.x_sh;
-new.y_sh=s.*initial.y_sh;
-new.x_e=s.*initial.x_e;
-new.y_e=s.*initial.y_e;
+%% Import original DTU 10MW structural file
+% Define import options
+opts = detectImportOptions(original_fileName);
+opts.VariableNames = {'r','m','x_cg','y_cg','ri_x','ri_y','x_sh','y_sh',...
+    'E','G','I_x','I_y','I_p','k_x','k_y','A','pitch','x_e','y_e'}; % set variable names
+opts.DataLines     = [6 56]; % only read flexible data (ignoring headers)
+% in some places the delimiter is spaces not tabs, so readtable should recognise both
+opts.Delimiter     = {'\t',' '};
 
+% Import flexible data as table
+f_original_st_flex  = readtable(original_fileName,opts);
 
-%% s^2
+% Import rigid data as table
+opts.DataLines      = [59 109]; % only read rigid data (ignoring headers)
+f_original_st_rigid = readtable(original_fileName,opts);
 
-new.m=(s.^2).*initial.m;
-new.A=(s.^2).*initial.A;
+%% Set scaling factor
+s = rotor.bladeLength / DTU.bladeLength;
 
-%% s^4
+%% Preallocate new (scaled) structural tables
+f_new_st_flex  = f_original_st_flex;
+f_new_st_rigid = f_original_st_rigid;
 
-new.I_x=(s.^4).*initial.I_x;
-new.I_y=(s.^4).*initial.I_y;
-new.I_p=(s.^4).*initial.I_p;
+%% Scale variables by power of s and save in tables
+vars{1} = {'r','x_cg','y_cg','ri_x','ri_y','x_sh','y_sh','x_e','y_e'}; % s^1
+vars{2} = {'m','A'};                                                   % s^2
+% (NB 'm' = mass per unit length)
+vars{4} = {'I_x','I_y','I_p'};                                         % s^4
 
-%% st_new.dat update
-
-f_new_st=[new.r new.m new.x_cg new.y_cg new.ri_x new.ri_y new.x_sh new.y_sh initial.E initial.G new.I_x new.I_y new.I_p initial.k_x initial.k_y new.A initial.pitch new.x_e new.y_e];
-
-C={1, 'number of sets,', 'Nset', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ';'-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ',' ',' '; '#1', 'user_mads', 'generated blade',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' '; 'r', 'm', 'x_cg', 'y_cg', 'ri_x', 'ri_y', 'x_sh', 'y_sh', 'E', 'G', 'I_x', 'I_y', 'I_p', 'k_x', 'k_y', 'A', 'pitch', 'x_e', 'y_e'; '$1', 51, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ',' ',' ',' '};
-for i=1:length(f_new_st(:,1))
-    for j=1:length(f_new_st(1,:))
-          C{i+5,j}=f_new_st(i,j);
-    end
-end
-writecell(C,'st_new.dat','Delimiter','tab')
-
-%% c2new.dat update
-
-f_original_c2 = importdata('c2_inputs.txt');
-HAWCinp=load('aero_design.mat');
-
-initial.Nsec=f_original_c2(:,1);
-initial.x_pos=f_original_c2(:,2);
-initial.y_pos=f_original_c2(:,3);
-initial.z_pos=f_original_c2(:,4);
-initial.twist=f_original_c2(:,5);
-
-new.x_pos=s.*initial.x_pos;
-new.y_pos=s.*initial.y_pos;
-new.z_pos=s.*initial.z_pos;
-new.twist=-rad2deg(HAWCinp.HAWC_in.beta);
-
-
-
-c2new=[initial.Nsec new.x_pos new.y_pos new.z_pos new.twist];
-
-for i=1:length(c2new(:,1))
-    D{i,1}='sec';
-    D{i,2}=i;
-    for j=3:(length(c2new(1,:))+1)
-      D{i,j}=c2new(i,j-1);
+for i = 1:length(vars) % for each s^i (each cell in vars)
+    for j = 1:length(vars{i}) % for each variable with vars{i}
+        % Variable in scaled table = old variable * scaling factor ^ i
+        f_new_st_flex.(vars{i}{j}) = f_original_st_flex.(vars{i}{j}) * s^i;
+        f_new_st_rigid.(vars{i}{j}) = f_original_st_rigid.(vars{i}{j}) * s^i;
     end
 end
 
-writecell(D,'c2_new.dat','Delimiter','tab');
+%% Copy flexible headings from original structural file and paste in new
+data   = importdata(original_fileName);  % import original file
+fileID = fopen(new_fileName,'w');        % open new file with write permissions
+fprintf(fileID,'%s\n',data.textdata{:}); % write original headings to file
+fclose(fileID);                          % close file
 
-        
+%% Append new flexible data to file
+writetable(f_new_st_flex,new_fileName,'WriteMode','append','Delimiter','tab');
+
+%% Copy rigid headings from original structural file and paste in new
+% Extract original headings
+linenum        = 57;                           % line number where headings start
+fileID         = fopen(original_fileName,'r'); % open original file with read permissions
+rigid_headings = textscan(fileID,'%s',2,'delimiter','\n','headerlines',linenum-1);
+% read 2 lines starting from linenum and save to rigid_headings
+fclose(fileID);                                % close file
+
+% Append headings to new file
+fileID         = fopen(new_fileName,'a');    % open new file with append permissions
+fprintf(fileID,'%s\n',rigid_headings{1}{:}); % write original headings to file
+fclose(fileID);                              % close file
+
+%% Append new flexible data to file
+writetable(f_new_st_rigid,new_fileName,'WriteMode','append','Delimiter','tab');
+
+%% Scale DTU 10 MW c2def coordinates
+% Define import options
+opts_c2def    = detectImportOptions(original_c2def_fileName);
+opts_c2def.VariableNames = {'sec','idx','x','y','z','twist'}; % set variable names
+
+f_original_c2 = readtable(original_c2def_fileName,opts_c2def); % read original data as table
+f_new_c2      = f_original_c2; % preallocate new table
+
+c2_vars = {'x','y','z'}; % specify variables to be scaled
+for i = 1:length(c2_vars)
+    f_new_c2.(c2_vars{i}) = f_original_c2.(c2_vars{i}) * s; % scale and save in new table
+end
+
+% Extract twist from aero_design output
+for i = 1:length(HAWC_in.beta)
+    f_new_c2.twist{i} = append(string(-rad2deg(HAWC_in.beta(i))),';');
+    % NB: convert from radians, change sign, and append semicolon
+end
+
+% Write new data to file
+writetable(f_new_c2,new_c2def_fileName,'Delimiter','tab','WriteVariableNames',0);

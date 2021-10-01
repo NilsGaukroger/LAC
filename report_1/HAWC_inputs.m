@@ -127,7 +127,7 @@ if auto == 1
 
     fclose('all'); %saves and closes all files
 else
-    %% Alternative printing
+    % Alternative printing
     fprintf('nsec %d;\n',length(HAWC_in.r))
     for i = 1:length(HAWC_in.r)
         fprintf('sec %d %.8f %.8f %.8f %.8f;\n',i,HAWC_in.c2def.x(i),HAWC_in.c2def.y(i),HAWC_in.c2def.z(i),HAWC_in.c2def.beta(i));

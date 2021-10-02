@@ -64,11 +64,11 @@ DTU.tsr_u = readtable([DTU_folder, DTU_N_tsr_u{4}],'FileType','text');
 DTU.tsr_u.Properties.VariableNames = u_vars;
 
 %% Calculated values
-HAWC_out.tsr_pwr.tsr = ((HAWC_out.tsr_pwr.Speed * ((2*pi)/60)) * rotor.R)...
+HAWC_out.tsr_pwr.tsr = ((HAWC_out.tsr_pwr.Speed * ((2*pi)/60)) * redesign.R)...
     ./ HAWC_out.tsr_pwr.V;
 chord = interp1(HAWC_in.r,HAWC_in.c,HAWC_out.tsr_u.s);
 chord(end) = 1e-2;
-HAWC_out.tsr_u.that = thickness(HAWC_out.tsr_u.s,p,t_max,rotor.R) ./ chord;
+HAWC_out.tsr_u.that = thickness(HAWC_out.tsr_u.s,p,t_max,redesign.R) ./ chord;
 % HAWC_out.tsr_u.that(HAWC_out.tsr_u.that > 1) = 1;
 
 % r_R = 0.98;
@@ -118,7 +118,7 @@ legend('Design','Actual','Location','best')
 grid minor
 subplot(2,1,2)
 % plot(HAWC_out.tsr_u.s/HAWC_out.tsr_u.s(end),x_des(HAWC_out.tsr_u.that*100,p1(2,:),p2(2,:))); hold on
-plot(rotor.r/rotor.R,result2.alpha); hold on
+plot(redesign.r/redesign.R,result2.alpha); hold on
 plot(HAWC_out.tsr_u.s/HAWC_out.tsr_u.s(end),rad2deg(HAWC_out.tsr_u.ALPHA0),'color',[0.8500, 0.3250, 0.0980]); hold off
 xlabel('Non-dimensional radius [-]'); ylabel('\alpha [deg]');
 legend('Design','Actual','Location','best')

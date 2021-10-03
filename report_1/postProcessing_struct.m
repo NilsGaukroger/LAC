@@ -6,11 +6,25 @@
 
 close all; clear variables; clc
 
+%% Set default plot settings
+disp('Setting default plot parameters...');
+set(    0,          'defaulttextInterpreter', 'tex');
+set(groot, 'defaultAxesTickLabelInterpreter', 'tex');
+set(groot,        'defaultLegendInterpreter', 'tex');
+set(    0,             'defaultAxesFontSize',      15);
+set(    0,            'DefaultLineLineWidth',       1.5);
+disp('Default plot parameters set.');
+
+%% Add functions folder to path
+addpath('functions\')
+
 %% Load data from Structural_scaling
 load('struct.mat');
 
 %% Create new variables
-elas = {'st_flex','st_rigid'};
+elas = {'st_flex','st_rigid'}; % filenames of different elasticities
+% Array containing new variable and variables from which it is derived
+% NB: order as such 'EI_xx' = f('E','I_x') etc.
 vars = {'EI_xx','E','I_x';
     'EI_yy','E','I_y';
     'GJ','G','I_p';
@@ -50,30 +64,35 @@ for i = 1:4
 end
 
 %% HAWC post-processing
-DTU_folder_flex = 'your_model/results_dtu10mw/struct/flex/';
-DTU_pwr_fileName_flex = 'DTU_10MW_struct_flex.pwr';
-redesign_folder_flex = 'your_model/results_redesign/struct/flex/';
-redesign_pwr_fileName_flex = 'redesign_struct_flex.pwr';
+folders = {'results_dtu10mw/struct/','results_redesign/struct/'};
+elas    = {'flex','rigid'};
+files   = {'/DTU_10MW_struct_','/redesign_struct_'};
+pwr     = cell(2,2); % array for storing .pwr files, rows = turbine, cols = elasticity
 
-DTU_pwr_rigid = readtable([DTU_folder_flex DTU_pwr_fileName_flex],'FileType','text');
-DTU_pwr_rigid.Properties.VariableNames = {'V','P','T','Cp','Ct',...
-    'Pitch Q','Flap M','Edge M','Pitch','Speed','Tip x','Tip y','Tip z',...
-    'J_rot','J_DT'};
-DTU_pwr_flex = readtable([DTU_folder_rigid DTU_pwr_fileName_rigid],'FileType','text');
-DTU_pwr_flex.Properties.VariableNames = DTU_pwr_rigid.Properties.VariableNames;
-redesign_pwr_rigid = readtable([redesign_folder_rigid redesign_pwr_fileName_rigid],'FileType','text');
-redesign_pwr_flex = readtable([redesign_folder_flex redesign_pwr_fileName_flex],'FileType','text');
-redesign_pwr_flex.Properties.VariableNames = DTU_pwr_flex.Properties.VariableNames;
+for i = 1:size(pwr,1)
+    for j = 1:size(pwr,2)
+        pwr{i,j} = import_pwr(strcat("your_model/",folders{i},elas{j},files{i},elas{j},".pwr"));
+    end
+end
 
-%% 
-vars = {'P','T','Speed','Pitch','Tip y','Tip x','Tip z'};
+%% Calculation of deflection
+for i = 1:size(pwr,1)
+    pwr{i,1}.x_defl = pwr{i,1}.('Tip x') - pwr{i,2}.('Tip x');
+    pwr{i,1}.y_defl = pwr{i,1}.('Tip y') - pwr{i,2}.('Tip y');
+    pwr{i,1}.z_defl = pwr{i,1}.('Tip z') - pwr{i,2}.('Tip z');
+end
+
+%% Plotting
+vars = {'P','T','Speed','Pitch','x_defl','y_defl','z_defl'};
 ylabels = {'Power [kW]','Thrust [kN]','Rotor speed [rpm]','Pitch angle [deg]',...
-    'Flapwise tip deflection [m]','Edgewise tip deflection [m]','Tip-z [m]'};
+    'Flapwise tip deflection [m]','Edgewise tip deflection [m]','Spanwise tip deflection [m]'};
+
+% Operational parameters
 figure
 for i = 1:4
     subplot(2,2,i)
-    plot(DTU_pwr_flex.V,DTU_pwr_flex.(vars{i})); hold on
-    plot(redesign_pwr_flex.V,redesign_pwr_flex.(vars{i})); hold off
+    plot(pwr{1,1}.V,pwr{1,1}.(vars{i})); hold on
+    plot(pwr{2,1}.V,pwr{2,1}.(vars{i})); hold off
     ylabel(ylabels(i));
     legend('DTU 10MW','Redesign','Location','best')
     if i > 2
@@ -81,12 +100,17 @@ for i = 1:4
     end
     grid minor
 end
+
+% Tip deflections
 figure
 for i = 1:3
     subplot(3,1,i)
-    plot(DTU_pwr_flex.V,DTU_pwr_flex.(vars{i+4})); hold on
-    plot(redesign_pwr_flex.V,redesign_pwr_flex.(vars{i+4})); hold off
+    plot(pwr{1,1}.V,pwr{1,1}.(vars{i+4})); hold on
+    plot(pwr{2,1}.V,pwr{2,1}.(vars{i+4})); hold off
     ylabel(ylabels(i+4));
     legend('DTU 10MW','Redesign','Location','best')
+    if i > 2
+        xlabel('Wind speed [m/s]')
+    end
     grid minor
 end

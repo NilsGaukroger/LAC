@@ -103,8 +103,9 @@ for i = 1:4
 end
 
 % Tip deflections
+mode = 2; % 2: z-position, 3: z-deflection
 figure
-for i = 1:3
+for i = 1:mode
     subplot(3,1,i)
     plot(pwr{1,1}.V,pwr{1,1}.(vars{i+4})); hold on
     plot(pwr{2,1}.V,pwr{2,1}.(vars{i+4})); hold off
@@ -114,5 +115,15 @@ for i = 1:3
     if i > 2
         xlabel('Wind speed [m/s]')
     end
+    grid minor
+end
+if i == 2
+    subplot(3,1,3)
+    plot(pwr{1,1}.V,pwr{1,1}.('Tip z')./DTU.R); hold on
+    plot(pwr{2,1}.V,pwr{2,1}.('Tip z')./redesign.R); hold off
+    ylabel('Non-dimensional spanwise tip position [m]')
+    legend('DTU 10MW','Redesign','Location','best')
+    xlim([4 25])
+    xlabel('Wind speed [m/s]')
     grid minor
 end

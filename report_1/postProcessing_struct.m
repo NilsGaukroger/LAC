@@ -64,14 +64,14 @@ for i = 1:4
 end
 
 %% HAWC post-processing
-folders = {'results_dtu10mw/struct/','results_redesign/struct/'};
+turbine = {'results_dtu10mw/struct/','results_redesign/struct/'};
 elas    = {'flex','rigid'};
-files   = {'/DTU_10MW_struct_','/redesign_struct_'};
+file    = {'/DTU_10MW_struct_','/redesign_struct_'};
 pwr     = cell(2,2); % array for storing .pwr files, rows = turbine, cols = elasticity
 
 for i = 1:size(pwr,1)
     for j = 1:size(pwr,2)
-        pwr{i,j} = import_pwr(strcat("your_model/",folders{i},elas{j},files{i},elas{j},".pwr"));
+        pwr{i,j} = import_pwr(strcat("your_model/",turbine{i},elas{j},file{i},elas{j},".pwr"));
     end
 end
 

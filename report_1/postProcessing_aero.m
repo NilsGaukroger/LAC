@@ -20,7 +20,7 @@ load('aero_design.mat');
 
 %% Load HAWC results
 % Retrieve file names
-DTU_folder = 'your_model\results_dtu10mw\rigid\';
+DTU_folder = 'your_model\results_dtu10mw\aero\rigid\';
 DTU_name   = 'DTU_10MW_rigid_hawc2s_';
 tsr_folder = 'your_model\results_redesign\aero\tsr\';
 ws_folder  = 'your_model\results_redesign\aero\ws\';

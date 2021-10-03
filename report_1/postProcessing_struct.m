@@ -95,6 +95,7 @@ for i = 1:4
     plot(pwr{2,1}.V,pwr{2,1}.(vars{i})); hold off
     ylabel(ylabels(i));
     legend('DTU 10MW','Redesign','Location','best')
+    xlim([4 25])
     if i > 2
         xlabel('Wind speed [m/s]')
     end
@@ -109,6 +110,7 @@ for i = 1:3
     plot(pwr{2,1}.V,pwr{2,1}.(vars{i+4})); hold off
     ylabel(ylabels(i+4));
     legend('DTU 10MW','Redesign','Location','best')
+    xlim([4 25])
     if i > 2
         xlabel('Wind speed [m/s]')
     end

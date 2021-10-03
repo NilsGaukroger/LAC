@@ -2,8 +2,8 @@
 ;   Modified from version 9.2a for LAC course
 ;
   begin new_htc_structure;	material properties, orientations and constraints of bodies
-  body_output_file_name ./info/body.dat;
-  beam_output_file_name ./info/beam.dat;
+  body_output_file_name ./result_redesign/struct/flex/info/body.dat;
+  beam_output_file_name ./result_redesign/struct/flex/info/beam.dat;
 ;-------------------------------------------------------------------------------------------------------------------------------
     begin main_body;	tower
       name	tower;

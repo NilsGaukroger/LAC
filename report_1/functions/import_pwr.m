@@ -1,0 +1,6 @@
+function [pwr] = import_pwr(filename)
+pwr = readtable(filename,'FileType','text');
+pwr.Properties.VariableNames = {'V','P','T','Cp','Ct',...
+    'Pitch Q','Flap M','Edge M','Pitch','Speed','Tip x','Tip y','Tip z',...
+    'J_rot','J_DT'};
+end

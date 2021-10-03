@@ -1,6 +1,7 @@
 % 46320 LAC Course
 % Assignment 1: Post-processing
-% Nils Joseph Gaukroger
+% Authors: Nikolaos Stamatopoulos, Nils Joseph Gaukroger, Stefanos Masalas,
+% Eduardo Fredrich de Miranda
 % 26th September 2021
 
 close all; clear variables; clc

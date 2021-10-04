@@ -88,8 +88,18 @@ for i = 1:length(HAWC_in.beta)
     % NB: convert from radians, change sign, and append semicolon
 end
 
+% Write new nsec to file
+fileID = fopen(new_c2def_fileName,'w');        % open new file with append permissions
+fprintf(fileID,'nsec %d;\n',size(f_new_c2,1)); % write original headings to file
+fclose(fileID);                                % close file
+
 % Write new data to file
-writetable(f_new_c2,new_c2def_fileName,'Delimiter','tab','WriteVariableNames',0);
+writetable(f_new_c2,new_c2def_fileName,'Delimiter','tab','WriteMode','append','WriteVariableNames',0);
+
+% Append exit to new file
+fileID = fopen(new_c2def_fileName,'a'); % open new file with append permissions
+fprintf(fileID,'exit;');                % write original headings to file
+fclose(fileID);                         % close file
 
 %% Save structural parameters to structures
 DTU.st_flex    = f_original_st_flex;

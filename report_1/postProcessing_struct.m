@@ -11,12 +11,19 @@ disp('Setting default plot parameters...');
 set(    0,          'defaulttextInterpreter', 'tex');
 set(groot, 'defaultAxesTickLabelInterpreter', 'tex');
 set(groot,        'defaultLegendInterpreter', 'tex');
-set(    0,             'defaultAxesFontSize',      15);
-set(    0,            'DefaultLineLineWidth',       1.5);
+set(    0,             'defaultAxesFontSize',    15);
+set(    0,            'DefaultLineLineWidth',   1.5);
 disp('Default plot parameters set.');
 
 %% Add functions folder to path
 addpath('functions\')
+
+%% Figure saving settings
+save     = true; % true: saves figures, false: doesn't
+overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\';
+if not((isfolder(overleaf))) % if directory doesn't exist don't attempt to save there
+    save = false;
+end
 
 %% Load data from Structural_scaling
 load('struct.mat');
@@ -62,6 +69,10 @@ for i = 1:4
     legend('DTU 10 MW','Redesign','Location','SW')
     grid minor
 end
+if save
+    exportgraphics(gcf,strcat(overleaf, 'part1_', 'stiffness', '.pdf'),...
+        'ContentType','vector');
+end
 
 %% HAWC post-processing
 turbine = {'results_dtu10mw/struct/','results_redesign/struct/'};
@@ -101,6 +112,10 @@ for i = 1:4
     end
     grid minor
 end
+if save
+    exportgraphics(gcf,strcat(overleaf, 'part1_', 'operationalParameters', '.pdf'),...
+        'ContentType','vector');
+end
 
 % Tip deflections
 mode = 2; % 2: z-position, 3: z-deflection
@@ -126,4 +141,8 @@ if i == 2
     xlim([4 25])
     xlabel('Wind speed [m/s]')
     grid minor
+end
+if save
+    exportgraphics(gcf,strcat(overleaf, 'part1_', 'deflections', '.pdf'),...
+        'ContentType','vector');
 end

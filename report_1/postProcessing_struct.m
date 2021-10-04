@@ -119,8 +119,8 @@ for i = 1:mode
 end
 if i == 2
     subplot(3,1,3)
-    plot(pwr{1,1}.V,pwr{1,1}.('Tip z')./DTU.R); hold on
-    plot(pwr{2,1}.V,pwr{2,1}.('Tip z')./redesign.R); hold off
+    plot(pwr{1,1}.V,pwr{1,1}.('Tip z')./DTU.bladeLength); hold on
+    plot(pwr{2,1}.V,pwr{2,1}.('Tip z')./redesign.bladeLength); hold off
     ylabel('Non-dimensional spanwise tip position [m]')
     legend('DTU 10MW','Redesign','Location','best')
     xlim([4 25])

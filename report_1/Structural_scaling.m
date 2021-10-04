@@ -16,7 +16,7 @@ new_fileName       = 'your_model/data/redesign_Blade_st.dat';
 
 % c2def.txt file
 original_c2def_fileName = 'your_model/dtu10mw/DTU_10MW_c2def.txt';
-new_c2def_fileName = 'your_model/redesign_c2def.txt';
+new_c2def_fileName = 'your_model/data/redesign_c2def.dat';
 
 %% Run structuralScaling
 [DTU,redesign] = structuralScaling(original_fileName,new_fileName,...

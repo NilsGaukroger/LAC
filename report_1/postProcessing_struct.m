@@ -94,7 +94,7 @@ for i = 1:size(pwr,1)
 end
 
 %% Plotting
-vars = {'P','T','Speed','Pitch','x_defl','y_defl','z_defl'};
+vars = {'P','T','Speed','Pitch','y_defl','x_defl','z_defl'};
 ylabels = {'Power [kW]','Thrust [kN]','Rotor speed [rpm]','Pitch angle [deg]',...
     'Flapwise tip deflection [m]','Edgewise tip deflection [m]','Spanwise tip deflection [m]'};
 
@@ -136,6 +136,8 @@ if i == 2
     subplot(3,1,3)
     plot(pwr{1,1}.V,pwr{1,1}.('Tip z')./DTU.bladeLength); hold on
     plot(pwr{2,1}.V,pwr{2,1}.('Tip z')./redesign.bladeLength); hold off
+%     plot(pwr{1,1}.V,pwr{1,1}.('Tip z')); hold on
+%     plot(pwr{2,1}.V,pwr{2,1}.('Tip z')); hold off
     ylabel('Non-dimensional spanwise tip position [m]')
     legend('DTU 10MW','Redesign','Location','best')
     xlim([4 25])

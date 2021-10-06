@@ -39,6 +39,8 @@ for i = 1:length(turbine)
     end
 end
 
+
+
 %% Calculated values
 % HAWC_out.tsr_pwr.tsr = ((HAWC_out.tsr_pwr.Speed * ((2*pi)/60)) * redesign.R)...
 %     ./ HAWC_out.tsr_pwr.V;

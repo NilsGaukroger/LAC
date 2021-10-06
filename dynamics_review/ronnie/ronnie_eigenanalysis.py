@@ -9,8 +9,8 @@ from _ronnie_utils import get_nr_matrices, print_modal_components, animate_mode_
 
 
 # define our input variables
-Omega = 0.0  # rotational frequency [rad/s]
-animate_modes = True  # visualize the modes?
+Omega = 0.8  # rotational frequency [rad/s]
+animate_modes = False  # visualize the modes?
 save_gif = True  # save the animation as a .gif? (requires matplotlib > 3.2.1, e.g. 3.3.1)
 
 
@@ -74,4 +74,6 @@ if animate_modes:
             anim.save('ronnie_standstill.gif', dpi=150)
         else:
             anim.save('ronnie_rotating.gif', dpi=150)
+
+#%% Calculate harmonics
 

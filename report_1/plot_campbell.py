@@ -6,12 +6,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-struc_path = 'your_model/results_redesign/stab/redesign_st.cmb'  # either None or path to structural .cmb file
-aero_path = 'your_model/results_redesign/stab/redesign_ael.cmb'  # either None or path to aeroelastic .cmb file
+struc_path = 'your_model/results_dtu10mw/stab/DTU_10MW_st.cmb'  # either None or path to structural .cmb file
+aero_path = 'your_model/results_dtu10mw/stab/DTU_10MW_ael.cmb'  # either None or path to aeroelastic .cmb file
 min_wsp = 4  # minimum wind speed to plot
 max_modes = 11  # maximum number of modes to plot
 opt_path = './your_model/redesign_struct_flex.opt'  # opt path for 1P, 3P, 6P lines
-save_fig = False  # save the figures to png?
+save_fig = True  # save the figures to png?
 
 # identification of modes for structural and aeroelastic campbell diagram
 modes_struc = ['1. 1st Twr FA', '2. 1st Twr SS', '3. 1st BW flap', '4. 1st SYM flap',  

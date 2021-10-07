@@ -9,17 +9,26 @@ import matplotlib.pyplot as plt
 struc_path = 'your_model/results_dtu10mw/stab/DTU_10MW_st.cmb'  # either None or path to structural .cmb file
 aero_path = 'your_model/results_dtu10mw/stab/DTU_10MW_ael.cmb'  # either None or path to aeroelastic .cmb file
 min_wsp = 4  # minimum wind speed to plot
-max_modes = 11  # maximum number of modes to plot
+max_modes = 12  # maximum number of modes to plot
 opt_path = './your_model/redesign_struct_flex.opt'  # opt path for 1P, 3P, 6P lines
 save_fig = True  # save the figures to png?
 
 # identification of modes for structural and aeroelastic campbell diagram
+# add if statement for turbines as FA and SS swap for DTU 10 MW, i.e.
+# DTU
 modes_struc = ['1. 1st Twr FA', '2. 1st Twr SS', '3. 1st BW flap', '4. 1st SYM flap',  
               '5. 1st FW flap', '6. 1st BW edge', '7. 1st FW edge', '8. 2nd BW flap',  
-              '9. 2nd FW flap', '10. 2nd SYM flap', '11. 1st COL edge'] 
+              '9. 2nd FW flap', '10. 2nd SYM flap', '11. 1st COL edge','12. 3rd BW flap'] 
 modes_aero = ['1. 1st Twr SS', '2. 1st Twr FA', '3. 1st BW flap', '4. 1st SYM flap',  
               '5. 1st FW flap', '6. 1st BW edge', '7. 1st FW edge', '8. 2nd BW flap', 
-              '9. 2nd FW flap', '10. 2nd SYM flap', '11. 1st COL edge'] 
+              '9. 2nd FW flap', '10. 2nd SYM flap', '11. 1st COL edge', '12. 3rd BW flap'] 
+# # Redesign
+# modes_struc = ['1. 1st Twr FA', '2. 1st Twr SS', '3. 1st BW flap', '4. 1st SYM flap',  
+#               '5. 1st FW flap', '6. 1st BW edge', '7. 1st FW edge', '8. 2nd BW flap',  
+#               '9. 2nd FW flap', '10. 2nd SYM flap', '11. 1st COL edge','12. 3rd BW flap'] 
+# modes_aero = ['1. 1st Twr FA', '2. 1st Twr SS', '3. 1st BW flap', '4. 1st SYM flap',  
+#               '5. 1st FW flap', '6. 1st BW edge', '7. 1st FW edge', '8. 2nd BW flap', 
+#               '9. 2nd FW flap', '10. 2nd SYM flap', '11. 1st COL edge', '12. 3rd BW flap'] 
 
 
 #%% Define useful functions

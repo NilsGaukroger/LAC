@@ -20,8 +20,10 @@ addpath('functions\')
 
 %% Figure saving settings
 save     = true; % true: saves figures, false: doesn't
-overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\';
-if not((isfolder(overleaf))) % if directory doesn't exist don't attempt to save there
+overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\struct\'; % overleaf not working currently
+local    = './plots/report_2/struct/';
+locs     = {overleaf,local};
+if (not((isfolder(overleaf)))) || (not((isfolder(local)))) % if directory doesn't exist don't attempt to save there
     save = false;
 end
 
@@ -64,14 +66,30 @@ figure
 for i = 1:4
     subplot(2,2,i)
     semilogy(DTU.st_flex.s_S,DTU.st_flex.(vars{i,1})); hold on
-    plot(redesign.st_flex.s_S,redesign.st_flex.(vars{i,1})); hold off
-    xlabel('Non-dimensionalised blade span [-]'); ylabel(ylabels{i})
+    semilogy(redesign.st_flex.s_S,redesign.st_flex.(vars{i,1})); hold off
+    if i > 2
+        xlabel('Non-dimensionalised blade span [-]')
+    end
+    ylabel(ylabels{i})
     legend('DTU 10 MW','Redesign','Location','SW')
     grid minor
 end
 if save
-    exportgraphics(gcf,strcat(overleaf, 'part1_', 'stiffness', '.pdf'),...
-        'ContentType','vector');
+    saveFigasPDF(locs,'stiffness');
+end
+
+figure
+for i = 1:3
+    semilogy(redesign.st_flex.s_S,redesign.st_flex.(vars{i,1})); hold on
+%     semilogy(DTU.st_flex.s_S,DTU.st_flex.(vars{i,1}),'--')
+end
+hold off
+xlabel('Non-dimensionalised blade span [-]')
+ylabel('Rigidity [Nm^2]')
+legend('Edgewise','Flapwise','Torsional')
+grid minor
+if save
+    saveFigasPDF(locs,'stiffness_comp');
 end
 
 %% HAWC post-processing
@@ -94,57 +112,52 @@ for i = 1:size(pwr,1)
 end
 
 %% Plotting
-vars = {'P','T','Speed','Pitch','y_defl','x_defl','z_defl'};
+vars = {'P','T','Speed','Pitch','Tip y','x_defl','z_defl'};
 ylabels = {'Power [kW]','Thrust [kN]','Rotor speed [rpm]','Pitch angle [deg]',...
-    'Flapwise tip deflection [m]','Edgewise tip deflection [m]','Spanwise tip deflection [m]'};
+    {'Flapwise'; 'tip position [m]'},{'Edgewise'; 'tip deflection [m]'},...
+    {'Spanwise'; 'tip deflection [m]'}};
+% ylabels = {'Power [kW]','Thrust [kN]','Rotor speed [rpm]','Pitch angle [deg]',...
+%     'Tip y [m]','x_{defl} [m]','z_{defl} [m]'};
 
 % Operational parameters
 figure
 for i = 1:4
     subplot(2,2,i)
-    plot(pwr{1,1}.V,pwr{1,1}.(vars{i})); hold on
-    plot(pwr{2,1}.V,pwr{2,1}.(vars{i})); hold off
+    plot(pwr{1,1}.V,pwr{1,1}.(vars{i}),'marker','o','MarkerSize',4); hold on
+    plot(pwr{2,1}.V,pwr{2,1}.(vars{i}),'marker','o','MarkerSize',4); hold off
     ylabel(ylabels(i));
     legend('DTU 10MW','Redesign','Location','best')
     xlim([4 25])
+    if i == 1 || 3
+        legend('DTU 10MW','Redesign','Location','SE')
+    end
     if i > 2
         xlabel('Wind speed [m/s]')
     end
     grid minor
 end
 if save
-    exportgraphics(gcf,strcat(overleaf, 'part1_', 'operationalParameters', '.pdf'),...
-        'ContentType','vector');
+    saveFigasPDF(locs,'operationalParameters');
 end
 
 % Tip deflections
-mode = 2; % 2: z-position, 3: z-deflection
 figure
-for i = 1:mode
+for i = 1:3
     subplot(3,1,i)
-    plot(pwr{1,1}.V,pwr{1,1}.(vars{i+4})); hold on
-    plot(pwr{2,1}.V,pwr{2,1}.(vars{i+4})); hold off
-    ylabel(ylabels(i+4));
-    legend('DTU 10MW','Redesign','Location','best')
+    plot(pwr{1,1}.V,pwr{1,1}.(vars{i+4}),'marker','o','MarkerSize',4); hold on
+    plot(pwr{2,1}.V,pwr{2,1}.(vars{i+4}),'marker','o','MarkerSize',4); hold off
+    ylabel(ylabels{i+4});
+    legend('DTU 10MW','Redesign','Location','NE');
     xlim([4 25])
+    if i == 1
+        h = yline(0,'--','Planar Rotor','LabelHorizontalAlignment','left','LabelVerticalAlignment','bottom','LineWidth',1.5,'color','k','FontSize',12);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+    end
     if i > 2
         xlabel('Wind speed [m/s]')
     end
     grid minor
 end
-if i == 2
-    subplot(3,1,3)
-    plot(pwr{1,1}.V,pwr{1,1}.('Tip z')./DTU.bladeLength); hold on
-    plot(pwr{2,1}.V,pwr{2,1}.('Tip z')./redesign.bladeLength); hold off
-%     plot(pwr{1,1}.V,pwr{1,1}.('Tip z')); hold on
-%     plot(pwr{2,1}.V,pwr{2,1}.('Tip z')); hold off
-    ylabel('Non-dimensional spanwise tip position [m]')
-    legend('DTU 10MW','Redesign','Location','best')
-    xlim([4 25])
-    xlabel('Wind speed [m/s]')
-    grid minor
-end
 if save
-    exportgraphics(gcf,strcat(overleaf, 'part1_', 'deflections', '.pdf'),...
-        'ContentType','vector');
+    saveFigasPDF(locs,'deflections');
 end

@@ -3,7 +3,7 @@ clc
 close all
 
 %% Save plots parameter
-save=0; %save=0: Save plots with title, save=1: Save plots without title
+save_figs=0; %save_figs=0=0: Save plots with title, save_figs=0=1: Save plots without title
 
 %% Outputs from HAWC2Stab2.exe for new rotor
 
@@ -107,7 +107,26 @@ DTU10MW.Natfreq.structural_sorted(7,1)={10};
 DTU10MW.Natfreq.structural_sorted(8,1)={11};
 
 
-%% DTU 10 MW
+%% Swaping for 1st COL edge and 2nd SYM flap
+[row1,col1]=find(DTU10MW.Natfreq.structural_sorted.('V [m/s]')==13);
+
+DTU10MW.save_flap=DTU10MW.Natfreq.structural_sorted.('2nd SYM flap')(row1:end);
+DTU10MW.save_edge=DTU10MW.Natfreq.structural_sorted.('1st COL edge')(row1:end);
+
+DTU10MW.Natfreq.structural_sorted.('2nd SYM flap')(row1:end)=DTU10MW.save_edge;
+DTU10MW.Natfreq.structural_sorted.('1st COL edge')(row1:end)=DTU10MW.save_flap;
+
+[row2,col2]=find(Natfreq.structural_sorted.('V [m/s]')==13);
+
+save_flap=Natfreq.structural_sorted.('2nd SYM flap')(row2:end);
+save_edge=Natfreq.structural_sorted.('1st COL edge')(row2:end);
+
+Natfreq.structural_sorted.('2nd SYM flap')(row2:end)=save_edge;
+Natfreq.structural_sorted.('1st COL edge')(row2:end)=save_flap;
+
+%% DTU 10 MW plots
+
+if save_figs==0
 
 
 vars={'-o','-+','-*','-s','-x','-o','-|','-s','-d','-^','-v','->','-<','-p','-h'};
@@ -118,11 +137,11 @@ for i=2:width(DTU10MW.Natfreq.aeroelastic(1,:))
     
     hold on
 end
-plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),Freq1P,'k--','LineWidth',2.0)
+plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Freq1P,'k--','LineWidth',2.0)
 hold on
-plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),Freq3P,'k-.','LineWidth',2.0)
+plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Freq3P,'k-.','LineWidth',2.0)
 hold on
-plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),Freq6P,'k:','LineWidth',2.0)
+plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Freq6P,'k:','LineWidth',2.0)
 set(gca,'FontSize',20)
 xlim([4 25]);
 grid on
@@ -181,7 +200,7 @@ ylabel('Damping[% critical]');
 title('Damping values for aeroelastic mode shapes(DTU 10MW)');
 legend(DTU10MW.Damp.aeroelastic.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
 
-%% New rotor
+%% New rotor plots
 figure
 for i=2:width(Natfreq.aeroelastic_sorted(1,:))
    plot(Natfreq.aeroelastic_sorted.('V [m/s]'),Natfreq.aeroelastic_sorted.(Natfreq.aeroelastic_sorted.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
@@ -255,6 +274,157 @@ ylabel('Damping[% critical]');
 title('Damping values for structural mode shapes(Redesign)');
 legend(Damp.structural.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
 
+elseif save_figs==1
+    
+    vars={'-o','-+','-*','-s','-x','-o','-|','-s','-d','-^','-v','->','-<','-p','-h'};
+    
+    %% DTU 10 MW plots
+
+figure
+for i=2:width(DTU10MW.Natfreq.aeroelastic(1,:))
+   plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Natfreq.aeroelastic_sorted.(DTU10MW.Natfreq.aeroelastic_sorted.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Freq1P,'k--','LineWidth',2.0)
+hold on
+plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Freq3P,'k-.','LineWidth',2.0)
+hold on
+plot(DTU10MW.Natfreq.aeroelastic_sorted.('V [m/s]'),DTU10MW.Freq6P,'k:','LineWidth',2.0)
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Natural frequency [Hz]');
+%title('Campbell diagram for aeroelastic mode shapes(DTU 10MW)');
+%legend('1st Twr FA','1st Twr SS','1st BW flap','1st SYM flap','1st FW flap','1st BW edge','1st FW edge','2nd BW flap','2nd FW flap','1st COL edge','2nd SYM flap','3rd BW flap','1P','3P','6P','Location','eastoutside','NumColumns',1);
+legend(DTU10MW.Natfreq.aeroelastic_sorted.Properties.VariableNames{2:end},'1P','3P','6P','Location','eastoutside','NumColumns',1)
+
+
+
+figure
+for i=2:width(DTU10MW.Natfreq.structural(1,:))
+   plot(DTU10MW.Natfreq.structural_sorted.('V [m/s]'),DTU10MW.Natfreq.structural_sorted.(DTU10MW.Natfreq.structural_sorted.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Natural frequency [Hz]');
+%title('Campbell diagram for structural mode shapes(DTU 10MW)');
+legend(DTU10MW.Natfreq.structural_sorted.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
+
+figure
+for i=2:width(DTU10MW.Damp.structural(1,:))
+   plot(DTU10MW.Damp.structural.('V [m/s]'),DTU10MW.Damp.structural.(DTU10MW.Damp.structural.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Damping[% critical]');
+%title('Damping values for structural mode shapes(DTU 10MW)');
+legend(DTU10MW.Damp.structural.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
+
+
+figure
+for i=2:width(DTU10MW.Damp.aeroelastic(1,:))
+   plot(DTU10MW.Damp.aeroelastic.('V [m/s]'),DTU10MW.Damp.aeroelastic.(DTU10MW.Damp.aeroelastic.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Damping[% critical]');
+%title('Damping values for aeroelastic mode shapes(DTU 10MW)');
+legend(DTU10MW.Damp.aeroelastic.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
+
+%% New rotor plots
+figure
+for i=2:width(Natfreq.aeroelastic_sorted(1,:))
+   plot(Natfreq.aeroelastic_sorted.('V [m/s]'),Natfreq.aeroelastic_sorted.(Natfreq.aeroelastic_sorted.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+plot(Natfreq.aeroelastic_sorted.('V [m/s]'),Freq1P,'k--','LineWidth',2.0)
+hold on
+plot(Natfreq.aeroelastic_sorted.('V [m/s]'),Freq3P,'k-.','LineWidth',2.0)
+hold on
+plot(Natfreq.aeroelastic_sorted.('V [m/s]'),Freq6P,'k:','LineWidth',2.0)
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Natural frequency [Hz]');
+%title('Campbell diagram for aeroelastic mode shapes(Redesign)');
+legend(Natfreq.aeroelastic_sorted.Properties.VariableNames{2:end},'1P','3P','6P','Location','eastoutside','NumColumns',1)
+
+
+figure
+for i=2:width(Natfreq.structural_sorted(1,:))
+   plot(Natfreq.structural_sorted.('V [m/s]'),Natfreq.structural_sorted.(Natfreq.structural_sorted.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Natural frequency [Hz]');
+%title('Campbell diagram for structural mode shapes(Redesign)');
+legend(Natfreq.structural_sorted.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
+
+
+
+figure
+for i=2:width(Damp.aeroelastic(1,:))
+   plot(Damp.aeroelastic.('V [m/s]'),Damp.aeroelastic.(Damp.aeroelastic.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Damping[% critical]');
+%title('Damping values for aeroelastic mode shapes(Redesign)');
+legend(Damp.aeroelastic.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
+
+
+
+figure
+for i=2:width(Damp.structural(1,:))
+   plot(Damp.structural.('V [m/s]'),Damp.structural.(Damp.structural.Properties.VariableNames{i}),vars{i},'LineWidth',2.0)
+    
+    hold on
+end
+
+set(gca,'FontSize',20)
+xlim([4 25]);
+grid on
+grid minor
+xlabel('Wind speed [m/s]');
+ylabel('Damping[% critical]');
+%title('Damping values for structural mode shapes(Redesign)');
+legend(Damp.structural.Properties.VariableNames{2:end},'Location','eastoutside','NumColumns',1)
+
+end
+
 %% Table creation for the new rotor
 [row,col]=find(Natfreq.aeroelastic_sorted.('V [m/s]')'==14);
 
@@ -264,41 +434,6 @@ Tower_signal(end+1)=Natfreq_aeroelastic_sort(col,12);
 N=pwr{1,2}.('Speed')(end);
 omega=pi.*N./30;
 frequency=omega./(2*pi);
-
-%Blade_signal=[Naturalfreq.aeroelastic(col,1)+frequency Naturalfreq.aeroelastic(col,1)-frequency 
-    
-% for i=1:(2*length(Tower_signal)-2)
-% 
-% if i==1 
-%     Blade_signal(i)=Tower_signal(i)+frequency; % 1st Twr FA
-%     Blade_signal(i+1)=Tower_signal(i)-frequency;
-% elseif i==3
-%     Blade_signal(i)=Tower_signal(i-1)+frequency; % 1st Twr SS
-%     Blade_signal(i+1)=Tower_signal(i-1)-frequency;
-% 
-% elseif i==5
-%     Blade_signal(i)=Tower_signal(i-2)+frequency; % 1st BW flap
-%     Blade_signal(i+1)=Tower_signal(i-2)-frequency;
-% elseif i==7
-%     Blade_signal(i)=Tower_signal(i-3); % 1st SYM flap
-% 
-% elseif i==8
-%     Blade_signal(i)=Tower_signal(i-3)+frequency; %1st FW flap
-%     Blade_signal(i+1)=Tower_signal(i-3)-frequency;
-%     
-% elseif i==10
-%     Blade_signal(i)=Tower_signal(i-4)+frequency; %1st BW edge
-%     Blade_signal(i+1)=Tower_signal(i-4)-frequency;
-%     
-% elseif i==12
-%     Blade_signal(i)=Tower_signal(i-5)+frequency; %1st FW edge
-%     Blade_signal(i+1)=Tower_signal(i-5)-frequency;
-%     
-% elseif i==14
-%     Blade_signal(i)=Tower_signal(i-6); %1st COL edge
-% end
-% end
-% legend(varargin,'location','southoutside'
 
 for i=1:(length(Tower_signal)-1)
     Blade_signal(2*(i-1)+1)=Tower_signal(1,i)+frequency;

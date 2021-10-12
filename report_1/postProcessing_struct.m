@@ -19,13 +19,13 @@ disp('Default plot parameters set.');
 addpath('functions\')
 
 %% Figure saving settings
-save     = false; % true: saves figures, false: doesn't
+save_var = false; % true: saves figures, false: doesn't
 overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\struct\'; % overleaf not working currently
 local    = './plots/report_2/struct/';
 locs     = {overleaf,local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
     if (not(isfolder(locs{i})))
-        save = false;
+        save_var = false;
     end
 end
 
@@ -76,7 +76,7 @@ for i = 1:4
     legend('DTU 10 MW','Redesign','Location','SW')
     grid minor
 end
-if save
+if save_var
     saveFigasPDF(locs,'stiffness');
 end
 
@@ -90,27 +90,35 @@ xlabel('Non-dimensionalised blade span [-]')
 ylabel('Rigidity [Nm^2]')
 legend('Edgewise','Flapwise','Torsional')
 grid minor
-if save
+if save_var
     saveFigasPDF(locs,'stiffness_comp');
 end
 
 %% HAWC post-processing
 turbine = {'results_dtu10mw/struct/','results_redesign/struct/'};
+names   = {'DTU 10MW','Redesign'};
 elas    = {'flex','rigid'};
 file    = {'/DTU_10MW_struct_','/redesign_struct_'};
-pwr     = cell(2,2); % array for storing .pwr files, rows = turbine, cols = elasticity
+pwr     = cell(2,3); % array for storing .pwr files, rows = turbine, cols = elasticity (+ turbine name)
 
 for i = 1:size(pwr,1)
     for j = 1:size(pwr,2)
-        pwr{i,j} = import_pwr(strcat("your_model/",turbine{i},elas{j},file{i},elas{j},".pwr"));
+        if j == 1
+            pwr{i,j} = names{i};
+        else
+            pwr{i,j} = import_pwr(strcat("your_model/",turbine{i},elas{j-1},file{i},elas{j-1},".pwr"));
+        end
     end
 end
 
+pwr = cell2table(pwr); % convert to table
+pwr.Properties.VariableNames = {'Turbine',elas{1},elas{2}};
+
 %% Calculation of deflection
 for i = 1:size(pwr,1)
-    pwr{i,1}.x_defl = pwr{i,1}.('Tip x') - pwr{i,2}.('Tip x');
-    pwr{i,1}.y_defl = pwr{i,1}.('Tip y') - pwr{i,2}.('Tip y');
-    pwr{i,1}.z_defl = pwr{i,1}.('Tip z') - pwr{i,2}.('Tip z');
+    pwr.flex{i}.x_defl = pwr.flex{i}.('Tip x') - pwr.rigid{i}.('Tip x');
+    pwr.flex{i}.y_defl = pwr.flex{i}.('Tip y') - pwr.rigid{i}.('Tip y');
+    pwr.flex{i}.z_defl = pwr.flex{i}.('Tip z') - pwr.rigid{i}.('Tip z');
 end
 
 %% Plotting
@@ -118,15 +126,13 @@ vars = {'P','T','Speed','Pitch','Tip y','x_defl','z_defl'};
 ylabels = {'Power [kW]','Thrust [kN]','Rotor speed [rpm]','Pitch angle [deg]',...
     {'Flapwise'; 'tip position [m]'},{'Edgewise'; 'tip deflection [m]'},...
     {'Spanwise'; 'tip deflection [m]'}};
-% ylabels = {'Power [kW]','Thrust [kN]','Rotor speed [rpm]','Pitch angle [deg]',...
-%     'Tip y [m]','x_{defl} [m]','z_{defl} [m]'};
 
 % Operational parameters
 figure
 for i = 1:4
     subplot(2,2,i)
-    plot(pwr{1,1}.V,pwr{1,1}.(vars{i}),'marker','o','MarkerSize',4); hold on
-    plot(pwr{2,1}.V,pwr{2,1}.(vars{i}),'marker','o','MarkerSize',4); hold off
+    plot(pwr.flex{1}.V,pwr.flex{1}.(vars{i}),'marker','o','MarkerSize',4); hold on
+    plot(pwr.flex{2}.V,pwr.flex{2}.(vars{i}),'marker','o','MarkerSize',4); hold off
     ylabel(ylabels(i));
     legend('DTU 10MW','Redesign','Location','best')
     xlim([4 25])
@@ -138,7 +144,7 @@ for i = 1:4
     end
     grid minor
 end
-if save
+if save_var
     saveFigasPDF(locs,'operationalParameters');
 end
 
@@ -146,8 +152,8 @@ end
 figure
 for i = 1:3
     subplot(3,1,i)
-    plot(pwr{1,1}.V,pwr{1,1}.(vars{i+4}),'marker','o','MarkerSize',4); hold on
-    plot(pwr{2,1}.V,pwr{2,1}.(vars{i+4}),'marker','o','MarkerSize',4); hold off
+    plot(pwr.flex{1}.V,pwr.flex{1}.(vars{i+4}),'marker','o','MarkerSize',4); hold on
+    plot(pwr.flex{2}.V,pwr.flex{2}.(vars{i+4}),'marker','o','MarkerSize',4); hold off
     ylabel(ylabels{i+4});
     legend('DTU 10MW','Redesign','Location','NE');
     xlim([4 25])
@@ -160,9 +166,9 @@ for i = 1:3
     end
     grid minor
 end
-if save
+if save_var
     saveFigasPDF(locs,'deflections');
 end
 
 %% Save outputs
-save('postProcessing_struct','DTU','redesign','pwr');
+save('postProcessing_struct.mat','DTU','redesign','pwr');

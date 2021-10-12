@@ -19,12 +19,14 @@ disp('Default plot parameters set.');
 addpath('functions\')
 
 %% Figure saving settings
-save     = true; % true: saves figures, false: doesn't
+save     = false; % true: saves figures, false: doesn't
 overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\struct\'; % overleaf not working currently
 local    = './plots/report_2/struct/';
 locs     = {overleaf,local};
-if (not((isfolder(overleaf)))) || (not((isfolder(local)))) % if directory doesn't exist don't attempt to save there
-    save = false;
+for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
+    if (not(isfolder(locs{i})))
+        save = false;
+    end
 end
 
 %% Load data from Structural_scaling

@@ -30,7 +30,7 @@ for i = 1:length(locs) % if any directory doesn't exist don't attempt to save th
 end
 
 %% Load data from Structural_scaling
-load('struct.mat');
+load('Structural_scaling.mat');
 
 %% Create new variables
 elas = {'st_flex','st_rigid'}; % filenames of different elasticities
@@ -163,3 +163,6 @@ end
 if save
     saveFigasPDF(locs,'deflections');
 end
+
+%% Save outputs
+save('postProcessing_struct','DTU','redesign','pwr');

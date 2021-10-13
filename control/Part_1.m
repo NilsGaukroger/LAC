@@ -12,14 +12,14 @@ global SimParams Controller;
 %                          Initialization
 % -------------------------------------------------------------------------
 
-SimParams.Simulation_TEND   = 200;          % Simulation lenght in seconds; NOTE: student in the lecture need to play around the value
+SimParams.Simulation_TEND   = 300;          % Simulation length in seconds; NOTE: student in the lecture need to play around the value
 
 WT.Model = 'WT0';                           % Model complexity,  WT0:Rotor,   WT1:Rotor+DT,  WT2:Rotor+DT+Tower fore-aft
 
 Controller.Type             = 'OL';
 
-SimParams.Open_Loop_Pitch   = 1;       % pitch angle in degrees; NOTE: student in the lecture need to play around the value
-SimParams.Open_Gen_Torque   = 1;       % generator reaction torque in N.m; NOTE: student in the lecture need to play around the value
+SimParams.Open_Loop_Pitch   = 7.824;       % pitch angle in degrees; NOTE: student in the lecture need to play around the value
+SimParams.Open_Gen_Torque   = 9.95025e+06;       % generator reaction torque in N.m; NOTE: student in the lecture need to play around the value
 
 %%
 

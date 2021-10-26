@@ -2,8 +2,8 @@
 ;   Modified from version 9.2a for LAC course
 ;
   begin new_htc_structure;	material properties, orientations and constraints of bodies
-  body_output_file_name ./results_redesign/struct/flex/info/body.dat;
-  beam_output_file_name ./results_redesign/struct/flex/info/beam.dat;
+  ; body_output_file_name ./results_redesign/struct/flex/info/body.dat;
+  ; beam_output_file_name ./results_redesign/struct/flex/info/beam.dat;
 ;-------------------------------------------------------------------------------------------------------------------------------
     begin main_body;	tower
       name	tower;
@@ -328,11 +328,11 @@
 	end controller_tuning;
     ; Operational data
     operational_data_filename	./redesign_cont_flex.opt;  file with operational data points
-	compute_controller_input; 
-    ; HAWC2S commands (uncomment as needed);
+	; HAWC2S commands (uncomment as needed);
 	; compute_optimal_pitch_angle use_operational_data;
     compute_steady_states	bladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)
+	compute_controller_input;
     save_power;	save steady-state values to .pwr
-    save_induction;	save spanwise values to many .ind files, 3 for each wind speed
+    ; save_induction;	save spanwise values to many .ind files, 3 for each wind speed
   end hawcstab2;
 exit;

@@ -21,7 +21,8 @@ SimParams.Open_Loop_Pitch   = 1;            	% pitch angle in degrees
 SimParams.Open_Gen_Torque   = 1;               % generator reaction torque in N.m
 
 
-Controller.PiParams.KII     =13013100;  % NOTE: student in the lecture need to play around the value
+% Controller.PiParams.KII     = 13013100;  % NOTE: student in the lecture need to play around the value
+Controller.PiParams.KII     = 13013100*2;
 
 
 %%

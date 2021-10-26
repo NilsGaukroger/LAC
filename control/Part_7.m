@@ -12,7 +12,7 @@ global SimParams Controller;
 %                          Initialization
 % -------------------------------------------------------------------------
 
-SimParams.Simulation_TEND   = 1000;          % Simulation lenght in seconds
+SimParams.Simulation_TEND   = 600;          % Simulation lenght in seconds
 
 WT.Model = 'WT2';                           % Model complexity,  WT0:Rotor,   WT1:Rotor+DT,  WT2:Rotor+DT+Tower fore-aft
 
@@ -25,7 +25,7 @@ SimParams.Open_Gen_Torque   = 1;       % generator reaction torque in N.m
 %                   Choose the wind speed profile here:
 % -------------------------------------------------------------------------
 % Here you can choose the type of wind speed you'd like to use!
-wind_profile_options = 9;   
+wind_profile_options = 1;   
 % 1: for step wind speed, use WSP_Profile_Generator to produce wind steps!
 % 2: for stochastic wind speed, mean wind speed: 8  m/s
 % 3: for stochastic wind speed, mean wind speed: 12 m/s

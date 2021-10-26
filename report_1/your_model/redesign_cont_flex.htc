@@ -308,18 +308,27 @@
       second_order_actuator	pitch1 100 0.7;
     end rotating_threebladed_substructure;
 	begin operational_data;
-	windspeed 4 25 22;
-	genspeed 0 371.61; RPM (0 7.4)
-	gearratio 50;
-	minpitch 0.00000000e+00;
-	opt_lambda 7.1; ; MATLAB optimal TSR
-	maxpow 11158.5; ; same as DTU 10MW
-	prvs_turbine 1;
-	include_torsiondeform 1; pick 1 for bladedeform option
-	set_torque_limit 0;
+	  windspeed 4 25 22;
+	  genspeed 0 371.61; RPM (0 7.4)
+	  gearratio 50;
+	  minpitch 0.00000000e+00;
+	  opt_lambda 7.1; ; MATLAB optimal TSR
+	  maxpow 11158.5; ; same as DTU 10MW
+	  prvs_turbine 1;
+	  include_torsiondeform 1; pick 1 for bladedeform option
+	  set_torque_limit 0;
 	end operational_data;
+	begin controller_tuning;
+	  partial_load 0.05 0.7; fn [Hz], zeta [-]
+	  full_load 0.06 0.7; fn [Hz], zeta [-]
+	  gain_scheduling 1; 1 linear, 2 quadratic
+	  constant_power 1; 0 constant torque, 1 constant power
+	  ; rotorspeed_gs 1; gain scheduling to include term for aerodynamic damping? 0 no, 1 yes
+	  ; regions (four integers); manually specify transitions in controller operational regions
+	end controller_tuning;
     ; Operational data
-    operational_data_filename	./redesign_struct_flex.opt;  file with operational data points
+    operational_data_filename	./redesign_cont_flex.opt;  file with operational data points
+	compute_controller_input; 
     ; HAWC2S commands (uncomment as needed);
 	; compute_optimal_pitch_angle use_operational_data;
     compute_steady_states	bladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)

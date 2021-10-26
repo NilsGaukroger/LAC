@@ -9,7 +9,7 @@ close all; clear variables; clc
 %% Load data from postProcessing_struct
 load('postProcessing_struct.mat');
 
-%% Modal identification
+%% Modal identification (order these as they appear in HAWCStab2)
 n_modes = 12; % number of modes
 
 % DTU 10MW
@@ -38,7 +38,7 @@ disp('Default plot parameters set.');
 
 %% Figure saving settings
 save_var = false; % true: saves figures, false: doesn't
-overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\stab\'; % overleaf not working currently
+overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\stab\';
 local    = './plots/report_2/stab/';
 locs     = {overleaf,local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
@@ -59,17 +59,16 @@ cmb.camp     = cell(2,3); % array for storing campbell diagram inputs files, row
 cmb.damp     = cell(2,3); % same for damping
 cmb.realPart = cell(2,3); % dame for real parts of aeroelastic eigenvalues
 modeNames = {DTU.modes.struc, DTU.modes.ael; redesign.modes.struc, redesign.modes.ael};
-idx = cell(2);
 
 for i = 1:size(cmb.camp,1)
     for j = 1:size(cmb.camp,2)
         if j == 1
-            [cmb.camp{i,j},cmb.damp{i,j}] = deal(names{i});
+            [cmb.camp{i,j},cmb.damp{i,j},cmb.realPart{i,j}] = deal(names{i});
         elseif j == 2
-            [cmb.camp{i,j},cmb.damp{i,j},idx{i,j}] = import_cmb(n_modes,strcat("your_model/",turbine{i},file{i},type{j-1},".cmb"),...
+            [cmb.camp{i,j},cmb.damp{i,j}] = import_cmb(n_modes,strcat("your_model/",turbine{i},file{i},type{j-1},".cmb"),...
                 modeNames{i,j-1},true);
         elseif j == 3
-            [cmb.camp{i,j},cmb.damp{i,j},idx{i,j},cmb.realPart{i,j}] = import_cmb(n_modes,strcat("your_model/",turbine{i},file{i},type{j-1},".cmb"),...
+            [cmb.camp{i,j},cmb.damp{i,j},cmb.realPart{i,j}] = import_cmb(n_modes,strcat("your_model/",turbine{i},file{i},type{j-1},".cmb"),...
                 modeNames{i,j-1},true);
         end
     end
@@ -80,6 +79,8 @@ for i = 1:length(fn)
     cmb.(fn{i}) = cell2table(cmb.(fn{i}));
     cmb.(fn{i}).Properties.VariableNames = {'Turbine','Structural','Aeroelastic'};
 end
+
+%% Correction for 10
 
 %% Plot Campbell diagrams
 analyses = ["Structural", "Aeroelastic"];

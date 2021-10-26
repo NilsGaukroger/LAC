@@ -1,4 +1,4 @@
-function [camp,damp,idx,realPart] = import_cmb(n_modes,filename,VariableNames,swap)
+function [camp,damp,realPart] = import_cmb(n_modes,filename,VariableNames,swap)
 %% Import file
 cmb = readtable(filename,'FileType','text');
 

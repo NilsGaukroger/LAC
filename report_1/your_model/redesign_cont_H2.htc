@@ -664,16 +664,16 @@
     mbdy state	pos blade3 26 1 blade3 # blade 3 tip pos;
     mbdy state	pos blade1 26 1 global # gl blade 1 tip pos;	
 ; - Monitor Aerodynamics - ;
-    aero windspeed	3 1 1 72.5;
-    aero alfa	1 72.5;
-    aero alfa	2 72.5;
-    aero alfa	3 72.5;
-    aero cl	1 72.5;
-    aero cl	2 72.5;
-    aero cl	3 72.5;
-    aero cd	1 72.5;
-    aero cd	2 72.5;
-    aero cd	3 72.5;	
+    aero windspeed	3 1 1 79.7; (72.5 * s)
+    aero alfa	1 79.7; (72.5 * s)
+    aero alfa	2 79.7; (72.5 * s)
+    aero alfa	3 79.7; (72.5 * s)
+    aero cl	1 79.7; (72.5 * s)
+    aero cl	2 79.7; (72.5 * s)
+    aero cl	3 79.7; (72.5 * s)
+    aero cd	1 79.7; (72.5 * s)
+    aero cd	2 79.7; (72.5 * s)
+    aero cd	3 79.7;	 (72.5 * s)
 ; DLL outputs and into HAWC2
     dll inpvec	1 1 # generator torque reference [nm];
     dll inpvec	1 2 # pitch angle reference of blade 1 [rad];

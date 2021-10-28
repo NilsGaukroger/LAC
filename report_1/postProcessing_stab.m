@@ -141,3 +141,6 @@ for i = 1:size(cmb.camp,1) % turbine loop
     end
 end
 sgtitle('Damping diagrams')
+
+%% Save outputs
+save('postProcessing_stab.mat','DTU','redesign','pwr');

@@ -627,7 +627,7 @@
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
   begin output;
-    filename	./res/DTU_10MW_RWT;
+    filename	./results_dtu10mw/cont/DTU_10MW_cont;
 	time 0 1000; 
     data_format	hawc_binary; ; change this to hawc_ascii for MATLAB files
     buffer	1;	

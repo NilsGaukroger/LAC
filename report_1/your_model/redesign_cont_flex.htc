@@ -309,8 +309,8 @@
     end rotating_threebladed_substructure;
 	begin operational_data;
 	  windspeed 4 25 22;
-	  genspeed 0 371.61; RPM (0 7.4)
-	  gearratio 50;
+	  genspeed 0 7.4; RPM (0 7.4)
+	  gearratio 1;
 	  minpitch 0.00000000e+00;
 	  opt_lambda 7.1; ; MATLAB optimal TSR
 	  maxpow 11158.5; ; same as DTU 10MW
@@ -329,10 +329,10 @@
     ; Operational data
     operational_data_filename	./redesign_cont_flex.opt;  file with operational data points
 	; HAWC2S commands (uncomment as needed);
-	; compute_optimal_pitch_angle use_operational_data;
-    compute_steady_states	bladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)
-	compute_controller_input;
-    save_power;	save steady-state values to .pwr
+	compute_optimal_pitch_angle use_operational_data;
+    ;compute_steady_states	bladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)
+	;compute_controller_input;
+    ;save_power;	save steady-state values to .pwr
     ; save_induction;	save spanwise values to many .ind files, 3 for each wind speed
   end hawcstab2;
 exit;

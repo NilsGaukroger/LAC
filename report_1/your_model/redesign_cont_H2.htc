@@ -4,7 +4,7 @@
     solvertype	1;	(newmark)
     on_no_convergence	continue;
     convergence_limits	1000 1 1e-07;
-	logfile	./log/DTU_10MW_RWT.log;
+	logfile	./log/redesign_H2.log;
     begin newmark;
       deltat	0.01;
     end newmark;
@@ -368,34 +368,35 @@
       arraysizes_init	100 1;
       arraysizes_update	100 100;
     begin init;
+		continue_in_file ./data/gains_C1.dat; otherwise comment in lines 372 -- 399
 ; Overall parameters
-        constant	1 10000;	Rated power [kW]
-        constant	2 0.628;	Minimum rotor (LSS) speed [rad/s]
-        constant	3 1.005;	Rated rotor (LSS) speed [rad/s]
-        constant	4 15600000;	Maximum allowable generator torque [Nm]
-        constant	5 100;	Minimum pitch angle, theta_min [deg],
+;        constant	1 10000;	Rated power [kW]
+;        constant	2 0;	Minimum rotor (LSS) speed [rad/s]
+;        constant	3 0.778;	Rated rotor (LSS) speed [rad/s]
+;        constant	4 15600000;	Maximum allowable generator torque [Nm]
+;        constant	5 0.000535;	Minimum pitch angle, theta_min [deg],
 ; if |theta_min|>90, then a table of <wsp,theta_min> is read ;
 ; from a file named 'wptable.n', where n=int(theta_min)
-        constant	6 82;	Maximum pitch angle [deg]
-        constant	7 10;	Maximum pitch velocity operation [deg/s]
-        constant	8 0.4;	Frequency of generator speed filter [Hz]
-        constant	9 0.7;	Damping ratio of speed filter [-]
-        constant	10 1.8;	Frequency of free-free DT torsion mode [Hz], if zero no notch filter used
+;        constant	6 82;	Maximum pitch angle [deg]
+;        constant	7 10;	Maximum pitch velocity operation [deg/s]
+;        constant	8 0.4;	Frequency of generator speed filter [Hz]
+;        constant	9 0.7;	Damping ratio of speed filter [-]
+;        constant	10 1.8;	Frequency of free-free DT torsion mode [Hz], if zero no notch filter used
 ; Partial load control parameters
-        constant	11 13013100;	Optimal Cp tracking K factor [Nm/(rad/s)^2], ;
+;        constant	11 13013100;	Optimal Cp tracking K factor [Nm/(rad/s)^2], ;
 ; Qg=K*Omega^2, K=eta*0.5*rho*A*Cp_opt*R^3/lambda_opt^3
-        constant	12 68345600;	Proportional gain of torque controller [Nm/(rad/s)]
-        constant	13 15336700;	Integral gain of torque controller [Nm/rad]
-        constant	14 0;	Differential gain of torque controller [Nm/(rad/s^2)]
+;        constant	12 68345600;	Proportional gain of torque controller [Nm/(rad/s)]
+;        constant	13 15336700;	Integral gain of torque controller [Nm/rad]
+;        constant	14 0;	Differential gain of torque controller [Nm/(rad/s^2)]
 ;     Full load control parameters
-        constant	15 1;	Generator control switch [1=constant power, 0=constant torque]
-        constant	16 1.06713;	Proportional gain of pitch controller [rad/(rad/s)]
-        constant	17 0.242445;	Integral gain of pitch controller [rad/rad]
-        constant	18 0;	Differential gain of pitch controller [rad/(rad/s^2)]
-        constant	19 4e-09;	Proportional power error gain [rad/W]
-        constant	20 4e-09;	Integral power error gain [rad/(Ws)]
-        constant	21 11.4;	Coefficient of linear term in aerodynamic gain scheduling, KK1 [deg]
-        constant	22 402.9;	Coefficient of quadratic term in aerodynamic gain scheduling, KK2 [deg^2] &
+;        constant	15 1;	Generator control switch [1=constant power, 0=constant torque]
+;        constant	16 1.06713;	Proportional gain of pitch controller [rad/(rad/s)]
+;        constant	17 0.242445;	Integral gain of pitch controller [rad/rad]
+;        constant	18 0;	Differential gain of pitch controller [rad/(rad/s^2)]
+;        constant	19 4e-09;	Proportional power error gain [rad/W]
+;        constant	20 4e-09;	Integral power error gain [rad/(Ws)]
+;        constant	21 11.4;	Coefficient of linear term in aerodynamic gain scheduling, KK1 [deg]
+;        constant	22 402.9;	Coefficient of quadratic term in aerodynamic gain scheduling, KK2 [deg^2] &
 ; (if zero, KK1 = pitch angle at double gain)
         constant	23 1.3;	Relative speed for double nonlinear gain [-]
 ;     Cut-in simulation parameters
@@ -430,11 +431,11 @@
         constant	45 30;	Overspeed percentage before initiating safety system alarm (shut-down) [%]
         constant	46 1.5;	Max low-pass filtered tower top acceleration level [m/s^2]
 ;     Turbine parameter
-        constant	47 178;	Nominal rotor diameter [m]
+        constant	47 195.5785;	Nominal rotor diameter [m]
 ;     Parameters for rotor inertia reduction in variable speed region
         constant	48 0;	Proportional gain on rotor acceleration in variable speed region [Nm/(rad/s^2)] (not used when zero)
 ;     Parameters for alternative partial load controller with PI regulated TSR tracking
-        constant	49 7.8;	Optimal tip speed ratio [-] (only used when K=constant 11 = 0 otherwise  Qg=K*Omega^2 is used)
+        constant	49 7.1;	Optimal tip speed ratio [-] (only used when K=constant 11 = 0 otherwise  Qg=K*Omega^2 is used)
 ;     Parameters for adding aerodynamic drivetrain damping on gain scheduling
         constant	50 0;	Aerodynamic DT damping coefficient at the operational point of zero pitch angle [Nm/(rad/s)] (not used when zero)
         constant	51 0;	Coefficient of linear term in aerodynamic DT damping scheduling, KK1 [deg]
@@ -478,7 +479,7 @@
 		constant  	80 100; 	Derate percentage (eg. 70 means 70% of nominal power
 		constant 	81 0.0; Moment of inertia of the rotor 
 ; 	  Floating additional control loop
-		constant 	82 11.4;    Rated wind speed (Only used when constant 79 = 3 OR constant 95 = 0)
+		constant 	82 10.7;    Rated wind speed (Only used when constant 79 = 3 OR constant 95 = 0)
 		constant 	83 0.0;		Gain for the loop mapping from tower velocity to blade pitch [rad/(m/s)]
 		constant  	84 0.0; 	Gain for the loop mapping from tower velocity to GenTorque [Nm/(m/s)]
 		constant  	85 9999.0; 	Time to switch on the floating control loop [s]
@@ -524,7 +525,7 @@
         constant	1 20;	Frequency of 2nd order servo model of generator-converter system [Hz]
         constant	2 0.9;	Damping ratio 2nd order servo model of generator-converter system [-]
         constant	3 15600000;	Maximum allowable LSS torque (pull-out torque) [Nm]
-        constant	4 0.94;	Generator efficiency [-]
+        constant	4 0.93;	Generator efficiency [-]
         constant	5 1;	Gearratio [-]
         constant	6 0;	Time for half value in softstart of torque [s]
         constant	7 -1;	Time for grid loss [s] (never if lower than zero)
@@ -630,7 +631,7 @@
   begin output;
     filename	./results_redesign/cont/redesign_cont;
 	time 0 1000; 
-    data_format	hawc_binary; ; change this to hawc_ascii for MATLAB files
+    data_format	hawc_ascii; ; change this to hawc_ascii for MATLAB files
     buffer	1;	
 ;
     general time;

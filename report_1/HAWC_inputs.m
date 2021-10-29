@@ -137,5 +137,9 @@ end
 
 %% Max gen speed for structural
 gearratio = 50;
-genspeed = N(end) * gearratio;
-fprintf('genspeed 0 %.2f; RPM (0 %.1f)\n', genspeed, N(end));
+redesign.omega_opt = N(end);
+genspeed = redesign.omega_opt * gearratio;
+fprintf('genspeed 0 %.2f; RPM (0 %.1f)\n', genspeed, redesign.omega_opt);
+
+%% Add redesign.omega_opt to aero_design.mat
+save('aero_design','aerofoil','DTU','HAWC_in','result','result2','redesign','p','p1','p2','t_max');

@@ -153,3 +153,6 @@ octave-workspace
 
 # HAWC results
 .report_1/results*
+
+# HAWC2 results
+report_1/your_model/results_redesign/cont/*.dat

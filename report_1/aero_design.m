@@ -275,5 +275,7 @@ HAWC_in.beta = HAWC_in.beta';
 HAWC_in.that = (HAWC_in.t'./HAWC_in.c);
 HAWC_in.tsr_opt = tsr_opt;
 
+redesign.tsr_opt = tsr_opt;
+
 %% Save variables for post-processing
 save('aero_design','aerofoil','DTU','HAWC_in','result','result2','redesign','p','p1','p2','t_max');

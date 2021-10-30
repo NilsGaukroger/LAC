@@ -16,5 +16,4 @@ gs_K1 = str2double(data.textdata{10,3}); % Coefficient of linear term in aerodyn
 if order == 2 % if using a quadratic fit for the aerodynamic gain scheduling
     gs_K2 = str2double(data.textdata{10,7}); % Coefficient of quadratic term in aerodynamic gain scheduling [deg^2]
 end
-
 end

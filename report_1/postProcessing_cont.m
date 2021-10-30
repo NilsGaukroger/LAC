@@ -24,6 +24,10 @@ fullLoad_zeta   = [ 0.7;  0.7;  0.7;  0.7;  0.7;  0.7]; % damping ratio [-]
 
 gains = table(caseName,generatorTorque,partialLoad_omega,partialLoad_zeta,fullLoad_omega,fullLoad_zeta);
 
+%% Add details for C7
+gains = [gains;{"C7","Constant Power", 0.05, 0.7, 0.065, 0.7}];
+genTorque_switch = [genTorque_switch; 1];
+
 %% Import gains from *_ctrl_tuning.txt
 % File import settings
 order = 2; % Order of aerodynamic gain scheduling fit (1 = linear, 2 = quadratic)
@@ -33,8 +37,8 @@ order = 2; % Order of aerodynamic gain scheduling fit (1 = linear, 2 = quadratic
     gains.("Region 3: Kp"),gains.("Region 3: Ki"),...
     gains.("Region 3: K1"),gains.("Region 3: K2")] = deal(NaN(size(gains,1),1));
 
-for i = 1:length(caseName)
-    filename = strcat("./your_model/results_redesign/cont/", caseName(i), "/redesign_cont_HS2_ctrl_tuning.txt");
+for i = 1:size(gains,1)
+    filename = strcat("./your_model/results_redesign/cont/", gains.caseName(i), "/redesign_cont_HS2_ctrl_tuning.txt");
     [gains.("Region 1: K")(i),gains.("Region 2: I")(i),gains.("Region 2: Kp")(i),gains.("Region 2: Ki")(i),...
         gains.("Region 3: Kp")(i),gains.("Region 3: Ki")(i),...
         gains.("Region 3: K1")(i),gains.("Region 3: K2")(i)] = import_gains(filename,order);
@@ -43,7 +47,9 @@ end
 disp(gains)
 
 %% Write gains.dat files
-write_gains(caseName,gains,genTorque_switch,redesign)
+for i = 1:size(gains,1)
+    write_gains(caseName,gains,genTorque_switch,redesign,i)
+end
 
 %% Import HAWC2 results
 data = cell(6,1);

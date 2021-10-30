@@ -368,7 +368,7 @@
       arraysizes_init	100 1;
       arraysizes_update	100 100;
     begin init;
-		continue_in_file ./data/gains_C6.dat; otherwise comment in lines 372 -- 496
+		continue_in_file ./data/gains_C7.dat; otherwise comment in lines 372 -- 496
 ; Overall parameters
 ;        constant	1 10000;	Rated power [kW]
 ;        constant	2 0;	Minimum rotor (LSS) speed [rad/s]

@@ -1,7 +1,5 @@
-function write_gains(caseName,gains,genTorque_switch,redesign)
-% Further work: Add constants up to 95 for ability to vary rotor diameter, optimal tsr etc.
-% for i = 1:length(caseName)
-for i = 6:6
+function write_gains(gains,genTorque_switch,redesign)
+for i = 1:size(gains,1)
 fileID = fopen(strcat('your_model/data/gains_C', num2str(i), '.dat'), 'w');
 fprintf(fileID,['; Overall parameters\n',...
 '        constant	1 10000;	Rated power [kW]\n',...

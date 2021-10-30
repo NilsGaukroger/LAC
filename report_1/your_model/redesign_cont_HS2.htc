@@ -320,9 +320,9 @@
 	end operational_data;
 	begin controller_tuning;
 	  partial_load 0.05 0.7; fn [Hz], zeta [-]
-	  full_load 0.05 0.7; fn [Hz], zeta [-]
+	  full_load 0.10 0.7; fn [Hz], zeta [-]
 	  gain_scheduling 2; 1 linear, 2 quadratic
-	  constant_power 1; 0 constant torque, 1 constant power
+	  constant_power 0; 0 constant torque, 1 constant power
 	  ; rotorspeed_gs 1; gain scheduling to include term for aerodynamic damping? 0 no, 1 yes
 	  ; regions (four integers); manually specify transitions in controller operational regions
 	end controller_tuning;

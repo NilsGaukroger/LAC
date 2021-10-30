@@ -44,7 +44,7 @@ for i = 1:size(gains,1)
             gains.("Region 3: Kp")(i),gains.("Region 3: Ki")(i),...
             gains.("Region 3: K1")(i),gains.("Region 3: K2")(i)] = import_gains(filename,order);
     else
-        fprintf('File %s does not exist.\n',filename)
+        fprintf('Controller tuning .txt for case C%d does not exist.\n',i)
     end
 end
 
@@ -58,13 +58,13 @@ for i = 1:size(gains,1)
 end
 
 %% Import HAWC2 results
-data = cell(6,1);
+data = cell(length(gains,1),1);
 for i = 1:length(data)
     filename = strcat('your_model\results_redesign\cont\',caseName(i),'\redesign_cont.dat');
     if isfile(filename) % check if file exists
         data{i} = readtable(filename);
     else
-        fprintf('File %s does not exist.\n',filename)
+        fprintf('HAWC2 results .dat file for case C%d does not exist.\n',i)
     end
 end
 

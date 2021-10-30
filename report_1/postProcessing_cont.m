@@ -39,22 +39,33 @@ order = 2; % Order of aerodynamic gain scheduling fit (1 = linear, 2 = quadratic
 
 for i = 1:size(gains,1)
     filename = strcat("./your_model/results_redesign/cont/", gains.caseName(i), "/redesign_cont_HS2_ctrl_tuning.txt");
-    [gains.("Region 1: K")(i),gains.("Region 2: I")(i),gains.("Region 2: Kp")(i),gains.("Region 2: Ki")(i),...
-        gains.("Region 3: Kp")(i),gains.("Region 3: Ki")(i),...
-        gains.("Region 3: K1")(i),gains.("Region 3: K2")(i)] = import_gains(filename,order);
+    if isfile(filename) % check if file exists
+        [gains.("Region 1: K")(i),gains.("Region 2: I")(i),gains.("Region 2: Kp")(i),gains.("Region 2: Ki")(i),...
+            gains.("Region 3: Kp")(i),gains.("Region 3: Ki")(i),...
+            gains.("Region 3: K1")(i),gains.("Region 3: K2")(i)] = import_gains(filename,order);
+    else
+        fprintf('File %s does not exist.\n',filename)
+    end
 end
-
-disp(gains)
 
 %% Write gains.dat files
 for i = 1:size(gains,1)
-    write_gains(caseName,gains,genTorque_switch,redesign,i)
+    if any(isnan(gains{i,7:end}))
+        fprintf('Missing gains for C%d\n',i)
+    else
+        write_gains(gains,genTorque_switch,redesign,i)
+    end
 end
 
 %% Import HAWC2 results
 data = cell(6,1);
 for i = 1:length(data)
-    data{i} = readtable(strcat('your_model\results_redesign\cont\',caseName(i),'\redesign_cont.dat'));
+    filename = strcat('your_model\results_redesign\cont\',caseName(i),'\redesign_cont.dat');
+    if isfile(filename) % check if file exists
+        data{i} = readtable(filename);
+    else
+        fprintf('File %s does not exist.\n',filename)
+    end
 end
 
 %% Plot HAWC2 results

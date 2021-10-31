@@ -19,7 +19,7 @@ set(    0,            'DefaultLineLineWidth',     2);
 disp('Default plot parameters set.');
 
 %% Figure saving settings
-save_var = false; % true: saves figures, false: doesn't
+save_var = true; % true: saves figures, false: doesn't
 local    = './plots/report_3/';
 locs     = {local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
@@ -182,4 +182,142 @@ if save_var
     saveFig(locs,'C1vsC3',"png");
 end
 
-%% C7 tuning
+%% Import C7 HAWC2 results
+filepath = 'your_model\results_redesign\cont\C7\';
+folders = dir('your_model\results_redesign\cont\C7\');
+folders = folders(3:end);
+folders = folders([folders.isdir] == 1);
+C7      = cell(length(folders),2);
+for i = 1:length(folders)
+    filename = strcat(filepath, folders(i).name, '\redesign_cont.dat');
+    C7{i,1} = [str2double(folders(i).name(6:10)), str2double(folders(i).name(16:end))];
+    C7{i,2} = readtable(filename);
+end
+
+%% Plot C7 HAWC2 results
+figure
+plot(data{1}{:,1},data{1}{:,10}); hold on
+comb = [0.055, 0.7 ;
+        0.05 , 0.65;
+        0.055, 0.65];
+letter = ['a','b','c'];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,10})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(j),comb(j,1),comb(j,2));
+end
+yline(0.774,'--','LineWidth',1.5) % target rotational speed
+hold off
+xlabel('Time [s]'); ylabel('Rotational speed [rad/s]')
+legend(leg,'FontSize',18)
+box on
+grid on
+xlim([427 468])
+if save_var
+    saveFig(locs,'C1vsC7_rotationalSpeed_1Step',"png");
+end
+
+%%
+comb = [0.055, 0.65];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+bounds = [427, 468;
+          674, 714;
+          961, 1000];
+
+figure
+for k = 1:3
+    subplot(1,3,k)
+plot(data{1}{:,1},data{1}{:,10}); hold on
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,10})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(3),comb(j,1),comb(j,2));
+end
+yline(0.774,'--','LineWidth',1.5) % target rotational speed
+hold off
+xlabel('Time [s]');
+if k == 1
+    ylabel('Rotational speed [rad/s]')
+end
+legend(leg)
+box on
+grid on
+xlim([bounds(k,1) bounds(k,2)])
+end
+if save_var
+    saveFig(locs,'C1vsC7_rotationalSpeed_3Steps',"png");
+end
+
+%%
+figure
+plot(data{1}{:,1},data{1}{:,4}); hold on
+comb = [0.055, 0.7 ;
+        0.05 , 0.65;
+        0.055, 0.65];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,4})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(j),comb(j,1),comb(j,2));
+end
+yline(6.864350,'--','LineWidth',1.5) % target pitch angle
+hold off
+xlabel('Time [s]'); ylabel('Pitch angle [deg]')
+legend(leg,'FontSize',18)
+box on
+grid on
+xlim([427 468])
+if save_var
+    saveFig(locs,'C1vsC7_pitchAngle_1Step',"png");
+end
+
+%%
+comb = [0.055, 0.65];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+bounds = [427, 468;
+          674, 714;
+          961, 1000];
+
+figure
+for k = 1:3
+    subplot(1,3,k)
+plot(data{1}{:,1},data{1}{:,4}); hold on
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,4})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(3),comb(j,1),comb(j,2));
+end
+hold off
+xlabel('Time [s]');
+if k == 1
+    ylabel('Pitch angle [deg]')
+end
+if k == 3
+    legend(leg,'Location','SE')
+else
+    legend(leg)
+end
+box on
+grid on
+xlim([bounds(k,1) bounds(k,2)])
+end
+if save_var
+    saveFig(locs,'C1vsC7_pitchAngle_3Steps',"png");
+end

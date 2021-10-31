@@ -157,10 +157,10 @@ if save_var
     saveFig(locs,'C1vsC4',"png");
 end
 
-% Low-pass filtered tower fore-aft acceleration
+%% Low-pass filtered tower fore-aft acceleration
 x = [1,3,6];
 idx = [96,3,94,95];
-ylabels = ["Low-pass filtered tower fore-aft acceleration [m/s^2]", "Pitch angle [deg]", "Flag for mechanical brake [-]", "Flag for emergency pitch stop [-]"];
+ylabels = {["Low-pass filtered tower"; "fore-aft acceleration [m/s^2]"], "Pitch angle [deg]", "Flag for mechanical brake [-]", "Flag for emergency pitch stop [-]"};
 
 figure
 for j = 1:4
@@ -173,7 +173,10 @@ for j = 1:4
     if j > 2
         xlabel('Time [s]');
     end
-    ylabel(ylabels(j))
+    if j == 1
+        yline(1.5,'--','LineWidth',1.5)
+    end
+    ylabel(ylabels{j})
     legend('C1','C3','C6','Location','NW')
     box on
     grid on

@@ -9,6 +9,25 @@ close all; clear variables; clc
 %% Add functions folder to path
 addpath('functions\')
 
+%% Set default plot settings
+disp('Setting default plot parameters...');
+set(    0,          'defaulttextInterpreter', 'tex');
+set(groot, 'defaultAxesTickLabelInterpreter', 'tex');
+set(groot,        'defaultLegendInterpreter', 'tex');
+set(    0,             'defaultAxesFontSize',    15);
+set(    0,            'DefaultLineLineWidth',     2);
+disp('Default plot parameters set.');
+
+%% Figure saving settings
+save_var = true; % true: saves figures, false: doesn't
+local    = './plots/report_3/';
+locs     = {local};
+for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
+    if (not(isfolder(locs{i})))
+        save_var = false;
+    end
+end
+
 %% Load data from postProcessing_stab
 load('postProcessing_stab.mat');
 
@@ -25,7 +44,7 @@ fullLoad_zeta   = [ 0.7;  0.7;  0.7;  0.7;  0.7;  0.7]; % damping ratio [-]
 gains = table(caseName,generatorTorque,partialLoad_omega,partialLoad_zeta,fullLoad_omega,fullLoad_zeta);
 
 %% Add details for C7
-gains = [gains;{"C7","Constant Power", 0.05, 0.7, 0.065, 0.7}];
+gains = [gains;{"C7","Constant Power", 0.05, 0.7, 0.03, 0.7}];
 genTorque_switch = [genTorque_switch; 1];
 
 %% Import gains from *_ctrl_tuning.txt
@@ -44,7 +63,7 @@ for i = 1:size(gains,1)
             gains.("Region 3: Kp")(i),gains.("Region 3: Ki")(i),...
             gains.("Region 3: K1")(i),gains.("Region 3: K2")(i)] = import_gains(filename,order);
     else
-        fprintf('Controller tuning .txt for case C%d does not exist.\n',i)
+        fprintf('Controller tuning .txt for case C%d does not exist\n',i)
     end
 end
 
@@ -58,49 +77,90 @@ for i = 1:size(gains,1)
 end
 
 %% Import HAWC2 results
-data = cell(length(gains,1),1);
+data = cell(size(gains,1),1);
 for i = 1:length(data)
-    filename = strcat('your_model\results_redesign\cont\',caseName(i),'\redesign_cont.dat');
+    filename = strcat('your_model\results_redesign\cont\',gains.caseName(i),'\redesign_cont.dat');
     if isfile(filename) % check if file exists
         data{i} = readtable(filename);
     else
-        fprintf('HAWC2 results .dat file for case C%d does not exist.\n',i)
+        fprintf('HAWC2 results .dat file for case C%d does not exist\n',i)
     end
 end
 
 %% Plot HAWC2 results
-idx  = [15,3,10,100]; scale = [1,1,1,1e-3];
+idx  = [15,4,10,100]; scale = [1,1,1,1e-3];
 ylabels = ["Wind speed [m/s]", "Pitch angle [deg]", "Rotational speed [rad/s]", "Electrical power [kW]"];
 
 figure
 for j = 1:4
     subplot(2,2,j)
-    for i = 1:3
+    for i = 3:-1:1
         plot(data{i}{:,1},data{i}{:,idx(j)}.*scale(j))
         hold on
     end
     hold off
-    xlabel('Time [s]'); ylabel(ylabels(j))
-    legend('C1','C2','C3')
+    if j > 2
+        xlabel('Time [s]');
+    end
+    ylabel(ylabels(j))
+    legend('C3','C2','C1','Location','NW')
     box on
-    grid minor
+    grid on
+end
+if save_var
+    saveFig(locs,'C1-C3',"png");
 end
 
 figure
 for j = 1:4
     subplot(2,2,j)
-    for i = 4:6
+    for i = 6:-1:4
         plot(data{i}{:,1},data{i}{:,idx(j)}.*scale(j))
         hold on
     end
     hold off
-    xlabel('Time [s]'); ylabel(ylabels(j))
-    legend('C4','C5','C6')
+    if j > 2
+        xlabel('Time [s]');
+    end
+    ylabel(ylabels(j))
+    legend('C6','C5','C4','Location','NW')
     box on
-    grid minor
+    grid on
+end
+if save_var
+    saveFig(locs,'C4-C6',"png");
 end
 
-x = [2,5];
+% C1 vs. C4
+x = [1,4];
+idx = [99,100];
+ylabels = ["LSS torque [Nm]", "Electrical power [kW]"];
+
+figure
+for j = 1:2
+    subplot(2,2,j)
+    for i = 1:length(x)
+        plot(data{x(i)}{:,1},data{x(i)}{:,idx(j)}.*scale(j))
+        hold on
+    end
+    hold off
+    if j > 2
+        xlabel('Time [s]');
+    end
+    ylabel(ylabels(j))
+    legend('C1','C4','Location','NW')
+    box on
+    grid on
+    xlim([387 inf])
+end
+if save_var
+    saveFig(locs,'C1vsC4',"png");
+end
+
+%% Low-pass filtered tower fore-aft acceleration
+x = [1,3,6];
+idx = [96,3,94,95];
+ylabels = {["Low-pass filtered tower"; "fore-aft acceleration [m/s^2]"], "Pitch angle [deg]", "Flag for mechanical brake [-]", "Flag for emergency pitch stop [-]"};
 
 figure
 for j = 1:4
@@ -110,8 +170,157 @@ for j = 1:4
         hold on
     end
     hold off
-    xlabel('Time [s]'); ylabel(ylabels(j))
-    legend('C2','C5')
+    if j > 2
+        xlabel('Time [s]');
+    end
+    if j == 1
+        yline(1.5,'--','LineWidth',1.5)
+    end
+    ylabel(ylabels{j})
+    legend('C1','C3','C6','Location','NW')
     box on
-    grid minor
+    grid on
+end
+if save_var
+    saveFig(locs,'C1vsC3',"png");
+end
+
+%% Import C7 HAWC2 results
+filepath = 'your_model\results_redesign\cont\C7\';
+folders = dir('your_model\results_redesign\cont\C7\');
+folders = folders(3:end);
+folders = folders([folders.isdir] == 1);
+C7      = cell(length(folders),2);
+for i = 1:length(folders)
+    filename = strcat(filepath, folders(i).name, '\redesign_cont.dat');
+    C7{i,1} = [str2double(folders(i).name(6:10)), str2double(folders(i).name(16:end))];
+    C7{i,2} = readtable(filename);
+end
+
+%% Plot C7 HAWC2 results
+figure
+plot(data{1}{:,1},data{1}{:,10}); hold on
+comb = [0.055, 0.7 ;
+        0.05 , 0.65;
+        0.055, 0.65];
+letter = ['a','b','c'];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,10})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(j),comb(j,1),comb(j,2));
+end
+yline(0.774,'--','LineWidth',1.5) % target rotational speed
+hold off
+xlabel('Time [s]'); ylabel('Rotational speed [rad/s]')
+legend(leg,'FontSize',18)
+box on
+grid on
+xlim([427 468])
+if save_var
+    saveFig(locs,'C1vsC7_rotationalSpeed_1Step',"png");
+end
+
+%%
+comb = [0.055, 0.65];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+bounds = [427, 468;
+          674, 714;
+          961, 1000];
+
+figure
+for k = 1:3
+    subplot(1,3,k)
+plot(data{1}{:,1},data{1}{:,10}); hold on
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,10})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(3),comb(j,1),comb(j,2));
+end
+yline(0.774,'--','LineWidth',1.5) % target rotational speed
+hold off
+xlabel('Time [s]');
+if k == 1
+    ylabel('Rotational speed [rad/s]')
+end
+legend(leg)
+box on
+grid on
+xlim([bounds(k,1) bounds(k,2)])
+end
+if save_var
+    saveFig(locs,'C1vsC7_rotationalSpeed_3Steps',"png");
+end
+
+%%
+figure
+plot(data{1}{:,1},data{1}{:,4}); hold on
+comb = [0.055, 0.7 ;
+        0.05 , 0.65;
+        0.055, 0.65];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,4})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(j),comb(j,1),comb(j,2));
+end
+yline(6.864350,'--','LineWidth',1.5) % target pitch angle
+hold off
+xlabel('Time [s]'); ylabel('Pitch angle [deg]')
+legend(leg,'FontSize',18)
+box on
+grid on
+xlim([427 468])
+if save_var
+    saveFig(locs,'C1vsC7_pitchAngle_1Step',"png");
+end
+
+%%
+comb = [0.055, 0.65];
+leg = cell(size(comb,1)+1,1);
+leg{1} = "C1:   \omega = 0.050, \zeta = 0.70";
+bounds = [427, 468;
+          674, 714;
+          961, 1000];
+
+figure
+for k = 1:3
+    subplot(1,3,k)
+plot(data{1}{:,1},data{1}{:,4}); hold on
+for j = 1:size(comb,1)
+    for i = 1:length(folders)
+        if C7{i,1} == comb(j,:)
+            plot(C7{i,2}{:,1},C7{i,2}{:,4})
+        end
+    end
+    leg{j+1} = sprintf('C7%s: \\omega = %.3f, \\zeta = %.2f',letter(3),comb(j,1),comb(j,2));
+end
+hold off
+xlabel('Time [s]');
+if k == 1
+    ylabel('Pitch angle [deg]')
+end
+if k == 3
+    legend(leg,'Location','SE')
+else
+    legend(leg)
+end
+box on
+grid on
+xlim([bounds(k,1) bounds(k,2)])
+end
+if save_var
+    saveFig(locs,'C1vsC7_pitchAngle_3Steps',"png");
 end

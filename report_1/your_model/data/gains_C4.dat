@@ -1,7 +1,7 @@
 ; Overall parameters
         constant	1 10000;	Rated power [kW]
         constant	2 0;	Minimum rotor (LSS) speed [rad/s]
-        constant	3 0.778;	Rated rotor (LSS) speed [rad/s]
+        constant	3 0.774;	Rated rotor (LSS) speed [rad/s]
         constant	4 15600000;	Maximum allowable generator torque [Nm]
         constant	5 0.000535;	Minimum pitch angle, theta_min [deg],
 ; if |theta_min|>90, then a table of <wsp,theta_min> is read ;

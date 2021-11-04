@@ -6,8 +6,8 @@ import numpy as np
 from _loads_utils import load_stats, load_hawc2s
 
 
-hawc2s_path = './dtu10mw_res/DTU_10MW_hawc2s.pwr'  # path to .pwr or .opt file
-stats_path = './dtu10mw_res/dtu10mw_steady/stats_mean.txt'  # path to mean steady stats
+hawc2s_path = './results_DL/steady/redesign_cont_HS2.pwr'  # path to .pwr or .opt file
+stats_path = './results_DL/steady/res/stats_mean.txt'  # path to mean steady stats
 
 dz_tb = 119  # distance from hub center to tower base [m]
 dz_yb = 3.37  # distance from hub center to yaw bearing [m]
@@ -47,16 +47,16 @@ for iplot, (ichan, name) in enumerate(channels.items()):
         theory = h2s_pitch  # directly take pitch angle
     elif ichan == 10:  # rotor speed
         u_theory = h2s_u
-        theory = np.full_like(h2s_u, np.nan)  # CORRECT ME!!!
+        theory = h2s_rotspd
     elif ichan == 13:  # thrust
         u_theory = h2s_u
-        theory = np.full_like(h2s_u, np.nan)  # CORRECT ME!!!
+        theory = h2s_thrust
     elif ichan == 72:  # generator torque
         u_theory = h2s_u
-        theory = np.full_like(h2s_u, np.nan)  # CORRECT ME!!!
+        theory = -h2s_aerotrq
     elif ichan == 102:  # electrical power
         u_theory = h2s_u
-        theory = np.full_like(h2s_u, np.nan)  # CORRECT ME!!!
+        theory = h2s_paero * geneff
 
     # extract hawc2 wind and channel to plot from the HAWC2 stats
     h2_wind = data[:, idxs == i_wind]  # wind [m/s]
@@ -72,22 +72,22 @@ for iplot, (ichan, name) in enumerate(channels.items()):
         theory = h2_thrust * dz_tb - Mgrav  # tower-base FA is from thrust
     elif ichan == 20:  # tower-base side-side
         u_theory = h2_wind
-        theory = np.full_like(u_theory, np.nan)  # CORRECT ME!!!
+        theory = h2_aero_trq
     elif ichan == 22:  # yaw bearing pitch
         u_theory = h2_wind
-        theory = np.full_like(u_theory, np.nan)  # CORRECT ME!!!
+        theory = h2_thrust * dz_yb - Mgrav
     elif ichan == 23:  # yaw bearing roll
         u_theory = h2_wind
-        theory = np.full_like(u_theory, np.nan)  # CORRECT ME!!!
+        theory = h2_aero_trq
     elif ichan == 27:  # shaft torsion
         u_theory = h2_wind
-        theory = np.full_like(u_theory, np.nan)  # CORRECT ME!!!
+        theory = -h2_aero_trq
     elif ichan == 28:  # blade root out-of-plane-plane moment
         u_theory = h2_wind
         theory = np.full_like(u_theory, np.nan)  # leave me -- no theory for OoP moment
     elif ichan == 29:  # blade root in-plane moment
         u_theory = h2_wind
-        theory = np.full_like(u_theory, np.nan)  # CORRECT ME!!!
+        theory = h2_aero_trq/3
     else:  # no theory
         theory = np.full_like(u_theory, np.nan)
 

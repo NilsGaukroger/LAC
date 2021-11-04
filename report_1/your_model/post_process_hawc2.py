@@ -21,9 +21,23 @@ import numpy as np
 from _proc_hawc2_utils import initialize_stat, calculate_stat, update_stat
 
 
-res_folder = './res_steady/'  # folder with the HAWC2 results to post-process !!! MUST END WITH SLASH !!!
+res_folder = './results_DL/steady/res/'  # folder with the HAWC2 results to post-process !!! MUST END WITH SLASH !!!
 sel_idxs = [4, 10, 11, 13, 15, 19, 20, 22, 23, 27, 28, 29, 63, 66, 72,
             102, 110]  # channel indices in .sel file that you want to process
+# channels = {4: 'Pitch angle [deg]',
+#             10: 'Rotor speed [rad/s]',
+#             13: 'Thrust [kN]',
+#             72: 'Generator torque [Nm]',
+#             102: 'Electrical power [W]',
+#             63: 'Angle of attack @ 2/3 R [deg]',
+#             66: 'Cl @ 2/3 R [-]',
+#             19: 'Tower-base FA [kNm]',
+#             20: 'Tower-base SS [kNm]',
+#             22: 'Yaw-bearing pitch [kNm]',
+#             23: 'Yaw-bearing roll [kNm]',
+#             27: 'Shaft torsion [kNm]',
+#             28: 'Out-of-plane BRM [kNm]',
+#             29: 'In-plane BRM [kNm]'}
 
 # =======================================================================================
 # you shouldn't need to change anything below this line :)

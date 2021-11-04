@@ -18,7 +18,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00412 0.00412 0.00045;	Mx My Mz Kx Ky Kz , M´s raises overall level, K´s raises high freguency level "tuned by Larh"
       begin timoschenko_input;
-        filename	../data/dtu_10mw_rwt_tower_st.dat;
+        filename	./data/dtu_10mw_rwt_tower_st.dat;
         set	1 1;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -45,7 +45,7 @@
       damping_posdef	0 0 0 0.007 0.007 0.007;	"changed by Larh"
       concentrated_mass	2 0 2.687 0.30061 446040 4106000 410600 4106000;	Nacelle mass and inertia "corrected by Anyd 25/4/13"
       begin timoschenko_input;
-        filename	../data/dtu_10mw_rwt_towertop_st.dat;
+        filename	./data/dtu_10mw_rwt_towertop_st.dat;
         set	1 2;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -64,7 +64,7 @@
       concentrated_mass	1 0 0 0 0 0 0 3751000;	generator equivalent slow shaft "re_tuned by Anyd 20/2/13"
       concentrated_mass	5 0 0 0 105520 0 0 325700;	hub mass and inertia;	"re_tuned by Anyd 20/2/13"
       begin timoschenko_input;
-        filename	../data/dtu_10mw_rwt_shaft_st.dat;
+        filename	./data/dtu_10mw_rwt_shaft_st.dat;
         set	1 1;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -84,7 +84,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 3e-06 3e-06 2e-05;	"changed by Larh"
       begin timoschenko_input;
-        filename	../data/dtu_10mw_rwt_hub_st.dat;
+        filename	./data/dtu_10mw_rwt_hub_st.dat;
         set	1 2;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -111,11 +111,11 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00153 0.00255 0.00033;	" 3% damping tuned by tkim 23/03/13 unable to fit 3rd and higher mode"
       begin timoschenko_input;
-        filename	../data/redesign_Blade_st.dat;
+        filename	./data/redesign_Blade_st.dat;
         set	1 1;	set subset
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
-	    continue_in_file ../data/redesign_c2def.dat;
+	    continue_in_file ./data/redesign_c2def.dat;
         ; nsec	27;
         ; sec	1 0 7.006e-05 4.44089e-16 -14.5;
         ; sec	2 -2.06477e-05 -0.0122119 3 -14.5;
@@ -334,8 +334,8 @@
     link	1 mbdy_c2_def blade1;
     link	2 mbdy_c2_def blade2;
     link	3 mbdy_c2_def blade3;
-    ae_filename	../data/redesign_ae.dat;
-    pc_filename	../data/dtu_10mw_rwt_pc.dat;
+    ae_filename	./data/redesign_ae.dat;
+    pc_filename	./data/dtu_10mw_rwt_pc.dat;
     induction_method	1;	0=none, 1=normal
     aerocalc_method	1;	0=ingen aerodynamic, 1=med aerodynamic
     aerosections	50;	def. 50
@@ -349,13 +349,13 @@
 ;
     begin type2_dll;
       name	dtu_we_controller;
-      filename	../control/dtu_we_controller.dll;
+      filename	./control/dtu_we_controller.dll;
       dll_subroutine_init	init_regulation_advanced;
       dll_subroutine_update	update_regulation;
       arraysizes_init	100 1;
       arraysizes_update	100 100;
     begin init;
-		continue_in_file ../data/gains_C7.dat; otherwise comment in lines 372 -- 496
+		continue_in_file ./data/gains_C7.dat; otherwise comment in lines 372 -- 496
 ; Overall parameters
 ;        constant	1 10000;	Rated power [kW]
 ;        constant	2 0;	Minimum rotor (LSS) speed [rad/s]
@@ -503,7 +503,7 @@
 ;
     begin type2_dll;
       name	generator_servo;
-      filename	../control/generator_servo.dll;
+      filename	./control/generator_servo.dll;
       dll_subroutine_init	init_generator_servo;
       dll_subroutine_update	update_generator_servo;
       arraysizes_init	100 1;
@@ -532,7 +532,7 @@
 ;
     begin type2_dll;
       name	mech_brake;
-      filename	../control/mech_brake.dll;
+      filename	./control/mech_brake.dll;
       dll_subroutine_init	init_mech_brake;
       dll_subroutine_update	update_mech_brake;
       arraysizes_init	100 1;
@@ -557,7 +557,7 @@
 ;
     begin type2_dll;
       name	servo_with_limits;
-      filename	../control/servo_with_limits.dll;
+      filename	./control/servo_with_limits.dll;
       dll_subroutine_init	init_servo_with_limits;
       dll_subroutine_update	update_servo_with_limits;
       arraysizes_init	100 1;
@@ -593,7 +593,7 @@
 ;-------------------------------------------
     begin type2_dll;
       name	towerclearance_mblade;
-      filename	../control/towerclearance_mblade.dll;
+      filename	./control/towerclearance_mblade.dll;
       dll_subroutine_init	initialize;
       dll_subroutine_update	update;
       arraysizes_init	3 1;
@@ -621,32 +621,32 @@
     data_format	hawc_ascii; ; change this to hawc_ascii for MATLAB files
     buffer	1;	
 ;
-    general time;
-    constraint bearing1	shaft_rot 2;	angle and angle velocity
-    constraint bearing2	pitch1 5;	angle and angle velocity
-    constraint bearing2	pitch2 5;	angle and angle velocity
-    constraint bearing2	pitch3 5;	angle and angle velocity
-    aero omega;
-    aero torque;
-    aero power;
-    aero thrust;
-    wind free_wind	1 0 0 -119;	local wind at fixed position: coo (1=global,2=non-rotation rotor coo.), pos x, pos y, pos z
+general time;	time vector (1)
+    constraint bearing1	shaft_rot 2;	angle and angle velocity (2-3)
+    constraint bearing2	pitch1 5;	angle and angle velocity (4-5)
+    constraint bearing2	pitch2 5;	angle and angle velocity (6-7)
+    constraint bearing2	pitch3 5;	angle and angle velocity (8-9)
+    aero omega; (10)
+    aero torque; (11)
+    aero power; (12)
+    aero thrust; (13)
+    wind free_wind	1 0 0 -119;	local wind at fixed position: coo (1=global,2=non-rotation rotor coo.), pos x, pos y, pos z (14-16)
+    wind free_wind_hor	1 0 0 -119;	total U and dir;
 ; Moments:
     mbdy momentvec	tower 1 1 tower # tower base;
     mbdy momentvec	tower 10 2 tower # tower yaw bearing;
     mbdy momentvec	shaft 4 1 shaft # main bearing;
-	mbdy momentvec  blade1 2 2 blade1 # blade 1 root (blade coo);
-    mbdy momentvec	blade1 2 2 hub1 # blade 1 root (hub coo);
+    mbdy momentvec	blade1 2 2 hub1 # blade 1 root;
     mbdy momentvec	blade2 2 2 hub2 # blade 2 root;
     mbdy momentvec	blade3 2 2 hub3 # blade 3 root;
     mbdy momentvec	blade1 13 1 local # blade 1 50% local e coo;
     mbdy momentvec	blade2 13 1 local # blade 2 50% local e coo;
     mbdy momentvec	blade3 13 1 local # blade 3 50% local e coo;	
 ; Displacements and accellerations
-    mbdy state	pos tower 10 1 global only 2 # tower top fa displ;
-    mbdy state	pos tower 10 1 global only 1 # tower top ss displ;
-    mbdy state	acc tower 10 1 global only 2 # tower top fa acc;
-    mbdy state	acc tower 10 1 global only 1 # tower top ss acc;	
+    mbdy state	pos tower 10 1 global only 1 # Tower top FA displ;
+    mbdy state	pos tower 10 1 global only 2 # Tower top SS displ;
+    mbdy state	acc tower 10 1 global only 1 # Tower top FA acc;
+    mbdy state	acc tower 10 1 global only 2 # Tower top SS acc;	
 ;
     mbdy state	pos blade1 26 1 blade1 # blade 1 tip pos;
     mbdy state	pos blade2 26 1 blade2 # blade 2 tip pos;
@@ -664,57 +664,49 @@
     aero cd	2 79.7; (72.5 * s)
     aero cd	3 79.7;	 (72.5 * s)
 ; DLL outputs and into HAWC2
-    dll inpvec	1 1 # generator torque reference [nm];
-    dll inpvec	1 2 # pitch angle reference of blade 1 [rad];
-    dll inpvec	1 3 # pitch angle reference of blade 2 [rad];
-    dll inpvec	1 4 # pitch angle reference of blade 3 [rad];
-    dll inpvec	1 5 # power reference [w];
-    dll inpvec	1 6 # filtered wind speed [m/s];
-    dll inpvec	1 7 # filtered rotor speed [rad/s];
-    dll inpvec	1 8 # filtered rotor speed error for torque [rad/s];
-    dll inpvec	1 9 # bandpass filtered rotor speed [rad/s];
-    dll inpvec	1 10 # proportional term of torque contr. [nm];
-    dll inpvec	1 11 # integral term of torque controller [nm];
-    dll inpvec	1 12 # minimum limit of torque [nm];
-    dll inpvec	1 13 # maximum limit of torque [nm];
-    dll inpvec	1 14 # torque limit switch based on pitch [-];
-    dll inpvec	1 15 # filtered rotor speed error for pitch [rad/s];
-    dll inpvec	1 16 # power error for pitch [w];
-    dll inpvec	1 17 # proportional term of pitch controller [rad];
-    dll inpvec	1 18 # integral term of pitch controller [rad];
-    dll inpvec	1 19 # minimum limit of pitch [rad];
-    dll inpvec	1 20 # maximum limit of pitch [rad];
-    dll inpvec	1 21 # torque reference from dt dammper [nm];
-    dll inpvec	1 22 # status signal [-];
-    dll inpvec	1 23 # total added pitch rate [rad/s];
-    dll inpvec	1 24 # filtered mean pitch for gain sch [rad];
-    dll inpvec	1 25 # flag for mechnical brake [0=off/1=on];
-    dll inpvec	1 26 # flag for emergency pitch stop [0=off/1=on];
-    dll inpvec	1 27 # lp filtered acceleration level [m/s^2];
-    dll inpvec	1 31 # monitored average of reference pitch [rad];
-    dll inpvec	1 32 # monitored ave. of actual pitch (blade 1) [rad];	
+    dll inpvec	1 1 # Generator torque reference [Nm];
+    dll inpvec	1 2 # Pitch angle reference of blade 1 [rad];
+    dll inpvec	1 3 # Pitch angle reference of blade 2 [rad];
+    dll inpvec	1 4 # Pitch angle reference of blade 3 [rad];
+    dll inpvec	1 5 # Power reference [W];
+    dll inpvec	1 6 # Filtered wind speed [m/s];
+    dll inpvec	1 7 # Filtered rotor speed [rad/s];
+    dll inpvec	1 8 # Filtered rotor speed error for torque [rad/s];
+    dll inpvec	1 9 # Bandpass filtered rotor speed [rad/s];
+    dll inpvec	1 10 # Proportional term of torque contr. [Nm];
+    dll inpvec	1 11 # Integral term of torque controller [Nm];
+    dll inpvec	1 12 # Minimum limit of torque [Nm];
+    dll inpvec	1 13 # Maximum limit of torque [Nm];
+    dll inpvec	1 14 # Torque limit switch based on pitch [-];
+    dll inpvec	1 15 # Filtered rotor speed error for pitch [rad/s];
+    dll inpvec	1 16 # Power error for pitch [W];
+    dll inpvec	1 17 # Proportional term of pitch controller [rad];
+    dll inpvec	1 18 # Integral term of pitch controller [rad];
+    dll inpvec	1 19 # Minimum limit of pitch [rad];
+    dll inpvec	1 20 # Maximum limit of pitch [rad];
+    dll inpvec	1 21 # Torque reference from DT dammper [Nm];
+    dll inpvec	1 22 # Status signal [-];
+    dll inpvec	1 23 # Total added pitch rate [rad/s];
+    dll inpvec	1 24 # Filtered Mean pitch for gain sch [rad];
+    dll inpvec	1 25 # Flag for mechnical brake [0=off/1=on];
+    dll inpvec	1 26 # Flag for emergency pitch stop [0=off/1=on];
+    dll inpvec	1 27 # LP filtered acceleration level [m/s^2];
+    dll inpvec	1 31 # Monitored average of reference pitch [rad];
+    dll inpvec	1 32 # Monitored ave. of actual pitch (blade 1) [rad];	
 ; Input from generator model
-    dll inpvec	2 1 # mgen lss [nm];
-    dll inpvec	2 2 # pelec [w];
-    dll inpvec	2 3 # mframe [nm];
-    dll inpvec	2 4 # mgen hss [nm];
-    dll inpvec	2 8 # grid flag [0=run/1=stop];	
+    dll inpvec	2 1 # Mgen LSS [Nm];
+    dll inpvec	2 2 # Pelec [W];
+    dll inpvec	2 3 # Mframe [Nm];
+    dll inpvec	2 4 # Mgen HSS [Nm];
+    dll inpvec	2 8 # Grid flag [0=run/1=stop];	
 ; Input from mechanical brake
-    dll inpvec	3 1 # brake torque [nm];	
+    dll inpvec	3 1 # Brake torque [Nm];	
 ; Input from pitch servo
     dll inpvec	4 1 # pitch 1 [rad];
     dll inpvec	4 2 # pitch 2 [rad];
     dll inpvec	4 3 # pitch 3 [rad];	
 ; Check tower clearence
-    dll inpvec	5 1 # bltip tow min d [m];
-; Tower fore-aft velocity
-	mbdy state	vel towertop 1 1 global only 2 # tower top fa vel;
-; Floating 
-	mbdy state	vel towertop 1 1 global only 2 # tower top fa vel;
-	dll inpvec 1 45 # switch factor;
-	dll inpvec 1 46 # filtered tower-top fore-aft velocity;
-	dll inpvec 1 47 # GenTorq from the floating loop;
-	dll inpvec 1 48 # Pitch from the floating loop;
+    dll inpvec	5 1 # Bltip tow min d [m];
   end output;	
 ;
 exit;

@@ -27,7 +27,7 @@ def get_rotation_speed(wsp, operation_dat):
     Omega0 = 9.6 * pi/30  # default rotation speed [rad/s]
     for line in contents:
         wsp_line = float(line.split()[0])
-        if wsp_line > wsp:
+        if wsp_line >= wsp:
             Omega0 = float(line.split()[2]) * pi/30
             break
     return Omega0

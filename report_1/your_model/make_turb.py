@@ -46,8 +46,8 @@ from _run_hawc2_utils import clean_directory, get_rotation_speed
 operation_dat = './data/operation_DL.dat'  # path to operation.dat file
 master_name = 'redesign_DL.htc'  # name of file in the htc_master folder
 # wsps = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]  # wind speeds you want to simulate
-wsps = [5, 6, 7]
-nseeds = 6  # number of random simulations per wind speed
+wsps = [11]
+nseeds = 1  # number of random simulations per wind speed
 iref = 0.14  # reference turbulence intensity for turbulence class, given in IEC 61400-1 Table 1
 hawc2_exe = 'C:/hawc_simulations/hawc2_12.8_1900/HAWC2MB.exe'  # path to HAWC2 executable
 

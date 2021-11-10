@@ -1,6 +1,0 @@
-PI generator torque controller in region 1 (variable speed, variable power), starting at istate = 4
-K =   0.119686E+08 [Nm/(rad/s)^2]
-PI generator torque controller in region 2 (constant speed, variable power)
-I =   0.161066E+09 [kg*m^2]
-Kp =   0.708404E+08 [Nm/(rad/s)]
-Ki =   0.158965E+08 [Nm/rad]

@@ -151,5 +151,18 @@ octave-workspace
 # Simulink autosave extension
 .autosave
 
-# HAWC results
-.report_1/results*
+# Assignment 0
+A0/figs/
+
+# Assignmnet 1
+A1/figs/
+
+# Assignment 2
+A2/figs/
+
+# Assignment 3
+A3/figs/
+A3/res/
+
+# Assignment 4
+A4/res/

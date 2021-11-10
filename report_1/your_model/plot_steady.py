@@ -12,7 +12,7 @@ stats_path = './results_DL/steady/res/stats_mean.txt'  # path to mean steady sta
 dz_tb = 119  # distance from hub center to tower base [m]
 dz_yb = 3.37  # distance from hub center to yaw bearing [m]
 geneff = 0.94  # generator/gearboox efficienty [%]
-Mgrav = 6200  # yaw-bearing pitch moment due to gravity [kNm]
+Mgrav = 9967 # yaw-bearing pitch moment due to gravity [kNm]
 
 # define the channels and names to plot
 channels = {4: 'Pitch angle [deg]',
@@ -41,23 +41,6 @@ h2s_u, h2s_pitch, h2s_rotspd, h2s_paero, h2s_thrust, h2s_aerotrq = load_hawc2s(h
 # loop over each channels and plot the steady state with the theory line
 for iplot, (ichan, name) in enumerate(channels.items()):
     
-    # PART 1. Theoretical lines. Taken from HAWC2S pwr file!
-    if ichan == 4:  # pitch angle
-        u_theory = h2s_u
-        theory = h2s_pitch  # directly take pitch angle
-    elif ichan == 10:  # rotor speed
-        u_theory = h2s_u
-        theory = h2s_rotspd
-    elif ichan == 13:  # thrust
-        u_theory = h2s_u
-        theory = h2s_thrust
-    elif ichan == 72:  # generator torque
-        u_theory = h2s_u
-        theory = -h2s_aerotrq
-    elif ichan == 102:  # electrical power
-        u_theory = h2s_u
-        theory = h2s_paero * geneff
-
     # extract hawc2 wind and channel to plot from the HAWC2 stats
     h2_wind = data[:, idxs == i_wind]  # wind [m/s]
     HAWC2val = data[:, idxs == ichan]
@@ -65,11 +48,36 @@ for iplot, (ichan, name) in enumerate(channels.items()):
     # hawc2 channels we need for the theoretical calculations
     h2_thrust = data[:, idxs == 13]  # thrust [kN]
     h2_aero_trq = data[:, idxs == 72] / geneff * 1e-3  # aerodynamic torque [kNm]
+    
+    # PART 1. Theoretical lines. Taken from HAWC2S pwr file!
+    if ichan == 4:  # pitch angle
+        u_theory = h2s_u
+        theory = h2s_pitch
+    elif ichan == 10:  # rotor speed
+        u_theory = h2s_u
+        theory = h2s_rotspd
+    elif ichan == 13:  # thrust
+        u_theory = h2s_u
+        theory = h2s_thrust * 1e-3
+    elif ichan == 72:  # generator torque
+        u_theory = h2s_u
+        theory = h2s_aerotrq * geneff
+    elif ichan == 102:  # electrical power
+        u_theory = h2s_u
+        theory = h2s_paero * geneff
+
+    # aerodynamic parameters
+    elif ichan == 63:  # angle of attack
+        u_theory = h2_wind
+        theory = np.nan * np.ones_like(u_theory)
+    elif ichan == 66:  # lift coefficient
+        u_theory = h2_wind
+        theory = np.nan * np.ones_like(u_theory)
 
     # PART 2. Theoretical lines. Equations in lecture, calculated with hawc2 channels.
-    if ichan == 19:  # tower-base fore-aft
+    elif ichan == 19:  # tower-base fore-aft
         u_theory = h2_wind
-        theory = h2_thrust * dz_tb - Mgrav  # tower-base FA is from thrust
+        theory = h2_thrust * dz_tb - Mgrav
     elif ichan == 20:  # tower-base side-side
         u_theory = h2_wind
         theory = h2_aero_trq
@@ -82,14 +90,12 @@ for iplot, (ichan, name) in enumerate(channels.items()):
     elif ichan == 27:  # shaft torsion
         u_theory = h2_wind
         theory = -h2_aero_trq
-    elif ichan == 28:  # blade root out-of-plane-plane moment
+    elif ichan == 28:  # blade root out-of-plane moment
         u_theory = h2_wind
-        theory = np.full_like(u_theory, np.nan)  # leave me -- no theory for OoP moment
+        theory = h2_thrust * -60 / 3
     elif ichan == 29:  # blade root in-plane moment
         u_theory = h2_wind
-        theory = h2_aero_trq/3
-    else:  # no theory
-        theory = np.full_like(u_theory, np.nan)
+        theory = h2_aero_trq/ 3
 
     # plot the results
     fig = plt.figure(1 + iplot, figsize=(7, 3), clear=True)

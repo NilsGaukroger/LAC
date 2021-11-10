@@ -283,7 +283,7 @@
   begin wind;
     density	1.225;
     wsp	4;
-    tint	0;
+    tint	0; iec: i_ref*(0.75*U+5.6)/U
     horizontal_input	1;
     windfield_rotations	0 0 0;	yaw, tilt, rotation
     center_pos0	0 0 -119;	hub height

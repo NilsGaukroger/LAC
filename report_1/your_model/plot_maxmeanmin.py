@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from _loads_utils import load_stats
 
 
-stat_dir = './dtu10mw_res/dtu10mw_tca/'  # results directory with statistics files  !!! END WITH SLASH !!!
+stat_dir = './results_DL/turb/res/'  # results directory with statistics files  !!! END WITH SLASH !!!
 i_wind = 15  # channel number with the wind speed
 i_plot = [4, 10, 13, 15, 19, 20, 22, 23, 27, 28, 29, 72, 102, 110]  # channel indices in .sel file that you want to plot
 

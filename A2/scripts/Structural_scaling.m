@@ -23,4 +23,4 @@ new_c2def_fileName = '../../data/redesign/redesign_c2def.dat';
     original_c2def_fileName,new_c2def_fileName);
 
 %% Save data for post-processing
-save('Structural_scaling.mat','DTU','redesign');
+save('..\..\mat\Structural_scaling.mat','DTU','redesign');

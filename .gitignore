@@ -166,7 +166,8 @@ A3/res/
 
 # Assignment 4
 A4/res/
-A4/USB/
+A4/USB/hawc_results/
+A4/USB/hawc_simulations/hawc2_*/
 
 ## HAWC
 

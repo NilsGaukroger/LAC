@@ -7,7 +7,7 @@
 close all; clear variables; clc
 
 %% Add functions folder to path
-addpath('functions\')
+addpath('..\..\functions\')
 
 %% Set default plot settings
 disp('Setting default plot parameters...');
@@ -20,7 +20,7 @@ disp('Default plot parameters set.');
 
 %% Figure saving settings
 save_var = true; % true: saves figures, false: doesn't
-local    = './plots/report_3/';
+local    = '../figs/';
 locs     = {local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
     if (not(isfolder(locs{i})))
@@ -29,7 +29,7 @@ for i = 1:length(locs) % if any directory doesn't exist don't attempt to save th
 end
 
 %% Load data from postProcessing_stab
-load('postProcessing_stab.mat');
+load('../../mat/postProcessing_stab.mat');
 
 %% Create table for gains (cases C1-C6)
 caseName        = ["C1";"C2";"C3";"C4";"C5";"C6"];
@@ -57,7 +57,7 @@ order = 2; % Order of aerodynamic gain scheduling fit (1 = linear, 2 = quadratic
     gains.("Region 3: K1"),gains.("Region 3: K2")] = deal(NaN(size(gains,1),1));
 
 for i = 1:size(gains,1)
-    filename = strcat("./your_model/results_redesign/cont/", gains.caseName(i), "/redesign_cont_HS2_ctrl_tuning.txt");
+    filename = strcat("../res/redesign/", gains.caseName(i), "/redesign_cont_HS2_ctrl_tuning.txt");
     if isfile(filename) % check if file exists
         [gains.("Region 1: K")(i),gains.("Region 2: I")(i),gains.("Region 2: Kp")(i),gains.("Region 2: Ki")(i),...
             gains.("Region 3: Kp")(i),gains.("Region 3: Ki")(i),...
@@ -79,7 +79,7 @@ end
 %% Import HAWC2 results
 data = cell(size(gains,1),1);
 for i = 1:length(data)
-    filename = strcat('your_model\results_redesign\cont\',gains.caseName(i),'\redesign_cont.dat');
+    filename = strcat('..\res\redesign\',gains.caseName(i),'\redesign_cont.dat');
     if isfile(filename) % check if file exists
         data{i} = readtable(filename);
     else
@@ -186,8 +186,8 @@ if save_var
 end
 
 %% Import C7 HAWC2 results
-filepath = 'your_model\results_redesign\cont\C7\';
-folders = dir('your_model\results_redesign\cont\C7\');
+filepath = '..\res\redesign\C7\';
+folders = dir('..\res\redesign\C7\');
 folders = folders(3:end);
 folders = folders([folders.isdir] == 1);
 C7      = cell(length(folders),2);

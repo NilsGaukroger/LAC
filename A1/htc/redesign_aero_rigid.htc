@@ -10,7 +10,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00412 0.00412 0.00045;	tuned by Larh
       begin timoschenko_input;
-        filename	./data/DTU_10MW_RWT_Tower_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Tower_st.dat;
         set	1 1;	1 1=flexibe, 1 2=stiff
       end timoschenko_input;
       begin c2_def;	definition of centerline in main_body coordinates
@@ -37,7 +37,7 @@
       damping_posdef	0 0 0 0.007 0.007 0.007;	tuned by Larh
       concentrated_mass	2 0 2.687 0.30061 446040 4106000 410600 4106000;	nacelle mass and inertia corrected by Anyd 25/4/13
       begin timoschenko_input;
-        filename	./data/DTU_10MW_RWT_Towertop_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Towertop_st.dat;
         set	1 2;	1 1=flexibe, 1 2=stiff
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -56,7 +56,7 @@
       concentrated_mass	1 0 0 0 0 0 0 3751000;	generator equivalent slow shaft re-tuned by Anyd 20/2/13
       concentrated_mass	5 0 0 0 105520 0 0 325700;	hub mass and inertia re-tuned by Anyd 20/2/13
       begin timoschenko_input;
-        filename	./data/DTU_10MW_RWT_Shaft_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Shaft_st.dat;
         set	1 1;	1 1=flexibe, 1 2=stiff
       end timoschenko_input;
       begin c2_def;	definition of centerline in main_body coordinates
@@ -76,7 +76,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 3e-06 3e-06 2e-05;	changed by Larh
       begin timoschenko_input;
-        filename	./data/DTU_10MW_RWT_Hub_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Hub_st.dat;
         set	1 2;	1 1=flexibe, 1 2=stiff
       end timoschenko_input;
       begin c2_def;	definition of centerline in main_body coordinates
@@ -103,7 +103,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00153 0.00255 0.00033;	3% damping tuned by tkim 23/03/13, unable to fit 3rd and higher mode
       begin timoschenko_input;
-        filename	./data/DTU_10MW_RWT_Blade_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Blade_st.dat;
         set	1 1;	1 1=flexibe, 1 2=stiff
       end timoschenko_input;
       begin c2_def;	definition of centerline in main_body coordinates
@@ -279,8 +279,8 @@
     link	1 mbdy_c2_def blade1;
     link	2 mbdy_c2_def blade2;
     link	3 mbdy_c2_def blade3;
-    ae_filename	./data/redesign_ae.dat;
-    pc_filename	./data/DTU_10MW_RWT_pc.dat;
+    ae_filename	../../data/redesign/redesign_ae.dat;
+    pc_filename	../../data/dtu10mw/DTU_10MW_RWT_pc.dat;
     induction_method	1;	0=none, 1=normal
     aerocalc_method	1;	0=no aero calculations, 1=with aero calculations
     aerosections	50;
@@ -305,7 +305,7 @@
       second_order_actuator	pitch1 100 0.7;
     end rotating_threebladed_substructure;
     ; Operational data
-    operational_data_filename	./data/operation_rigid_ws.dat;  file with operational data points
+    operational_data_filename	../data/dtu_operation_rigid_ws.dat;  file with operational data points
     ; HAWC2S commands (uncomment as needed);
     compute_steady_states	nobladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)
     save_power;	save steady-state values to .pwr

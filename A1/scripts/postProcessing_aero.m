@@ -5,7 +5,7 @@
 % 26th September 2021
 
 close all; clear variables; clc
-addpath('functions\');
+addpath('..\..\functions\');
 
 %% Set default plot settings
 disp('Setting default plot parameters...');
@@ -21,7 +21,7 @@ disp('Default plot parameters set.');
 load('aero_design.mat');
 
 %% Load HAWC results
-turbine = {'results_dtu10mw/','results_redesign/'};
+turbine = {'dtu10mw/','redesign/'};
 simul   = {'tsr_opt/','tsr/','ws/'};
 file    = {'DTU_10MW_aero_rigid','redesign_aero_rigid'};
 
@@ -31,15 +31,13 @@ idx = [1,4,4];
 
 for i = 1:length(turbine)
     for j = 1:length(simul)
-        filepath = strcat('your_model/', turbine{i}, "aero/", simul{j});
+        filepath = strcat('../res/', turbine{i}, simul{j});
         u{i,j} = import_u(filepath,file{i},idx(j));
         if j > 1
             pwr{i,j} = import_pwr(strcat(filepath,file{i},'.pwr'));
         end
     end
 end
-
-
 
 %% Calculated values
 % HAWC_out.tsr_pwr.tsr = ((HAWC_out.tsr_pwr.Speed * ((2*pi)/60)) * redesign.R)...

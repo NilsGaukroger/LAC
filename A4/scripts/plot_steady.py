@@ -6,8 +6,8 @@ import numpy as np
 from _loads_utils import load_stats, load_hawc2s
 
 
-hawc2s_path = './results_DL/steady/redesign_cont_HS2.pwr'  # path to .pwr or .opt file
-stats_path = './results_DL/steady/res/stats_mean.txt'  # path to mean steady stats
+hawc2s_path = '../res/redesign/steady/redesign_cont_HS2.pwr'  # path to .pwr or .opt file
+stats_path = '../res/redesign/steady/stats_mean.txt'  # path to mean steady stats
 
 dz_tb = 119  # distance from hub center to tower base [m]
 dz_yb = 3.37  # distance from hub center to yaw bearing [m]

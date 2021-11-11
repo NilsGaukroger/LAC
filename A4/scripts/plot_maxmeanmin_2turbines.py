@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from _loads_utils import load_stats
 
 
-stat_dir1 = './results_DL/dtu10mw_res/dtu10mw_tca/'  # stats file, turbine 1  !!! END WITH SLASH !!!
-stat_dir2 = './results_DL/dtu10mw_res/dtu10mw_tcb/'  # stats file, turbine 2  !!! END WITH SLASH !!!
+stat_dir1 = '../res/dtu10mw/turb/'  # stats file, turbine 1  !!! END WITH SLASH !!!
+stat_dir2 = '../res/redesign/turb/'  # stats file, turbine 2  !!! END WITH SLASH !!!
 labels = ['DTU 10 MW, TC A', 'Redesign, TC B']  # legend labels
 
 # values to plot and indices of that value for the two turbines

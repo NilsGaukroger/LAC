@@ -21,7 +21,7 @@ import numpy as np
 from _proc_hawc2_utils import initialize_stat, calculate_stat, update_stat
 
 
-res_folder = './results_DL/turb/res/'  # folder with the HAWC2 results to post-process !!! MUST END WITH SLASH !!!
+res_folder = '../res/redesign/turb/'  # folder with the HAWC2 results to post-process !!! MUST END WITH SLASH !!!
 sel_idxs = [4, 10, 11, 13, 15, 19, 20, 22, 23, 27, 28, 29, 63, 66, 72,
             102, 110]  # channel indices in .sel file that you want to process
 # channels = {4: 'Pitch angle [deg]',

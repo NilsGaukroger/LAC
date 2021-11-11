@@ -6,6 +6,12 @@
 
 close all; clear variables; clc
 
+%% NB
+
+% If you haven't already downloaded everything into res/redesign/ (not just
+% C1/ to C6/, but also the C7/ comparisons, e.g. omega0.05_zeta0.7 etc.)
+% then you should do that before trying to create figures from this script.
+
 %% Add functions folder to path
 addpath('..\..\functions\')
 
@@ -19,7 +25,7 @@ set(    0,            'DefaultLineLineWidth',     2);
 disp('Default plot parameters set.');
 
 %% Figure saving settings
-save_var = true; % true: saves figures, false: doesn't
+save_var = false; % true: saves figures, false: doesn't
 local    = '../figs/';
 locs     = {local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there

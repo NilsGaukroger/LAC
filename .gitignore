@@ -1,3 +1,29 @@
+## User-generated
+
+# Assignment 0
+A0/figs/
+
+# Assignmnet 1
+A1/figs/
+
+# Assignment 2
+A2/figs/
+
+# Assignment 3
+A3/figs/
+A3/res/
+
+# Assignment 4
+A4/res/
+A4/log/
+A4/USB/hawc_results/
+A4/USB/hawc_simulations/hawc2_*/
+
+## HAWC
+
+# HAWC executables
+hawc_simulations/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -150,27 +176,3 @@ octave-workspace
 
 # Simulink autosave extension
 .autosave
-
-# Assignment 0
-A0/figs/
-
-# Assignmnet 1
-A1/figs/
-
-# Assignment 2
-A2/figs/
-
-# Assignment 3
-A3/figs/
-A3/res/
-
-# Assignment 4
-A4/res/
-A4/log/
-A4/USB/hawc_results/
-A4/USB/hawc_simulations/hawc2_*/
-
-## HAWC
-
-# HAWC executables
-hawc_simulations/

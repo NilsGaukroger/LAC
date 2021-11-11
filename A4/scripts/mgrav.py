@@ -8,7 +8,7 @@ Created on Tue Nov  9 10:10:04 2021
 import pandas as pd
 import numpy as np
 
-filepath = "./results_redesign/info/inertia.dat"
+filepath = "../../info/redesign/flex/inertia.dat"
 g = 9.81
 
 #%% Import data

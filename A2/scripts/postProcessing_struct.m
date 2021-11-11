@@ -16,12 +16,12 @@ set(    0,            'DefaultLineLineWidth',   1.5);
 disp('Default plot parameters set.');
 
 %% Add functions folder to path
-addpath('functions\')
+addpath('..\..\functions\')
 
 %% Figure saving settings
 save_var = false; % true: saves figures, false: doesn't
 overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\struct\'; % overleaf not working currently
-local    = './plots/report_2/struct/';
+local    = '../figs/struct/';
 locs     = {overleaf,local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
     if (not(isfolder(locs{i})))
@@ -30,7 +30,7 @@ for i = 1:length(locs) % if any directory doesn't exist don't attempt to save th
 end
 
 %% Load data from Structural_scaling
-load('Structural_scaling.mat');
+load('..\..\mat\Structural_scaling.mat');
 
 %% Create new variables
 elas = {'st_flex','st_rigid'}; % filenames of different elasticities
@@ -95,7 +95,7 @@ if save_var
 end
 
 %% HAWC post-processing
-turbine = {'results_dtu10mw/struct/','results_redesign/struct/'};
+turbine = {'dtu10mw/struct/','redesign/struct/'};
 names   = {'DTU 10MW','Redesign'};
 elas    = {'flex','rigid'};
 file    = {'/DTU_10MW_struct_','/redesign_struct_'};
@@ -106,7 +106,7 @@ for i = 1:size(pwr,1)
         if j == 1
             pwr{i,j} = names{i};
         else
-            pwr{i,j} = import_pwr(strcat("your_model/",turbine{i},elas{j-1},file{i},elas{j-1},".pwr"));
+            pwr{i,j} = import_pwr(strcat("../res/",turbine{i},elas{j-1},file{i},elas{j-1},".pwr"));
         end
     end
 end

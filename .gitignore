@@ -1,4 +1,8 @@
 ## User-generated
+course_material/
+hawc_simulations/
+lectures/
+mat/
 
 # Assignment 0
 A0/figs/
@@ -19,10 +23,7 @@ A4/log/
 A4/USB/hawc_results/
 A4/USB/hawc_simulations/hawc2_*/
 
-## HAWC
-
-# HAWC executables
-hawc_simulations/
+##--------------------------------------
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

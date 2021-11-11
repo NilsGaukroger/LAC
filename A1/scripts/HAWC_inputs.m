@@ -14,7 +14,7 @@ auto = 0; % '0': write .htc manually, '1': automatic
 
 %% Load inputs
 load('aero_design.mat');
-DTU.c2def = readtable('your_model/dtu10mw/DTU_10MW_c2def.txt');
+DTU.c2def = readtable('../../data/dtu10mw/DTU_10MW_c2def.txt');
 DTU.c2def.Properties.VariableNames = {'sec','idx','x','y','z','beta'};
 
 %% Scale coordinates
@@ -43,7 +43,7 @@ N     = omega * (60/(2*pi));
 pitch = 0;
 
 % Write data to file
-fileID = fopen('your_model/data/operation_rigid_1pt.dat','w');
+fileID = fopen('../data/operation_rigid_1pt.dat','w');
 fprintf(fileID,'%3s %17s %21s %21s\n',num2str(length(U0)),'wind speed [m/s]','pitch [deg]','rot. speed [rpm]');
 fprintf(fileID,' %.6f  %.6f  %.6f\n',U0,pitch,N);
 fclose(fileID);
@@ -58,7 +58,7 @@ N     = omega * (60/(2*pi));
 pitch = zeros(1,n_tsr);
 
 % Write data to file
-fileID = fopen('your_model/data/operation_rigid_tsr.dat','w');
+fileID = fopen('../data/operation_rigid_tsr.dat','w');
 fprintf(fileID,'%3s %17s %21s %21s\n',num2str(length(U0)),'wind speed [m/s]','pitch [deg]','rot. speed [rpm]');
 for i = 1:n_tsr
     fprintf(fileID,' %.6f  %.6f  %.6f\n',U0(i),pitch(i),N(i));
@@ -74,7 +74,7 @@ N     = omega * (60/(2*pi));
 pitch = zeros(1,n_tsr);
 
 % Write data to file
-fileID = fopen('your_model/data/operation_rigid_ws.dat','w');
+fileID = fopen('../data/operation_rigid_ws.dat','w');
 fprintf(fileID,'%3s %17s %21s %21s\n',num2str(length(U0)),'wind speed [m/s]','pitch [deg]','rot. speed [rpm]');
 for i = 1:n_tsr
     fprintf(fileID,' %.6f  %.6f  %.6f\n',U0(i),pitch(i),N(i));
@@ -82,7 +82,7 @@ end
 fclose(fileID);
 
 %% Write new .ae file
-fileID = fopen('your_model/data/redesign_ae.dat','w');
+fileID = fopen('../data/redesign_ae.dat','w');
 fprintf(fileID,'1\n');
 fprintf(fileID,'1 %d\n',length(HAWC_in.r));
 for i = 1:length(HAWC_in.r)
@@ -96,7 +96,7 @@ if auto == 1
     n = linspace(1,nsec,nsec);
     z = (n-1)/(nsec-1).*(rotor.R-rotor.r(1)); %z position along blade
 
-    text = fileread(['your_model/dtu10mw/DTU_10MW_' elasticity '_hawc2s.htc']); %load .htc to text
+    text = fileread(['../htc/DTU_10MW_aero_' elasticity '.htc']); %load .htc to text
 
     %find indices for start and end of c2_def section to replace
     nsecline=sprintf('nsec	%d;',nsec);

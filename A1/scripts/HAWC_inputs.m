@@ -82,7 +82,7 @@ end
 fclose(fileID);
 
 %% Write new .ae file
-fileID = fopen('../data/redesign_ae.dat','w');
+fileID = fopen('../../data/redesign/redesign_ae.dat','w');
 fprintf(fileID,'1\n');
 fprintf(fileID,'1 %d\n',length(HAWC_in.r));
 for i = 1:length(HAWC_in.r)

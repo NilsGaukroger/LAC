@@ -5,7 +5,7 @@ function [DTU,redesign] = structuralScaling(original_fileName,new_fileName,...
 % with scaled c2def coordinates.
 
 %% Load aero_design outputs
-load('aero_design.mat','DTU','HAWC_in','redesign');
+load('..\..\mat\aero_design.mat','DTU','HAWC_in','redesign');
 
 %% Import original DTU 10MW structural file
 % Define import options

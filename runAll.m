@@ -20,4 +20,4 @@ run('A2/scripts/postProcessing_struct')
 % Assignment 2: Stability post-processing
 run('A2/scripts/postProcessing_stab')
 % Assignment 3: Controller design post-processing
-run('A2/scripts/postProcessing_cont')
+run('A3/scripts/postProcessing_cont')

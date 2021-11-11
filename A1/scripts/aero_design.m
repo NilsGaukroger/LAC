@@ -7,7 +7,7 @@
 close all; clear variables; clc
 
 %% Add functions folder to path
-addpath('functions');
+addpath('../../functions');
 
 %% DTU rotor parameters
 DTU.R           = 89.1660;           % rotor radius [m]

@@ -18,7 +18,7 @@ disp('Default plot parameters set.');
 % set(    0,           'DefaultFigureColormap',feval('turbo'));
 
 %% Load MATLAB results
-load('aero_design.mat');
+load('../../mat/aero_design.mat');
 
 %% Load HAWC results
 turbine = {'dtu10mw/','redesign/'};

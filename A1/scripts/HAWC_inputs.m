@@ -13,7 +13,7 @@ ctsr = 1; % chosen tsr index for blade geometry
 auto = 0; % '0': write .htc manually, '1': automatic
 
 %% Load inputs
-load('aero_design.mat');
+load('../../mat/aero_design.mat');
 DTU.c2def = readtable('../../data/dtu10mw/DTU_10MW_c2def.txt');
 DTU.c2def.Properties.VariableNames = {'sec','idx','x','y','z','beta'};
 
@@ -142,4 +142,4 @@ genspeed = redesign.omega_opt * gearratio;
 fprintf('genspeed 0 %.2f; RPM (0 %.1f)\n', genspeed, redesign.omega_opt);
 
 %% Add redesign.omega_opt to aero_design.mat
-save('aero_design','aerofoil','DTU','HAWC_in','result','result2','redesign','p','p1','p2','t_max');
+save('../../mat/aero_design','aerofoil','DTU','HAWC_in','result','result2','redesign','p','p1','p2','t_max');

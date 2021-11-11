@@ -1,0 +1,755 @@
+Version ID : 12.8.0
+________________________________________________________________________________________________________________________________________________________________________
+Body initial positions and orientations in global coordinates
+________________________________________________________________________________________________________________________________________________________________________
+Time : 10:28:31
+Date : 11:11.2021
+________________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  1 with the name :tower
+Body initial position:                  0.00000E+00  0.00000E+00  0.00000E+00
+Body initial velocity:                  0.00000E+00  0.00000E+00  0.00000E+00
+Body initial rotation velocity vector:  0.00000E+00  0.00000E+00  0.00000E+00
+Body mass     [kg]   :                  6.27396E+05
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.07189E+09  2.07189E+09  8.03535E+06  0.00000E+00  0.00000E+00  0.00000E+00
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        0.00000E+00  0.00000E+00  4.76161E+01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                        0.00000E+00  0.00000E+00 -4.76161E+01
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  1.00000E+00  0.00000E+00  0.00000E+00
+  0.00000E+00  1.00000E+00  0.00000E+00
+  0.00000E+00  0.00000E+00  1.00000E+00
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  2 with the name :towertop
+Body initial position:                  0.00000E+00  0.00000E+00 -1.15630E+02
+Body initial velocity:                  0.00000E+00  0.00000E+00  0.00000E+00
+Body initial rotation velocity vector:  0.00000E+00  0.00000E+00  0.00000E+00
+Body mass     [kg]   :                  4.46040E+05
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.00024E+07  3.08662E+06  7.32639E+06  0.00000E+00  0.00000E+00 -2.93562E+06
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        0.00000E+00 -2.68700E+00  2.44939E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                        0.00000E+00  2.68700E+00 -2.44939E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  1.00000E+00  0.00000E+00  0.00000E+00
+  0.00000E+00  1.00000E+00  0.00000E+00
+  0.00000E+00  0.00000E+00  1.00000E+00
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  3 with the name :shaft
+Body initial position:                  0.00000E+00  0.00000E+00 -1.18380E+02
+Body initial velocity:                  0.00000E+00  0.00000E+00  0.00000E+00
+Body initial rotation velocity vector:  0.00000E+00  0.00000E+00 -2.00000E-01
+Body mass     [kg]   :                  1.05527E+05
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        5.31938E+06  5.31938E+06  4.07670E+06  0.00000E+00  0.00000E+00  0.00000E+00
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        0.00000E+00  7.07274E+00  6.18785E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                        0.00000E+00  0.00000E+00  7.09976E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  1.00000E+00  0.00000E+00  0.00000E+00
+  0.00000E+00 -8.71557E-02 -9.96195E-01
+  0.00000E+00  9.96195E-01 -8.71557E-02
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  4 with the name :hub1
+Body initial position:                  0.00000E+00 -7.07298E+00 -1.18999E+02
+Body initial velocity:                  1.80411E-16  0.00000E+00  0.00000E+00
+Body initial rotation velocity vector:  9.24446E-33  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.80000E+00
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.36173E+01  1.36173E+01  1.26000E+01  0.00000E+00  0.00000E+00  0.00000E+00
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.71287E-16 -6.10671E-02  1.39867E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                        0.00000E+00  0.00000E+00  1.40000E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  5 with the name :hub2
+Body initial position:                  0.00000E+00 -7.07298E+00 -1.18999E+02
+Body initial velocity:                  1.80411E-16  0.00000E+00  0.00000E+00
+Body initial rotation velocity vector:  6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.80000E+00
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.36173E+01  1.36173E+01  1.26000E+01  0.00000E+00  0.00000E+00  0.00000E+00
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.21128E+00  1.21786E-01 -6.91350E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                        0.00000E+00  0.00000E+00  1.40000E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  6 with the name :hub3
+Body initial position:                  0.00000E+00 -7.07298E+00 -1.18999E+02
+Body initial velocity:                  1.80411E-16  0.00000E+00  0.00000E+00
+Body initial rotation velocity vector: -6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.80000E+00
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.36173E+01  1.36173E+01  1.26000E+01  0.00000E+00  0.00000E+00  0.00000E+00
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        1.21128E+00  1.21786E-01 -6.91350E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                        0.00000E+00  0.00000E+00  1.40000E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  7 with the name :blade1_1
+Body initial position:                 -5.52013E-03 -6.94901E+00 -1.21796E+02
+Body initial velocity:                 -5.59483E-01 -9.62223E-05  1.09983E-03
+Body initial rotation velocity vector:  9.62965E-33  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  7.13028E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.08706E+05  1.07461E+05  4.55579E+04  3.45937E+02 -2.43518E+02 -3.08390E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.05554E-02 -1.15699E-01  2.99175E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.05554E-02 -1.49089E-02  2.99395E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  8 with the name :blade1_2
+Body initial position:                  9.84662E-03 -6.71497E+00 -1.27792E+02
+Body initial velocity:                 -1.75809E+00  1.71638E-04 -1.96183E-03
+Body initial rotation velocity vector:  1.04000E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.98910E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.60308E+04  1.60262E+04  1.77156E+04 -5.47536E+01 -5.32128E+01  1.70677E+01
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.25895E-02 -5.55607E-02  1.33587E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.25895E-02 -2.76209E-03  1.33702E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number :  9 with the name :blade1_3
+Body initial position:                  1.22961E-02 -6.60542E+00 -1.30491E+02
+Body initial velocity:                 -2.29784E+00  2.14336E-04 -2.44987E-03
+Body initial rotation velocity vector:  1.04000E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  3.45885E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.28613E+04  2.26212E+04  1.77711E+04 -8.23016E+02 -1.44290E+02  1.30439E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -2.35389E-02 -9.22725E-02  1.72281E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -2.35389E-02  1.70367E-02  1.72520E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 10 with the name :blade1_4
+Body initial position:                  2.65428E-02 -6.46406E+00 -1.34003E+02
+Body initial velocity:                 -3.00009E+00  4.62671E-04 -5.28835E-03
+Body initial rotation velocity vector:  1.07852E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.47848E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.13251E+04  1.22365E+04  1.06174E+04 -1.06777E+03 -1.61765E+02  1.05872E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -4.98841E-02 -8.89681E-02  1.39317E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -4.98841E-02  2.81142E-02  1.39572E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 11 with the name :blade1_5
+Body initial position:                  4.06329E-02 -6.35222E+00 -1.36816E+02
+Body initial velocity:                 -3.56240E+00  7.08278E-04 -8.09565E-03
+Body initial rotation velocity vector:  1.15556E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  6.99694E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.08228E+05  2.16567E+05  2.47558E+04 -3.14460E+03 -4.77465E+03 -2.19676E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.30063E-01 -2.05392E-01  4.57017E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.30063E-01  5.84875E-03  4.57478E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 12 with the name :blade1_6
+Body initial position:                  2.90949E-02 -6.03305E+00 -1.46412E+02
+Body initial velocity:                 -5.47986E+00  5.07158E-04 -5.79684E-03
+Body initial rotation velocity vector:  1.23260E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  5.44700E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.64012E+05  1.72592E+05  1.54736E+04 -1.63256E+03 -5.13298E+03 -2.15141E+03
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.97896E-01 -1.52093E-01  4.67083E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.97896E-01 -5.17902E-02  4.67302E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 13 with the name :blade1_7
+Body initial position:                  3.67262E-02 -5.81369E+00 -1.55992E+02
+Body initial velocity:                 -7.39234E+00  6.40180E-04 -7.31729E-03
+Body initial rotation velocity vector:  1.27111E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  7.91254E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        8.36251E+05  8.44511E+05  1.42230E+04 -8.33841E+02 -8.10086E+03 -2.28952E+04
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.33214E-01 -1.57182E-01  8.73548E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.33214E-01 -2.24004E-01  8.73403E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 14 with the name :blade1_8
+Body initial position:                 -1.60276E-02 -5.59108E+00 -1.74802E+02
+Body initial velocity:                 -1.11441E+01 -2.79379E-04  3.19332E-03
+Body initial rotation velocity vector:  1.34815E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  4.27193E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        4.27792E+05  4.28732E+05  4.41522E+03  1.42905E+02 -3.74832E+03 -2.31163E+04
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.07805E-01  7.54625E-02  8.40020E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.07805E-01 -4.41802E-01  8.38892E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 15 with the name :blade1_9
+Body initial position:                  1.65697E-02 -5.87679E+00 -1.94042E+02
+Body initial velocity:                 -1.49724E+01  2.88830E-04 -3.30134E-03
+Body initial rotation velocity vector:  1.46371E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  8.86134E+02
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.39688E+04  2.40390E+04  4.70344E+02  4.01046E+01 -4.15840E+02 -1.93595E+03
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -9.55005E-02  1.66685E-01  4.45012E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -9.55005E-02 -3.60637E-01  4.43861E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 16 with the name :blade1_10
+Body initial position:                  9.63334E-02 -6.26955E+00 -2.03871E+02
+Body initial velocity:                 -1.69238E+01  1.67920E-03 -1.91934E-02
+Body initial rotation velocity vector:  1.54074E-32  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  1.44495E+02
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        6.92152E+02  7.08492E+02  3.46480E+01  1.98920E+00 -1.06926E+01 -6.61108E+01
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -4.89560E-02  9.64513E-02  1.81988E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -4.89560E-02 -1.75742E-01  1.81394E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+ -1.00000E+00  5.34183E-18  1.22348E-16
+  1.06735E-17  9.99048E-01  4.36194E-02
+ -1.21999E-16  4.36194E-02 -9.99048E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 17 with the name :blade2_1
+Body initial position:                  2.42539E+00 -7.31431E+00 -1.17621E+02
+Body initial velocity:                  2.78786E-01  4.22774E-02 -4.83233E-01
+Body initial rotation velocity vector:  6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  7.13028E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.08706E+05  1.07461E+05  4.55579E+04  3.45937E+02 -2.43518E+02 -3.08390E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -2.58453E+00  2.76049E-01 -1.48596E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.05554E-02 -1.49089E-02  2.99395E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 18 with the name :blade2_2
+Body initial position:                  7.60783E+00 -7.86492E+00 -1.14648E+02
+Body initial velocity:                  8.80751E-01  1.32613E-01 -1.51578E+00
+Body initial rotation velocity vector:  6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.98910E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.60308E+04  1.60262E+04  1.77156E+04 -5.47536E+01 -5.32128E+01  1.70677E+01
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.15039E+00  1.20001E-01 -6.70812E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.25895E-02 -2.76209E-03  1.33702E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 19 with the name :blade2_3
+Body initial position:                  9.94378E+00 -8.10837E+00 -1.13312E+02
+Body initial velocity:                  1.15105E+00  1.73331E-01 -1.98119E+00
+Body initial rotation velocity vector:  6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  3.45885E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.28613E+04  2.26212E+04  1.77711E+04 -8.23016E+02 -1.44290E+02  1.30439E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.48152E+00  1.34928E-01 -8.74101E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -2.35389E-02  1.70367E-02  1.72520E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 20 with the name :blade2_4
+Body initial position:                  1.29775E+01 -8.42713E+00 -1.11565E+02
+Body initial velocity:                  1.50464E+00  2.26213E-01 -2.58562E+00
+Body initial rotation velocity vector:  6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.47848E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.13251E+04  1.22365E+04  1.06174E+04 -1.06777E+03 -1.61765E+02  1.05872E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.18370E+00  9.72519E-02 -7.35334E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -4.98841E-02  2.81142E-02  1.39572E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 21 with the name :blade2_5
+Body initial position:                  1.54053E+01 -8.68391E+00 -1.10164E+02
+Body initial velocity:                  1.78824E+00  2.68532E-01 -3.06934E+00
+Body initial rotation velocity vector:  6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  6.99694E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.08228E+05  2.16567E+05  2.47558E+04 -3.14460E+03 -4.77465E+03 -2.19676E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -3.89330E+00  4.01967E-01 -2.37197E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.30063E-01  5.84875E-03  4.57478E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 22 with the name :blade2_6
+Body initial position:                  2.37140E+01 -9.61726E+00 -1.05444E+02
+Body initial velocity:                  2.74497E+00  4.13361E-01 -4.72474E+00
+Body initial rotation velocity vector:  6.41848E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  5.44700E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.64012E+05  1.72592E+05  1.54736E+04 -1.63256E+03 -5.13298E+03 -2.15141E+03
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -3.94220E+00  4.72888E-01 -2.47273E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.97896E-01 -5.17902E-02  4.67302E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 23 with the name :blade2_7
+Body initial position:                  3.19914E+01 -1.06486E+01 -1.00728E+02
+Body initial velocity:                  3.70253E+00  5.57647E-01 -6.37394E+00
+Body initial rotation velocity vector:  6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  7.91254E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        8.36251E+05  8.44511E+05  1.42230E+04 -8.33841E+02 -8.10086E+03 -2.28952E+04
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -7.48162E+00  9.92340E-01 -4.40361E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.33214E-01 -2.24004E-01  8.73403E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 24 with the name :blade2_8
+Body initial position:                  4.82634E+01 -1.28744E+01 -9.15536E+01
+Body initial velocity:                  5.56927E+00  8.41286E-01 -9.61594E+00
+Body initial rotation velocity vector:  6.41848E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  4.27193E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        4.27792E+05  4.28732E+05  4.41522E+03  1.42905E+02 -3.74832E+03 -2.31163E+04
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -7.18751E+00  1.17675E+00 -4.18757E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.07805E-01 -4.41802E-01  8.38892E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 25 with the name :blade2_9
+Body initial position:                  6.48240E+01 -1.56650E+01 -8.21622E+01
+Body initial velocity:                  7.48906E+00  1.12996E+00 -1.29155E+01
+Body initial rotation velocity vector:  6.41848E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  8.86134E+02
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.39688E+04  2.40390E+04  4.70344E+02  4.01046E+01 -4.15840E+02 -1.93595E+03
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -3.77892E+00  7.51560E-01 -2.23504E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -9.55005E-02 -3.60637E-01  4.43861E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 26 with the name :blade2_10
+Body initial position:                  7.32341E+01 -1.73394E+01 -7.73421E+01
+Body initial velocity:                  8.47859E+00  1.27655E+00 -1.45911E+01
+Body initial rotation velocity vector:  6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  1.44495E+02
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        6.92152E+02  7.08492E+02  3.46480E+01  1.98920E+00 -1.06926E+01 -6.61108E+01
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                       -1.53831E+00  3.36062E-01 -9.18879E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -4.89560E-02 -1.75742E-01  1.81394E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01  3.77755E-02  8.65201E-01
+  7.54791E-02  9.93346E-01 -8.69898E-02
+ -8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 27 with the name :blade3_1
+Body initial position:                 -2.41987E+00 -7.31514E+00 -1.17611E+02
+Body initial velocity:                  2.80698E-01 -4.21812E-02  4.82133E-01
+Body initial rotation velocity vector: -6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  7.13028E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.08706E+05  1.07461E+05  4.55579E+04  3.45937E+02 -2.43518E+02 -3.08390E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        2.59508E+00  2.74456E-01 -1.46775E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.05554E-02 -1.49089E-02  2.99395E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 28 with the name :blade3_2
+Body initial position:                 -7.61768E+00 -7.86343E+00 -1.14665E+02
+Body initial velocity:                  8.77340E-01 -1.32785E-01  1.51774E+00
+Body initial rotation velocity vector: -6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.98910E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.60308E+04  1.60262E+04  1.77156E+04 -5.47536E+01 -5.32128E+01  1.70677E+01
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        1.16298E+00  1.18101E-01 -6.49089E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.25895E-02 -2.76209E-03  1.33702E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 29 with the name :blade3_3
+Body initial position:                 -9.95607E+00 -8.10651E+00 -1.13333E+02
+Body initial velocity:                  1.14679E+00 -1.73546E-01  1.98364E+00
+Body initial rotation velocity vector: -6.24500E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  3.45885E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.28613E+04  2.26212E+04  1.77711E+04 -8.23016E+02 -1.44290E+02  1.30439E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        1.50506E+00  1.31375E-01 -8.33485E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -2.35389E-02  1.70367E-02  1.72520E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 30 with the name :blade3_4
+Body initial position:                 -1.30040E+01 -8.42312E+00 -1.11611E+02
+Body initial velocity:                  1.49545E+00 -2.26676E-01  2.59091E+00
+Body initial rotation velocity vector: -6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  2.47848E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.13251E+04  1.22365E+04  1.06174E+04 -1.06777E+03 -1.61765E+02  1.05872E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        1.23359E+00  8.97215E-02 -6.49261E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -4.98841E-02  2.81142E-02  1.39572E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 31 with the name :blade3_5
+Body initial position:                 -1.54459E+01 -8.67778E+00 -1.10235E+02
+Body initial velocity:                  1.77416E+00 -2.69240E-01  3.07743E+00
+Body initial rotation velocity vector: -6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  6.99694E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.08228E+05  2.16567E+05  2.47558E+04 -3.14460E+03 -4.77465E+03 -2.19676E+02
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        4.02336E+00  3.82333E-01 -2.14755E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.30063E-01  5.84875E-03  4.57478E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 32 with the name :blade3_6
+Body initial position:                 -2.37430E+01 -9.61287E+00 -1.05494E+02
+Body initial velocity:                  2.73489E+00 -4.13869E-01  4.73054E+00
+Body initial rotation velocity vector: -6.41848E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  5.44700E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        1.64012E+05  1.72592E+05  1.54736E+04 -1.63256E+03 -5.13298E+03 -2.15141E+03
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        4.14010E+00  4.43014E-01 -2.13127E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.97896E-01 -5.17902E-02  4.67302E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 33 with the name :blade3_7
+Body initial position:                 -3.20282E+01 -1.06431E+01 -1.00792E+02
+Body initial velocity:                  3.68981E+00 -5.58287E-01  6.38125E+00
+Body initial rotation velocity vector: -6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  7.91254E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        8.36251E+05  8.44511E+05  1.42230E+04 -8.33841E+02 -8.10086E+03 -2.28952E+04
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        7.61483E+00  9.72230E-01 -4.17375E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.33214E-01 -2.24004E-01  8.73403E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 34 with the name :blade3_8
+Body initial position:                 -4.82473E+01 -1.28768E+01 -9.15260E+01
+Body initial velocity:                  5.57482E+00 -8.41007E-01  9.61275E+00
+Body initial rotation velocity vector: -6.41848E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  4.27193E+03
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        4.27792E+05  4.28732E+05  4.41522E+03  1.42905E+02 -3.74832E+03 -2.31163E+04
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        7.29531E+00  1.16048E+00 -4.00155E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -1.07805E-01 -4.41802E-01  8.38892E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 35 with the name :blade3_9
+Body initial position:                 -6.48406E+01 -1.56625E+01 -8.21908E+01
+Body initial velocity:                  7.48332E+00 -1.13025E+00  1.29188E+01
+Body initial rotation velocity vector: -6.41848E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  8.86134E+02
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        2.39688E+04  2.40390E+04  4.70344E+02  4.01046E+01 -4.15840E+02 -1.93595E+03
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        3.87442E+00  7.37144E-01 -2.07026E+00
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -9.55005E-02 -3.60637E-01  4.43861E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+Body data for body number : 36 with the name :blade3_10
+Body initial position:                 -7.33304E+01 -1.73248E+01 -7.75083E+01
+Body initial velocity:                  8.44522E+00 -1.27823E+00  1.46103E+01
+Body initial rotation velocity vector: -6.59195E-17  1.99810E-01 -8.72388E-03
+Body mass     [kg]   :                  1.44495E+02
+Body inertia  [kg m^2]:                 Ixx          Iyy          Izz          Ixy          Ixz          Iyz
+                                        6.92152E+02  7.08492E+02  3.46480E+01  1.98920E+00 -1.06926E+01 -6.61108E+01
+Body Center of gravity (Gl) [m]:        COG_x        COG_y        COG_z
+                                        1.58726E+00  3.28672E-01 -8.34408E-01
+Body Center of gravity (Body) [m]:      COG_x        COG_y        COG_z
+                                       -4.89560E-02 -1.75742E-01  1.81394E+00
+Body coo orientation (the A-matrix):
+         xvec         yvec         zvec
+  5.00000E-01 -3.77755E-02 -8.65201E-01
+ -7.54791E-02  9.93346E-01 -8.69898E-02
+  8.62730E-01  1.08799E-01  4.93822E-01
+________________________________________________________________________________________________________________________________________________________________________
+NODE POSITIONS OF BODY NODES IN GLOBAL COORDINATES:
+           Body name    node              X              Y              Z
+________________________________________________________________________________________________________________________________________________________________________
+tower                      1   0.000000E+00   0.000000E+00   0.000000E+00
+tower                      2   0.000000E+00   0.000000E+00  -1.150000E+01
+tower                      3   0.000000E+00   0.000000E+00  -2.300000E+01
+tower                      4   0.000000E+00   0.000000E+00  -3.450000E+01
+tower                      5   0.000000E+00   0.000000E+00  -4.600000E+01
+tower                      6   0.000000E+00   0.000000E+00  -5.750000E+01
+tower                      7   0.000000E+00   0.000000E+00  -6.900000E+01
+tower                      8   0.000000E+00   0.000000E+00  -8.050000E+01
+tower                      9   0.000000E+00   0.000000E+00  -9.200000E+01
+tower                     10   0.000000E+00   0.000000E+00  -1.035000E+02
+tower                     11   0.000000E+00   0.000000E+00  -1.156300E+02
+towertop                   1   0.000000E+00   0.000000E+00  -1.156300E+02
+towertop                   2   0.000000E+00   0.000000E+00  -1.183800E+02
+shaft                      1   0.000000E+00   0.000000E+00  -1.183800E+02
+shaft                      2   0.000000E+00  -1.494292E+00  -1.185107E+02
+shaft                      3   0.000000E+00  -2.988584E+00  -1.186415E+02
+shaft                      4   0.000000E+00  -4.383257E+00  -1.187635E+02
+shaft                      5   0.000000E+00  -7.072982E+00  -1.189988E+02
+hub1                       1   0.000000E+00  -7.072982E+00  -1.189988E+02
+hub1                       2   3.425747E-16  -6.950848E+00  -1.217961E+02
+hub2                       1   0.000000E+00  -7.072982E+00  -1.189988E+02
+hub2                       2   2.422563E+00  -7.316554E+00  -1.176161E+02
+hub3                       1   0.000000E+00  -7.072982E+00  -1.189988E+02
+hub3                       2  -2.422563E+00  -7.316554E+00  -1.176161E+02
+blade1_1                   1  -5.520133E-03  -6.949011E+00  -1.217961E+02
+blade1_1                   2   1.434897E-03  -6.832443E+00  -1.247938E+02
+blade1_1                   3   9.846624E-03  -6.714967E+00  -1.277915E+02
+blade1_2                   1   9.846624E-03  -6.714967E+00  -1.277915E+02
+blade1_2                   2   5.019311E-03  -6.678455E+00  -1.287911E+02
+blade1_2                   3   1.229615E-02  -6.605419E+00  -1.304910E+02
+blade1_3                   1   1.229615E-02  -6.605419E+00  -1.304910E+02
+blade1_3                   2   1.166705E-03  -6.538802E+00  -1.321964E+02
+blade1_3                   3   2.654276E-02  -6.464062E+00  -1.340033E+02
+blade1_4                   1   2.654276E-02  -6.464062E+00  -1.340033E+02
+blade1_4                   2   3.259557E-02  -6.423579E+00  -1.350079E+02
+blade1_4                   3   4.063288E-02  -6.352219E+00  -1.368158E+02
+blade1_5                   1   4.063288E-02  -6.352219E+00  -1.368158E+02
+blade1_5                   2   7.214291E-02  -6.235399E+00  -1.400224E+02
+blade1_5                   3   7.239674E-02  -6.123717E+00  -1.432181E+02
+blade1_5                   4   2.909490E-02  -6.033050E+00  -1.464118E+02
+blade1_6                   1   2.909490E-02  -6.033050E+00  -1.464118E+02
+blade1_6                   2   8.322950E-02  -5.947617E+00  -1.496033E+02
+blade1_6                   3   6.646511E-02  -5.879857E+00  -1.527981E+02
+blade1_6                   4   3.672622E-02  -5.813692E+00  -1.559915E+02
+blade1_7                   1   3.672622E-02  -5.813692E+00  -1.559915E+02
+blade1_7                   2   2.213943E-02  -5.700567E+00  -1.619898E+02
+blade1_7                   3  -2.449097E-03  -5.620375E+00  -1.683944E+02
+blade1_7                   4  -1.602760E-02  -5.591075E+00  -1.748025E+02
+blade1_8                   1  -1.602760E-02  -5.591075E+00  -1.748025E+02
+blade1_8                   2  -1.549061E-02  -5.622006E+00  -1.812131E+02
+blade1_8                   3  -2.744243E-03  -5.715559E+00  -1.876265E+02
+blade1_8                   4   1.656974E-02  -5.876794E+00  -1.940420E+02
+blade1_9                   1   1.656974E-02  -5.876794E+00  -1.940420E+02
+blade1_9                   2   6.818586E-02  -6.129143E+00  -2.008616E+02
+blade1_9                   3   7.770336E-02  -6.197003E+00  -2.023658E+02
+blade1_9                   4   9.633341E-02  -6.269551E+00  -2.038708E+02
+blade1_10                  1   9.633341E-02  -6.269551E+00  -2.038708E+02
+blade1_10                  2   1.204485E-01  -6.347551E+00  -2.053760E+02
+blade1_10                  3   1.322877E-01  -6.430197E+00  -2.068808E+02
+blade1_10                  4   6.418039E-02  -6.504994E+00  -2.082231E+02
+blade2_1                   1   2.425394E+00  -7.314311E+00  -1.176207E+02
+blade2_1                   2   5.016969E+00  -7.590012E+00  -1.161348E+02
+blade2_1                   3   7.607831E+00  -7.864917E+00  -1.146475E+02
+blade2_2                   1   7.607831E+00  -7.864917E+00  -1.146475E+02
+blade2_2                   2   8.475343E+00  -7.958635E+00  -1.141585E+02
+blade2_2                   3   9.943779E+00  -8.108370E+00  -1.133122E+02
+blade2_3                   1   9.943779E+00  -8.108370E+00  -1.133122E+02
+blade2_3                   2   1.142567E+01  -8.263776E+00  -1.124798E+02
+blade2_3                   3   1.297751E+01  -8.427130E+00  -1.115653E+02
+blade2_4                   1   1.297751E+01  -8.427130E+00  -1.115653E+02
+blade2_4                   2   1.384429E+01  -8.518407E+00  -1.110639E+02
+blade2_4                   3   1.540531E+01  -8.683911E+00  -1.101644E+02
+blade2_5                   1   1.540531E+01  -8.683911E+00  -1.101644E+02
+blade2_5                   2   1.816482E+01  -8.988417E+00  -1.085552E+02
+blade2_5                   3   2.093016E+01  -9.294225E+00  -1.069790E+02
+blade2_5                   4   2.371396E+01  -9.617257E+00  -1.054441E+02
+blade2_6                   1   2.371396E+01  -9.617257E+00  -1.054441E+02
+blade2_6                   2   2.644678E+01  -9.952539E+00  -1.038269E+02
+blade2_6                   3   2.921648E+01  -1.030036E+01  -1.022716E+02
+blade2_6                   4   3.199142E+01  -1.064860E+01  -1.007283E+02
+blade2_7                   1   3.199142E+01  -1.064860E+01  -1.007283E+02
+blade2_7                   2   3.718212E+01  -1.131685E+01  -9.779533E+01
+blade2_7                   3   4.272593E+01  -1.206983E+01  -9.467676E+01
+blade2_7                   4   4.826336E+01  -1.287441E+01  -9.155364E+01
+blade2_8                   1   4.826336E+01  -1.287441E+01  -9.155364E+01
+blade2_8                   2   5.379141E+01  -1.373992E+01  -8.842492E+01
+blade2_8                   3   5.931096E+01  -1.466862E+01  -8.529252E+01
+blade2_8                   4   6.482399E+01  -1.566501E+01  -8.216220E+01
+blade2_9                   1   6.482399E+01  -1.566501E+01  -8.216220E+01
+blade2_9                   2   7.066261E+01  -1.680654E+01  -7.881843E+01
+blade2_9                   3   7.195044E+01  -1.707024E+01  -7.808410E+01
+blade2_9                   4   7.323409E+01  -1.733938E+01  -7.734210E+01
+blade2_10                  1   7.323409E+01  -1.733938E+01  -7.734210E+01
+blade2_10                  2   7.451470E+01  -1.761434E+01  -7.659603E+01
+blade2_10                  3   7.580078E+01  -1.789292E+01  -7.586132E+01
+blade2_10                  4   7.698725E+01  -1.813654E+01  -7.527395E+01
+blade3_1                   1  -2.419873E+00  -7.315144E+00  -1.176111E+02
+blade3_1                   2  -5.018404E+00  -7.589795E+00  -1.161372E+02
+blade3_1                   3  -7.617677E+00  -7.863431E+00  -1.146645E+02
+blade3_2                   1  -7.617677E+00  -7.863431E+00  -1.146645E+02
+blade3_2                   2  -8.480362E+00  -7.957877E+00  -1.141672E+02
+blade3_2                   3  -9.956075E+00  -8.106514E+00  -1.133334E+02
+blade3_3                   1  -9.956075E+00  -8.106514E+00  -1.133334E+02
+blade3_3                   2  -1.142684E+01  -8.263600E+00  -1.124818E+02
+blade3_3                   3  -1.300405E+01  -8.423123E+00  -1.116111E+02
+blade3_4                   1  -1.300405E+01  -8.423123E+00  -1.116111E+02
+blade3_4                   2  -1.387688E+01  -8.513487E+00  -1.111202E+02
+blade3_4                   3  -1.544594E+01  -8.677777E+00  -1.102345E+02
+blade3_5                   1  -1.544594E+01  -8.677777E+00  -1.102345E+02
+blade3_5                   2  -1.823696E+01  -8.977527E+00  -1.086797E+02
+blade3_5                   3  -2.100256E+01  -9.283296E+00  -1.071039E+02
+blade3_5                   4  -2.374305E+01  -9.612865E+00  -1.054943E+02
+blade3_6                   1  -2.374305E+01  -9.612865E+00  -1.054943E+02
+blade3_6                   2  -2.653001E+01  -9.939975E+00  -1.039705E+02
+blade3_6                   3  -2.928294E+01  -1.029032E+01  -1.023862E+02
+blade3_6                   4  -3.202815E+01  -1.064306E+01  -1.007916E+02
+blade3_7                   1  -3.202815E+01  -1.064306E+01  -1.007916E+02
+blade3_7                   2  -3.720426E+01  -1.131351E+01  -9.783353E+01
+blade3_7                   3  -4.272348E+01  -1.207020E+01  -9.467253E+01
+blade3_7                   4  -4.824734E+01  -1.287682E+01  -9.152598E+01
+blade3_8                   1  -4.824734E+01  -1.287682E+01  -9.152598E+01
+blade3_8                   2  -5.377592E+01  -1.374226E+01  -8.839820E+01
+blade3_8                   3  -5.930821E+01  -1.466903E+01  -8.528778E+01
+blade3_8                   4  -6.484056E+01  -1.566250E+01  -8.219079E+01
+blade3_9                   1  -6.484056E+01  -1.566250E+01  -8.219079E+01
+blade3_9                   2  -7.073080E+01  -1.679624E+01  -7.893608E+01
+blade3_9                   3  -7.202814E+01  -1.705851E+01  -7.821818E+01
+blade3_9                   4  -7.333043E+01  -1.732484E+01  -7.750832E+01
+blade3_10                  1  -7.333043E+01  -1.732484E+01  -7.750832E+01
+blade3_10                  2  -7.463515E+01  -1.759615E+01  -7.680385E+01
+blade3_10                  3  -7.593307E+01  -1.787295E+01  -7.608958E+01
+blade3_10                  4  -7.705143E+01  -1.812685E+01  -7.538469E+01

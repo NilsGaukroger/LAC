@@ -4,7 +4,7 @@
     solvertype	1;	(newmark)
     on_no_convergence	continue;
     convergence_limits	1000 1 1e-07;
-	logfile	./log/DTU_10MW_RWT.log;
+	logfile	../log/dtu10mw/DTU_10MW_cont_H2.log;
     begin newmark;
       deltat	0.01;
     end newmark;
@@ -18,7 +18,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00412 0.00412 0.00045;	Mx My Mz Kx Ky Kz , M´s raises overall level, K´s raises high freguency level "tuned by Larh"
       begin timoschenko_input;
-        filename	./data/dtu_10mw_rwt_tower_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Tower_st.dat;
         set	1 1;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -45,7 +45,7 @@
       damping_posdef	0 0 0 0.007 0.007 0.007;	"changed by Larh"
       concentrated_mass	2 0 2.687 0.30061 446040 4106000 410600 4106000;	Nacelle mass and inertia "corrected by Anyd 25/4/13"
       begin timoschenko_input;
-        filename	./data/dtu_10mw_rwt_towertop_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Towertop_st.dat;
         set	1 2;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -64,7 +64,7 @@
       concentrated_mass	1 0 0 0 0 0 0 3751000;	generator equivalent slow shaft "re_tuned by Anyd 20/2/13"
       concentrated_mass	5 0 0 0 105520 0 0 325700;	hub mass and inertia;	"re_tuned by Anyd 20/2/13"
       begin timoschenko_input;
-        filename	./data/dtu_10mw_rwt_shaft_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Shaft_st.dat;
         set	1 1;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -84,7 +84,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 3e-06 3e-06 2e-05;	"changed by Larh"
       begin timoschenko_input;
-        filename	./data/dtu_10mw_rwt_hub_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Hub_st.dat;
         set	1 2;
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -111,7 +111,7 @@
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00153 0.00255 0.00033;	" 3% damping tuned by tkim 23/03/13 unable to fit 3rd and higher mode"
       begin timoschenko_input;
-        filename	./data/dtu_10mw_rwt_blade_st.dat;
+        filename	../../data/dtu10mw/DTU_10MW_RWT_Blade_st.dat;
         set	1 1;	set subset
       end timoschenko_input;
       begin c2_def;	Definition of centerline (main_body coordinates)
@@ -346,8 +346,8 @@
     link	1 mbdy_c2_def blade1;
     link	2 mbdy_c2_def blade2;
     link	3 mbdy_c2_def blade3;
-    ae_filename	./data/dtu_10mw_rwt_ae.dat;
-    pc_filename	./data/dtu_10mw_rwt_pc.dat;
+    ae_filename	../../data/dtu10mw/DTU_10MW_RWT_ae.dat;
+    pc_filename	../../data/dtu10mw/DTU_10MW_RWT_pc.dat;
     induction_method	1;	0=none, 1=normal
     aerocalc_method	1;	0=ingen aerodynamic, 1=med aerodynamic
     aerosections	50;	def. 50
@@ -361,7 +361,7 @@
 ;
     begin type2_dll;
       name	dtu_we_controller;
-      filename	./control/dtu_we_controller.dll;
+      filename	../control/dtu_we_controller.dll;
       dll_subroutine_init	init_regulation_advanced;
       dll_subroutine_update	update_regulation;
       arraysizes_init	100 1;
@@ -514,7 +514,7 @@
 ;
     begin type2_dll;
       name	generator_servo;
-      filename	./control/generator_servo.dll;
+      filename	../control/generator_servo.dll;
       dll_subroutine_init	init_generator_servo;
       dll_subroutine_update	update_generator_servo;
       arraysizes_init	100 1;
@@ -543,7 +543,7 @@
 ;
     begin type2_dll;
       name	mech_brake;
-      filename	./control/mech_brake.dll;
+      filename	../control/mech_brake.dll;
       dll_subroutine_init	init_mech_brake;
       dll_subroutine_update	update_mech_brake;
       arraysizes_init	100 1;
@@ -568,7 +568,7 @@
 ;
     begin type2_dll;
       name	servo_with_limits;
-      filename	./control/servo_with_limits.dll;
+      filename	../control/servo_with_limits.dll;
       dll_subroutine_init	init_servo_with_limits;
       dll_subroutine_update	update_servo_with_limits;
       arraysizes_init	100 1;
@@ -604,7 +604,7 @@
 ;-------------------------------------------
     begin type2_dll;
       name	towerclearance_mblade;
-      filename	./control/towerclearance_mblade.dll;
+      filename	../control/towerclearance_mblade.dll;
       dll_subroutine_init	initialize;
       dll_subroutine_update	update;
       arraysizes_init	3 1;
@@ -627,7 +627,7 @@
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
   begin output;
-    filename	./results_dtu10mw/cont/DTU_10MW_cont;
+    filename	../res/dtu10mw/DTU_10MW_cont;
 	time 0 1000; 
     data_format	hawc_binary; ; change this to hawc_ascii for MATLAB files
     buffer	1;	

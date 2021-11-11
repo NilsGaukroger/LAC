@@ -171,4 +171,4 @@ if save_var
 end
 
 %% Save outputs
-save('postProcessing_struct.mat','DTU','redesign','pwr');
+save('..\..\mat\postProcessing_struct.mat','DTU','redesign','pwr');

@@ -7,7 +7,7 @@
 close all; clear variables; clc
 
 %% Load data from postProcessing_struct
-load('postProcessing_struct.mat');
+load('..\..\mat\postProcessing_struct.mat');
 
 %% Modal identification (order these as they appear in HAWCStab2)
 n_modes = 12; % number of modes
@@ -48,10 +48,10 @@ for i = 1:length(locs) % if any directory doesn't exist don't attempt to save th
 end
 
 %% Add functions folder to path
-addpath('functions\')
+addpath('..\..\functions\')
 
 %% Import .cmb files
-turbine   = {'results_dtu10mw/stab/','results_redesign/stab/'};
+turbine   = {'dtu10mw/stab/','redesign/stab/'};
 names     = {'DTU 10MW','Redesign'};
 type      = {'st','ael'}; % structural 'st' or aeroelastic 'ael' Campbell diagram
 file      = {'DTU_10MW_','redesign_'};
@@ -65,10 +65,10 @@ for i = 1:size(cmb.camp,1)
         if j == 1
             [cmb.camp{i,j},cmb.damp{i,j},cmb.realPart{i,j}] = deal(names{i});
         elseif j == 2
-            [cmb.camp{i,j},cmb.damp{i,j}] = import_cmb(n_modes,strcat("your_model/",turbine{i},file{i},type{j-1},".cmb"),...
+            [cmb.camp{i,j},cmb.damp{i,j}] = import_cmb(n_modes,strcat("../res/",turbine{i},file{i},type{j-1},".cmb"),...
                 modeNames{i,j-1},true);
         elseif j == 3
-            [cmb.camp{i,j},cmb.damp{i,j},cmb.realPart{i,j}] = import_cmb(n_modes,strcat("your_model/",turbine{i},file{i},type{j-1},".cmb"),...
+            [cmb.camp{i,j},cmb.damp{i,j},cmb.realPart{i,j}] = import_cmb(n_modes,strcat("../res/",turbine{i},file{i},type{j-1},".cmb"),...
                 modeNames{i,j-1},true);
         end
     end
@@ -143,4 +143,4 @@ end
 sgtitle('Damping diagrams')
 
 %% Save outputs
-save('postProcessing_stab.mat','DTU','redesign','pwr');
+save('..\..\mat\postProcessing_stab.mat','DTU','redesign','pwr');

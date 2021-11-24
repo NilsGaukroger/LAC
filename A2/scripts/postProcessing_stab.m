@@ -114,6 +114,16 @@ for i = 1:size(cmb.camp,1) % turbine loop
 end
 sgtitle('Campbell diagrams')
 
+%% Plot redesign aeroelastic campbell diagrams
+figure
+for k = 2:n_modes+1
+    plot(cmb.camp.(3){2}.("Wind Speed"),cmb.camp.(3){2}{:,k},'Marker',markers(k-1)); hold on
+end
+xlabel('Wind speed [m/s]')
+ylabel('Natural frequency [Hz]')
+legend(leg)
+grid minor
+
 %% Plot damping diagrams
 figure
 counter = 1;

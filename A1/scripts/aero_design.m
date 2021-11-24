@@ -27,7 +27,7 @@ aerofoil = polars();
 %% New design polynomials
 x = [0.3, 0.35, 0.47, 0.5]; % cl,max - cl,des
 % x = [0.3, 0.4, 0.35, 0.5]; % Edu's values
-[p1,p2,cl_max,x_desi] = desPolys(aerofoil,x,4);
+[p1,p2,cl_max,~,x_desi] = desPolys(aerofoil,x,4);
 
 %% cl vs alpha
 n = 4; % ignore 60.0% and cylinder

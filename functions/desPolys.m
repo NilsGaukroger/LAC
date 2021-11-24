@@ -1,4 +1,4 @@
-function [p1,p2,cl_max,x_des] = desPolys(aerofoil,x1,n)
+function [p1,p2,cl_max,alpha_max,x_des] = desPolys(aerofoil,x1,n)
 % Function to create new design polynomials from aerofoil polars, first
 % finds cl_max, then cl_des based on x1, then corresponding alpha_des and
 % cd_des (and (cl/cd)_des). Then fits splines and plots the result.

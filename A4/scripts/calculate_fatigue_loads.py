@@ -16,7 +16,7 @@ stat_dir = '../res/redesign/turb/'  # results directory with statistics files  !
 i_plot = [19, 20, 22, 23, 27, 28, 29]  # channel indices in .sel file that you want to process
 i_wind = 15  # channel number with the wind speed
 # undef_tclear = 18.25  # undeflected-blade tower clearance [m]
-v_ref = 50  # reference wind speed based on wind class (I=50, 2=42.5, 3=37.5)
+v_ref = 37.5  # reference wind speed based on wind class (I=50, 2=42.5, 3=37.5)
 
 
 # dictionary to map .sel index to ylabel for the plot

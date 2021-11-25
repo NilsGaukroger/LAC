@@ -11,10 +11,9 @@ import numpy as np
 from _loads_utils import load_stats
 
 
-stat_dir = '../res/dtu10mw/turb/'  # results directory with statistics files  !!! END WITH SLASH !!!
+stat_dir = '../res/redesign/turb/'  # results directory with statistics files  !!! END WITH SLASH !!!
 i_plot = [19, 20, 22, 23, 27, 28, 29, 110]  # channel indices in .sel file that you want to process
 i_wind = 15  # channel number with the wind speed
-undef_tclear = 18.25  # undeflected-blade tower clearance [m]
 
 # dictionary to map .sel index to ylabel for the plot
 ylabels = {4: 'Pitch angle [deg]',
@@ -48,6 +47,8 @@ files, idxs, data_max = load_stats(stat_file)
 # extract the set wind speed value from the filename using regex tricks
 wsps = [float(re.findall('[0-9]{1,2}[.][0-9]', f)[0]) for f in files]
 
+extr_design_load_lst = []
+
 # loop through the channels
 for i, chan_idx in enumerate(i_plot):
 
@@ -58,11 +59,6 @@ for i, chan_idx in enumerate(i_plot):
     minval = data_min[:, idxs == chan_idx]
     maxval = data_max[:, idxs == chan_idx]
 
-    # if it's tower clearance, special case
-    if 'clearance' in ylabel.lower():
-        maxval = np.full_like(maxval, np.nan)  # set maxes to nans, because those are irrelevant
-        minval = undef_tclear - minval  # transform min value to tip deflection (to calc max later)
-
     # get mean of the extremes for each wind speed bin
     wsp_unique = np.unique(wsps)
     mean_min = np.empty(wsp_unique.size)
@@ -70,17 +66,20 @@ for i, chan_idx in enumerate(i_plot):
     for j, vj in enumerate(wsp_unique):
         mean_min[j] = minval[np.isclose(wsps, vj)].mean()
         mean_max[j] = maxval[np.isclose(wsps, vj)].mean()
-
+    
     # calculate design extreme loads
-    extremes = np.hstack((mean_min, mean_max)).squeeze()  # combine min and max extremes
-    i_ext = np.nanargmax(np.abs(extremes))  # find index of value with max abs value
-    fc = 1.35 * extremes[i_ext]  # characteristic load
-    extr_design_load = 1.25 * fc  # extreme design load
-    if 'clearance' in ylabel.lower():
-        print('Tip deflection [m]', f'{extr_design_load:.6e}')
-        minval = undef_tclear - minval  # transform back to tower clearance for plotting
-        mean_min = undef_tclear - mean_min  # transform back to tower clearance for plotting
-        extr_design_load = undef_tclear - extr_design_load  # transform back to tower clearance
+    if 'clearance' in ylabel.lower():  # tower clearance is weird: no safety factors and min of min
+        maxval = np.full_like(maxval, np.nan)  # set maxes to nans, because those are irrelevant
+        meanval = np.full_like(maxval, np.nan)  # set maxes to nans, because those are irrelevant
+        mean_max[:] = np.nan
+        extr_design_load = np.min(minval)  # transform back to tower clearance
+        extr_design_load_lst.append(extr_design_load)
+    else:
+        extremes = np.hstack((mean_min, mean_max)).squeeze()  # combine min and max extremes
+        i_ext = np.nanargmax(np.abs(extremes))  # find index of value with max abs value
+        fc = 1.35 * extremes[i_ext]  # characteristic load
+        extr_design_load = 1.25 * fc  # extreme design load
+        extr_design_load_lst.append(extr_design_load)
     print(ylabel, f'{extr_design_load:.6e}')
 
     # make the plot
@@ -95,4 +94,25 @@ for i, chan_idx in enumerate(i_plot):
     plt.ylabel(ylabel)
     plt.tight_layout()
 
+plt.show()
+
+#%% Polar plot for comparison with DTU 10 MW
+dtu_extr_design_load_lst = np.array([370603.40625, 110181.290625, 52446.0375, 24233.090625, -23052.09375, -62707.921875, 33696.534375, 6.59303])
+redesign_extr_design_load_normalised = extr_design_load_lst / dtu_extr_design_load_lst
+
+theta = np.arange(0,2*np.pi,(2*np.pi)/len(redesign_extr_design_load_normalised))
+theta = np.append(theta,2*np.pi)
+redesign_extr_design_load_normalised = np.append(redesign_extr_design_load_normalised,redesign_extr_design_load_normalised[0])
+circle_theta = np.linspace(0,2*np.pi,100)
+circle_r     = np.ones((100))
+
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(circle_theta,circle_r,'--',color='gray',linewidth=2)
+ax.plot(theta,redesign_extr_design_load_normalised,'o-',linewidth=2)
+ax.set_xticklabels(["TbFA","TbSS","YbTI","YbRI","Shft","FlBR","EdBR","TClear"])
+ax.set_rmin(0.2)
+ax.set_rmax(2)
+ax.set_rticks(np.arange(0.5,2.5,0.5))
+ax.set_title('Extreme loads')
+plt.savefig('../figs/Part4/polar_extr.png')
 plt.show()

@@ -25,7 +25,7 @@ A4/res/*/*.sel
 A4/res/*/*/*.sel
 A4/log/
 A4/USB/hawc_results/
-A4/USB/hawc_simulations/hawc2_*/
+# A4/USB/hawc_simulations/hawc2_*/
 
 ##--------------------------------------
 

@@ -88,7 +88,7 @@ end
 hold off
 xlabel('Non-dimensionalised blade span [-]')
 ylabel('Rigidity [Nm^2]')
-legend('Edgewise','Flapwise','Torsional')
+legend('Flapwise','Edgewise','Torsional')
 grid minor
 if save_var
     saveFigasPDF(locs,'stiffness_comp');

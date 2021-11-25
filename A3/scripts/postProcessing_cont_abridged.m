@@ -1,5 +1,5 @@
 % 46320 LAC Course
-% Assignment 3: Post-processing
+% Assignment 3: Post-processing (reduced)
 % Authors: Nikolaos Stamatopoulos, Nils Joseph Gaukroger, Stefanos Masalas,
 % Eduardo Fredrich de Miranda
 % 28th October 2021

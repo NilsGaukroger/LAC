@@ -1,0 +1,12 @@
+Implementing minimum rotor speed
+
+(1. Run A2/htc/redesign_struct_flex.htc with HAWC2S WITHOUT a minimum rotor speed)
+(2. Compute structural and aeroelastic Campbell diagrams using HAWCStab2)
+(3. Plot them using postProcessing_struct.m)
+4. Decide on a minimum rotor speed from aeroelastic Campbell diagram
+5. Run redesign_cont_HS2.htc with HAWC2S to create .opt file
+6. Repeat steps 2 and 3 (potentially 4) with the new .opt file
+
+
+NB:
+If you play with wpdata, i.e. peak shaving or minimum rotor speed, you need to replot your Campbell diagrams

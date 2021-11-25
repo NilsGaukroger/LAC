@@ -129,15 +129,18 @@ if auto == 1
     fclose('all'); %saves and closes all files
 else
     % Alternative printing
-    fprintf('nsec %d;\n',length(HAWC_in.r))
+    fileID = fopen('../data/redesign_c2def.dat','w');
+    fprintf(fileID,'nsec %d;\n',length(HAWC_in.r));
     for i = 1:length(HAWC_in.r)
-        fprintf('sec %d %.8f %.8f %.8f %.8f;\n',i,HAWC_in.c2def.x(i),HAWC_in.c2def.y(i),HAWC_in.c2def.z(i),HAWC_in.c2def.beta(i));
+        fprintf(fileID,'sec %d %.8f %.8f %.8f %.8f;\n',i,HAWC_in.c2def.x(i),HAWC_in.c2def.y(i),HAWC_in.c2def.z(i),HAWC_in.c2def.beta(i));
     end
+    fprintf(fileID,'exit;');
+    fclose(fileID);
 end
 
 %% Max gen speed for structural
 gearratio = 50;
-redesign.omega_opt = N(end);
+redesign.omega_opt = N_max;
 genspeed = redesign.omega_opt * gearratio;
 fprintf('genspeed 0 %.2f; RPM (0 %.1f)\n', genspeed, redesign.omega_opt);
 

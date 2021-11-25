@@ -18,7 +18,7 @@ DTU.c2def = readtable('../../data/dtu10mw/DTU_10MW_c2def.txt');
 DTU.c2def.Properties.VariableNames = {'sec','idx','x','y','z','beta'};
 
 %% Scale coordinates
-scale = redesign.R / DTU.R;
+scale = redesign.bladeLength / DTU.bladeLength;
 
 HAWC_in.c2def   = DTU.c2def;
 HAWC_in.c2def.x = DTU.c2def.x * scale;

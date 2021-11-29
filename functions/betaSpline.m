@@ -1,4 +1,4 @@
-function new_beta = betaSpline(redesign,result,span,ratios)
+function new_beta = betaSpline(redesign,result,span,ratios,beta_max)
 
 r         = redesign.r;
 R         = redesign.R;
@@ -16,5 +16,7 @@ beta_spl = spline(r(pos), [grad_beta(start) y grad_beta(final)*ratios(2)], r(sta
 
 new_beta = beta;
 new_beta(start:final) = beta_spl;
+
+new_beta(new_beta > deg2rad(beta_max)) = deg2rad(beta_max);
 
 end

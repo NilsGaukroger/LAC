@@ -25,7 +25,7 @@ redesign.TI     = 0.14;              % IEC turbulence intensity [-]
 [redesign.R,redesign.V_rated,~] = rotorScaling(DTU.V_rated,DTU.TI,DTU.R,redesign.TI);
 
 % adjustment for individual assignment
-rotorScale = 8; % manual rotor radius scaling [%]
+rotorScale = 7.5; % manual rotor radius scaling [%]
 redesign.R = (1+rotorScale/100) * DTU.R;
 redesign.V_rated = ((DTU.V_rated^3 * DTU.R^2) / (redesign.R^2))^(1/3);
 
@@ -59,7 +59,7 @@ tsr         = tsr_opt;
 % Constraints
 t_max    = 5.38; % maximum absolute thickness [m]
 c_max    = (redesign.R/DTU.R) * 6.17447367; % scaled max chord of DTU 10 MW [m]
-beta_max = (redesign.R/DTU.R) * 20;   % maximum twist [deg]
+% beta_max = (redesign.R/DTU.R) * 20;   % maximum twist [deg]
 % in future, maybe limit twist up to same non-dimensional radius as DTU
 % 10MW
 
@@ -159,9 +159,16 @@ end
 
 %% Apply general constraints
 
-% cap twist at beta_max
-result.beta(result.beta > deg2rad(beta_max)) = deg2rad(beta_max);
+% Save original twist for plotting
+beta_original = result.beta;
 
+% cap twist at beta_max
+beta_max = NaN(1,length(tsr));
+for j = 1:length(tsr)
+    [~,idx]  = max(result.c(j,:));
+    beta_max(1,j) = rad2deg(result.beta(j,idx));
+    result.beta(j,result.beta(j,:) > deg2rad(beta_max(j))) = deg2rad(beta_max(j));
+end
 
 % set lower limit on relative thickness of 24.1%
 result.c(result.c > (redesign.t / 0.241)) =...
@@ -197,7 +204,7 @@ for j = 1:length(tsr)
     for i = 1:length(redesign.r)
         x0 = lsqnonlin(@(x)residuals_induction(x,redesign,tsr(j),i,p,p1,p2,t_max,redesign.R,result.c(j,i)),x0,lb,ub,opts);
         [~,values] = residuals_induction(x0,redesign,tsr(j),i,p,p1,p2,t_max,redesign.R,result.c(j,i));
-        redesign.t(j,i)     = values(1);
+        redesign.t(j,i)    = values(1);
         result2.a(j,i)     = values(2);
         result2.phi(j,i)   = values(3);
         result2.alpha(j,i) = values(4);
@@ -213,17 +220,21 @@ for j = 1:length(tsr)
 end
 
 %% Reapply constraint for twist
-result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
+for j = 1:length(tsr)
+    result2.beta(j,result2.beta(j,:) > deg2rad(beta_max(j))) = deg2rad(beta_max(j));
+end
+% result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
 
 %% Spline for beta
-new_beta = betaSpline(redesign,result2,[0.2, 0.265, 0.35],[0.8, 1.7]);
+new_beta = betaSpline(redesign,result2,[0.1, 0.36, 0.45],[0.6, 1.8],beta_max);
 
 figure
 subplot(3,1,2)
-plot(redesign.r/redesign.R,result2.beta); hold on
+plot(redesign.r/redesign.R,beta_original,'--'); hold on
+plot(redesign.r/redesign.R,result2.beta);
 plot(redesign.r/redesign.R,new_beta); hold off
 ylabel('Twist, \beta [deg]'); xlabel('Non-dimensional radius [-]')
-legend('Original','with spline')
+legend('Theoretical','Capped','Capped with spline')
 grid on
 box on
 

@@ -1,3 +1,34 @@
+## User-generated
+course_material/
+hawc_exe/
+lectures/
+mat/
+
+# Assignment 0
+A0/figs/
+
+# Assignmnet 1
+A1/figs/
+
+# Assignment 2
+A2/figs/
+
+# Assignment 3
+A3/figs/
+A3/res/
+
+# Assignment 4
+A4/figs/
+A4/res/*/*.dat
+A4/res/*/*/*.dat
+A4/res/*/*.sel
+A4/res/*/*/*.sel
+A4/log/
+A4/USB/hawc_results/
+A4/USB/hawc_simulations/hawc2_*/
+
+##--------------------------------------
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -150,9 +181,3 @@ octave-workspace
 
 # Simulink autosave extension
 .autosave
-
-# HAWC results
-.report_1/results*
-
-# HAWC2 results
-report_1/your_model/results_redesign/cont/*

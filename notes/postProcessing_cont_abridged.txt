@@ -1,0 +1,7 @@
+Controllers to compare to:
+C1 (DTU 10MW tuning)        : omega = 0.050, zeta = 0.70
+C2 (Redesign v0 tuning)     : omega = 0.055, zeta = 0.65
+C3-n (Redesign v1-n tunings): omega = ....., zeta = ....
+
+> By default, only plot C1, C2, C3, and save C3 gains as data\controller_gains.dat
+> Have an option to plot more than one C3 case (i.e. C3a, C3b, etc.) and then make it mandatory to choose to save one. Bear in mind you might still want to choose C2.

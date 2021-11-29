@@ -1,0 +1,44 @@
+Total:  [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+
+120 turbulent simulations: 21 hrs, 45 mins
+6 computers: 3 hours 37.5 mins
+
+Turbulent
+
+Running simulations:
+1. Plug in USB
+2. Copy "LAC/hawc_simulations/" from USB to "C:\Users\s######\Documents"
+3. Open make_turb.py in either Notepad or Spyder
+4. Change wsps on line 49 to your wind speeds, i.e. wsps = [#, #, #, #, #]
+5. Change number of random seeds per wind speed, i.e. nseeds = #
+5. From C:\Users\s######\Documents\hawc_simulations\ open cmd
+6. From cmd run: "python make_turb.py"
+7. Check C:\User\s######\Documents\hawc_simulations\htc_turb\ has been produced and contains the expected .htc files for all your wind speeds and random seeds
+8. From cmd run: "run_turb.bat"
+9. Check there are no errors (otherwise check .log file)
+10. Results should be saved in a C:\Users\s######\Documents\hawc_simulations\res_turb\ folder
+
+Exporting results:
+1. Plug in USB
+2. Copy all files (.dat and .sel for all wind speeds and random seeds) from C:\Users\s######\Documents\hawc_simulations\res_turb\ to USB's LAC\hawc_results\res\turb\
+3. Copy all files (.log for all wind speeds) from C:\Users\s######\Documents\hawc_simulations\log\ to USB's LAC\hawc_results\log\turb\
+
+
+Steady
+
+Running simulations:
+1. Plug in USB
+2. Copy "LAC/hawc_simulations/" from USB to "C:\Users\s######\Documents"
+3. Open make_steady.py in either Notepad or Spyder
+4. Change wsps on line 49 to your wind speeds, i.e. wsps = [#, #, #, #, #]
+5. From C:\Users\s######\Documents\hawc_simulations\ open cmd
+6. From cmd run: "python make_steady.py"
+7. Check C:\User\s######\Documents\hawc_simulations\htc_steady\ has been produced and contains the expected .htc files for all your wind speeds
+8. From cmd run: "run_steady.bat"
+9. Check there are no errors (otherwise check .log file)
+10. Results should be saved in a C:\Users\s######\Documents\hawc_simulations\res_steady\ folder
+
+Exporting results:
+1. Plug in USB
+2. Copy all files (.dat and .sel for all wind speeds) from C:\Users\s######\Documents\hawc_simulations\res_steady\ to USB's LAC\hawc_results\res\steady\
+3. Copy all files (.log for all wind speeds) from C:\Users\s######\Documents\hawc_simulations\log\ to USB's LAC\hawc_results\log\steady\

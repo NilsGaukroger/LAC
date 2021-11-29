@@ -162,6 +162,7 @@ end
 % cap twist at beta_max
 result.beta(result.beta > deg2rad(beta_max)) = deg2rad(beta_max);
 
+
 % set lower limit on relative thickness of 24.1%
 result.c(result.c > (redesign.t / 0.241)) =...
     redesign.t(result.c > (redesign.t / 0.241)) / 0.241;
@@ -171,7 +172,7 @@ r_R = 0.98;
 % result.beta = flattenTip(result.beta,result.beta,rotor,r_R);
 
 % remove flick after r/R > 0.98 for relative thickness
-for j=1:length(tsr)
+for j = 1:length(tsr)
     t_c = redesign.t(j,:) ./ result.c(j,:);
     a = t_c(find((redesign.r/redesign.R) > r_R,1));
     result.c(j,(redesign.r/redesign.R) > r_R) = redesign.t(j,(redesign.r/redesign.R) > r_R) ./ a;
@@ -213,6 +214,20 @@ end
 
 %% Reapply constraint for twist
 result2.beta(result2.beta > deg2rad(beta_max)) = deg2rad(beta_max);
+
+%% Spline for beta
+new_beta = betaSpline(redesign,result2,[0.2, 0.265, 0.35],[0.8, 1.7]);
+
+figure
+subplot(3,1,2)
+plot(redesign.r/redesign.R,result2.beta); hold on
+plot(redesign.r/redesign.R,new_beta); hold off
+ylabel('Twist, \beta [deg]'); xlabel('Non-dimensional radius [-]')
+legend('Original','with spline')
+grid on
+box on
+
+result2.beta = new_beta;
 
 %% Plot geometry
 figure

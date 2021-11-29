@@ -13,13 +13,21 @@ addpath('../../functions');
 DTU.R           = 89.1660;           % rotor radius [m]
 DTU.r_hub       = 2.8;               % hub radius [m]
 DTU.bladeLength = DTU.R - DTU.r_hub; % blade length [m]
+DTU.V_rated     = 11.4;              % rated wind speed [m/s]
+DTU.TI          = 0.16;              % IEC turbulence intensity [-]
 
 %% Design polynomials from DTU 10MW reports
 dis1 = 101; % number of points in DTU.r discretisation
 [DTU.c,DTU.that,DTU.beta,DTU.t,DTU.r] = DTU10MW_des(1,dis1);
 
 %% New rotor radius
-[redesign.R,redesign.V_rated,~] = rotorScaling(11.4,0.16,DTU.R,0.14);
+redesign.TI     = 0.14;              % IEC turbulence intensity [-]
+[redesign.R,redesign.V_rated,~] = rotorScaling(DTU.V_rated,DTU.TI,DTU.R,redesign.TI);
+
+% % adjustment for individual assignment
+% rotorScale = 8; % manual rotor radius scaling [%]
+% redesign.R = (1+rotorScale/100) * DTU.R;
+% redesign.V_rated = ((DTU.V_rated^3 * DTU.R^2) / (redesign.R^2))^(1/3);
 
 %% Aerofoil data
 aerofoil = polars();

@@ -24,10 +24,10 @@ dis1 = 101; % number of points in DTU.r discretisation
 redesign.TI     = 0.14;              % IEC turbulence intensity [-]
 [redesign.R,redesign.V_rated,~] = rotorScaling(DTU.V_rated,DTU.TI,DTU.R,redesign.TI);
 
-% % adjustment for individual assignment
-% rotorScale = 8; % manual rotor radius scaling [%]
-% redesign.R = (1+rotorScale/100) * DTU.R;
-% redesign.V_rated = ((DTU.V_rated^3 * DTU.R^2) / (redesign.R^2))^(1/3);
+% adjustment for individual assignment
+rotorScale = 8; % manual rotor radius scaling [%]
+redesign.R = (1+rotorScale/100) * DTU.R;
+redesign.V_rated = ((DTU.V_rated^3 * DTU.R^2) / (redesign.R^2))^(1/3);
 
 %% Aerofoil data
 aerofoil = polars();
@@ -286,7 +286,7 @@ grid on
 subplot(3,1,3)
 plot(redesign.r,(redesign.t./result.c)*100); hold on
 plot(HAWC_in.r+redesign.r_hub,(HAWC_in.t./HAWC_in.c)*100); hold off
-ylabel('t/c [%]'); xlabel('Non-dimensional radius [-]')
+ylabel('t/c [%]'); xlabel('Radius [m]')
 legend('Original','HAWC')
 grid on
 sgtitle('HAWC geometry');

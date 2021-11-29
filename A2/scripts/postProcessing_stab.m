@@ -40,7 +40,7 @@ disp('Default plot parameters set.');
 save_var = false; % true: saves figures, false: doesn't
 overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\stab\';
 local    = './plots/report_2/stab/';
-locs     = {overleaf,local};
+locs     = {local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
     if (not(isfolder(locs{i})))
         save_var = false;
@@ -51,7 +51,7 @@ end
 addpath('..\..\functions\')
 
 %% Import .cmb files
-turbine   = {'dtu10mw/stab/','redesign/stab/'};
+turbine   = {'dtu10mw/stab/','redesign_v1/stab/'};
 names     = {'DTU 10MW','Redesign'};
 type      = {'st','ael'}; % structural 'st' or aeroelastic 'ael' Campbell diagram
 file      = {'DTU_10MW_','redesign_'};
@@ -151,6 +151,17 @@ for i = 1:size(cmb.camp,1) % turbine loop
     end
 end
 sgtitle('Damping diagrams')
+
+%% Minimum rotor speed
+% f  = 0.25;       % frequency [Hz]
+% P1 = f * 60 / 3; % rotational speed [rpm]
+DTU.n_min = 6;   % DTU minimum rotational speed [rpm]
+redesign.n_min = DTU.n_min;
+
+gearratio = 50;
+genspeed = [redesign.n_min redesign.omega_opt] * gearratio;
+fprintf('genspeed %.2f %.2f; RPM (%.1f %.1f)\n', ...
+    genspeed(1), genspeed(2), redesign.n_min, redesign.omega_opt);
 
 %% Save outputs
 save('..\..\mat\postProcessing_stab.mat','DTU','redesign','pwr');

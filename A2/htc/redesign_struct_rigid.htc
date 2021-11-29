@@ -2,8 +2,8 @@
 ;   Modified from version 9.2a for LAC course
 ;
   begin new_htc_structure;	material properties, orientations and constraints of bodies
-;   body_output_file_name ../../info/redesign/rigid/body.dat;
-;   beam_output_file_name ../../info/redesign/rigid/beam.dat;
+;   body_output_file_name ../../info/redesign_v1/rigid/body.dat;
+;   beam_output_file_name ../../info/redesign_v1/rigid/beam.dat;
 ;-------------------------------------------------------------------------------------------------------------------------------
     begin main_body;	tower
       name	tower;
@@ -309,7 +309,7 @@
     end rotating_threebladed_substructure;
 	begin operational_data;
 	windspeed 4 25 22;
-	genspeed 0 371.61; RPM (0 7.4)
+	genspeed 0 448.31; RPM (0 9.0)
 	gearratio 50;
 	minpitch 0.00000000e+00;
 	opt_lambda 7.1; ; MATLAB optimal TSR
@@ -319,11 +319,11 @@
 	set_torque_limit 0;
 	end operational_data;
     ; Operational data
-    operational_data_filename	redesign_struct_rigid.opt;  file with operational data points
+    operational_data_filename	redesign_v1_struct_rigid.opt;  file with operational data points
     ; HAWC2S commands (uncomment as needed);
 	; compute_optimal_pitch_angle use_operational_data;
     compute_steady_states	nobladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)
-    ; save_power;	save steady-state values to .pwr
+    save_power;	save steady-state values to .pwr
     ; save_induction;	save spanwise values to many .ind files, 3 for each wind speed
   end hawcstab2;
 exit;

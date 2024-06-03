@@ -73,7 +73,7 @@ ax1.patch.set_visible(False)  # prevent ax1 from hiding ax2
 plt.tight_layout()
 
 #%% AEP comparison bar chart between DTU 10 MW and Redesign
-AEP_lst = [33227.7, 35536.3]
+AEP_lst = [32919.2, 35536.3]
 ticks = ['DTU 10 MW','Redesign']
 x_pos = np.arange(len(AEP_lst))
 

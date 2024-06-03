@@ -19,10 +19,10 @@ disp('Default plot parameters set.');
 addpath('..\..\functions\')
 
 %% Figure saving settings
-save_var = false; % true: saves figures, false: doesn't
+save_var = true; % true: saves figures, false: doesn't
 overleaf = 'C:\Users\nilsg\Dropbox\Apps\Overleaf\LAC Assignment 2\figures\struct\'; % overleaf not working currently
-local    = '../figs/struct/';
-locs     = {overleaf,local};
+local    = '../figs/v1/struct/';
+locs     = {local};
 for i = 1:length(locs) % if any directory doesn't exist don't attempt to save there
     if (not(isfolder(locs{i})))
         save_var = false;
@@ -95,7 +95,7 @@ if save_var
 end
 
 %% HAWC post-processing
-turbine = {'dtu10mw/struct/','redesign/struct/'};
+turbine = {'dtu10mw/struct/','redesign_v1/struct/'};
 names   = {'DTU 10MW','Redesign'};
 elas    = {'flex','rigid'};
 file    = {'/DTU_10MW_struct_','/redesign_struct_'};

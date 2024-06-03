@@ -2,8 +2,8 @@
 ;   Modified from version 9.2a for LAC course
 ;
   begin new_htc_structure;	material properties, orientations and constraints of bodies
-;  body_output_file_name ../../info/redesign/flex/body.dat;
-;  beam_output_file_name ../../info/redesign/flex/beam.dat;
+;  body_output_file_name ../../info/redesign_v1/flex/body.dat;
+;  beam_output_file_name ../../info/redesign_v1/flex/beam.dat;
 ;-------------------------------------------------------------------------------------------------------------------------------
     begin main_body;	tower
       name	tower;
@@ -101,7 +101,7 @@
     begin main_body;	blade1
       name	blade1;
       type	timoschenko;
-      nbodies	1;
+      nbodies	10;
       node_distribution	c2_def;
       damping_posdef	0 0 0 0.00153 0.00255 0.00033;	3% damping tuned by tkim 23/03/13, unable to fit 3rd and higher mode
       begin timoschenko_input;
@@ -309,7 +309,7 @@
     end rotating_threebladed_substructure;
 	begin operational_data;
 	windspeed 4 25 22;
-	genspeed 0 371.61; RPM (0 7.4)
+	genspeed 0 448.31; RPM (0 9.0)
 	gearratio 50;
 	minpitch 0.00000000e+00;
 	opt_lambda 7.1; ; MATLAB optimal TSR
@@ -319,7 +319,7 @@
 	set_torque_limit 0;
 	end operational_data;
     ; Operational data
-    operational_data_filename	redesign_struct_flex.opt;  file with operational data points
+    operational_data_filename	redesign_v1_struct_flex.opt;  file with operational data points
     ; HAWC2S commands (uncomment as needed);
 	; compute_optimal_pitch_angle use_operational_data;
     compute_steady_states	bladedeform tipcorrect induction nogradients;	compute steady states using hawcstab2 (need for other commands)

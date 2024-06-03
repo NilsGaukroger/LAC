@@ -105,4 +105,6 @@ See notes/hawc_simulations.txt
 - plot_dels_2turbines.py (saves short-term fatigue DELs to A4/figs/Part3/)
 - plot_maxmeanmin_2turbines.py (saves max, mean, min plots to A4/figs/Part1and2/)
 
-*NB: remember to change the wind class. I.e. For AEP both turbines should be in class IIIb, for loads ...?
+*NB: remember to change the wind class. I.e. For AEP both turbines should be in class IIIb, for loads each turbine should be in the wind class it was designed for, i.e. DTU 10MW in Ia and redesign in IIIb*
+
+NB: DTU 10MW results folder split into turbulence class a (tca/) and turbulence class b (tcb/) results
